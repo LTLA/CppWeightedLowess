@@ -4,8 +4,7 @@
 #include <algorithm>
 #include <vector>
 #include <cstdint>
-
-#define THRESHOLD 0.0000001
+#include <cmath>
 
 namespace scran {
 
@@ -13,7 +12,7 @@ class WeightedLowess {
 
 private:
     double span = 0.3;
-    int npts = 200;
+    int points = 200;
     int iterations = 4;
     double delta = -1;
 
@@ -59,8 +58,8 @@ private:
     /* Determining the `delta`. For a seed point with x-coordinate `x`, we skip all
      * points in `[x, x + delta]` before finding the next seed point. 
      * We try to choose a `delta` that satisfies the constraints on the number
-     * of seed points in `npts`. A naive approach would be to simply divide the
-     * range of `x` by `npts - 1`. However, this may place seed points inside 
+     * of seed points in `points`. A naive approach would be to simply divide the
+     * range of `x` by `points - 1`. However, this may place seed points inside 
      * large gaps on the x-axis intervals where there are no actual observations. 
      * 
      * Instead, we try to distribute the seed points so that they don't fall
@@ -87,8 +86,8 @@ private:
         }
 
         double lowest_delta = diffs.back();
-        for (size_t nskips = 0; nskips < npts - 1 && nskips < diffs.size() - 1; ++nskips) {
-            double candidate_delta = diffs[diffs.size() - nskips - 1] / (npts - nskips);
+        for (size_t nskips = 0; nskips < points - 1 && nskips < diffs.size() - 1; ++nskips) {
+            double candidate_delta = diffs[diffs.size() - nskips - 1] / (points - nskips);
             lowest_delta = std::min(candidate_delta, lowest_delta);
         }
 
@@ -104,7 +103,7 @@ private:
         std::vector<size_t> indices;
         indices.push_back(0);
         size_t last_pt = 0;
-        for (size_t pt = 1; pt < npts - 1; ++pt) {
+        for (size_t pt = 1; pt < points - 1; ++pt) {
             if (means[pt] - means[last_pt] > d) {
                 indices.push_back(pt);
                 last_pt=pt;
@@ -115,6 +114,11 @@ private:
     }
 
 private:
+    struct window {
+        size_t left, right;
+        double distance;
+    };
+
     /* This function identifies the start and end index in the span for each chosen sampling
      * point. It returns two arrays via reference containing said indices. It also returns
      * an array containing the maximum distance between points at each span.
@@ -125,233 +129,252 @@ private:
      * algorithm as a whole remains quadratic (as weights must be recomputed) so there's no
      * damage to scalability.
      */
-    std::pair<std::vector<size_t>, std::vector<size_t> > find_limits(const double* weights) const {
-        std::vector<size_t> left_out, right_out;
-        const size_t npts = xbuffer.size();
+    std::vector<window> find_limits(const double* weights, double spanweight, const std::vector<size_t>& seeds) const {
+        std::vector<window> output(indices.size());
+        const size_t nobs = xbuffer.size(); 
+        const size_t nseeds = seeds.size();
 
-        for (size_t curpt = 0; curpt < npts; ++curpt) {
-            auto left=curpt, right=curpt;
-            double curw = weights[curpt];
-            int ende=(curpt==npts-1), ends=(curpt==0);
+        for (size_t s = 0; s < nseeds; ++s) {
+            auto curpt = seeds[s], left = curpt, right = curpt;
+            double curw = (weights == NULL ? 1 : weights[curpt]);
+            bool ende = (curpt == nobs - 1), ends = (curpt == 0);
             double mdist=0, ldist, rdist;
 
             while (curw < spanweight && (!ende || !ends)) {
-                if (ende) {
-                    /* Can only extend backwards. */
-                    --left;
-                    curw+=wptr[left];
-                    if (left==0) { ends=1; }
-                    ldist=xptr[curpt]-xptr[left];
-                    if (mdist < ldist) { mdist=ldist; }
-                } else if (ends) {
-                    /* Can only extend forwards. */
-                    ++right;
-                    curw+=wptr[right];
-                    if (right==npts-1) { ende=1; }
-                    rdist=xptr[right]-xptr[curpt];
-                    if (mdist < rdist) { mdist=rdist; }
-                } else {
-                    /* Can do either; extending by the one that minimizes the curpt mdist. */
-                    ldist=xptr[curpt]-xptr[left-1];
-                    rdist=xptr[right+1]-xptr[curpt];
-                    if (ldist < rdist) {
+                if (!ends) {
+                    ldist = xbuffer[curpt] - xbuffer[left - 1];
+                }
+                if (!ende) {
+                    rdist = xbuffer[right + 1] - xbuffer[curpt];
+                }
+
+                /* Move the span backwards. */
+                if (!ends) {
+                    if (ende || ldist < rdist) {
                         --left;
-                        curw+=wptr[left];
-                        if (left==0) { ends=1; }
-                        if (mdist < ldist) { mdist=ldist; }
-                    } else {
+
+                        if (weights != NULL) {
+                            curw += weights[left];
+                        } else {
+                            ++curw;
+                        }
+
+                        if (left==0) { 
+                            ends=1;
+                        }
+
+                        if (mdist < ldist) { 
+                            mdist=ldist; 
+                        }
+                    } 
+                }
+                
+                /* Move the span forwards. */
+                if (!ende) {
+                    if (ends || ldist > rdist) {
                         ++right;
-                        curw+=wptr[right];
-                        if (right==npts-1) { ende=1; }
-                        if (mdist < rdist) { mdist=rdist; }
+
+                        if (weights != NULL) {
+                            curw += weights[right];
+                        } else {
+                            ++curw;
+                        }
+
+                        if (right == nobs - 1) { 
+                            ende=1; 
+                        }
+
+                        if (mdist < rdist) { 
+                            mdist=rdist; 
+                        }
                     }
                 }
             }
 
-            /* Extending to ties. */
-            while (left>0 && xptr[left]==xptr[left-1]) { --left; }
-            while (right<npts-1 && xptr[right]==xptr[right+1]) { ++right; }
+            /* Once we've found the span, we stretch it out to include all ties. */
+            while (left > 0 && xbuffer[left] == xbuffer[left-1]) {
+                --left; 
+            }
 
-            /* Recording */
-            spbegin[curx]=left;
-            spend[curx]=right;
-            spdist[curx]=mdist;
+            while (right < npts-1 && xbuffer[right]==xbuffer[right+1]) { 
+                ++right; 
+            }
+
+            output[s].left = left;
+            output[s].right = right;
+            output[s].distance = mdist;
         }
-
-        (*start)=spbegin;
-        (*end)=spend;
-        (*dist)=spdist;
-        return;
+        return output;
     }
 
-/* Computes the lowess fit at a given point using linear regression with a combination of tricube,
- * prior and robustness weighting. Some additional effort is put in to avoid numerical instability
- * and undefined values when divisors are near zero.
- */
+private:
+    double cube(double x) {
+        return x*x*x;
+    }
 
-double lowess_fit (const double* xptr, const double* yptr, const double* wptr, const double* rwptr,
-		const int npts, const int curpt, const int left, const int right, const double dist, double* work) {
-	double ymean=0, allweight=0;
-	int pt;
-	if (dist < THRESHOLD) {
-		for (pt=left; pt<=right; ++pt) {
-			work[pt]=wptr[pt]*rwptr[pt];
-			ymean+=yptr[pt]*work[pt];
-			allweight+=work[pt];
-		}
-		ymean/=allweight;
-		return ymean;
-	}
-	double xmean=0;
-	for (pt=left; pt<=right; ++pt) {
-		work[pt]=pow(1-pow(fabs(xptr[curpt]-xptr[pt])/dist, 3.0), 3.0)*wptr[pt]*rwptr[pt];
-		xmean+=work[pt]*xptr[pt];
-		ymean+=work[pt]*yptr[pt];
-		allweight+=work[pt];
-	}
-	xmean/=allweight;
-	ymean/=allweight;
+    /* Computes the lowess fit at a given point using linear regression with a
+     * combination of tricube, prior and robustness weighting. 
+     */
+    double lowess_fit (const double* weights, const int curpt, const window& limits, double* work) const {
+        double ymean = 0, allweight = 0;
+        size_t left = limits.left, right = limits.right;
+        double dist = limits.distance;
 
-	double var=0, covar=0, temp;
-	for (pt=left; pt<=right; ++pt) {
-		temp=xptr[pt]-xmean;
-		var+=temp*temp*work[pt];
-		covar+=temp*(yptr[pt]-ymean)*work[pt];
-	}
-	if (var < THRESHOLD) { return ymean; }
+        if (dist <= 0) {
+            for (size_t pt = left; pt <= right; ++pt) {
+                double curweight = robustness[pt];
+                if (weights != NULL) {
+                    curweight *= weights[pt];
+                }
+                ymean += ybuffer[pt] * curweight;
+                allweight += curweight;
+            }
+            ymean /= allweight;
+            return ymean;
+        }
 
-	const double slope=covar/var;
-	const double intercept=ymean-slope*xmean;
-	return slope*xptr[curpt]+intercept;
-}
+        double xmean=0;
+        for (size_t pt = left; pt <= right; ++pt) {
+            double& current = work[pt];
+            current = cube(1 - cube(std::abs(xbuffer[curpt] - xbuffer[pt])/dist)) * robustness[pt];
+            if (weights != NULL) {
+                current *= weights[pt];
+            }
+            xmean += current * xbuffer[pt];
+            ymean += current * ybuffer[pt];
+            allweight += current;
+        }
+        xmean /= allweight;
+        ymean /= allweight;
 
-/* This is a C version of the local weighted regression (lowess) trend fitting algorithm,
- * based on the Fortran code in lowess.f from http://www.netlib.org/go written by Cleveland.
- * Consideration of non-equal prior weights is added to the span calculations and linear
- * regression. These weights are intended to have the equivalent effect of frequency weights
- * (at least, in the integer case; extended by analogy to all non-negative values).
- */
+        double var=0, covar=0;
+        for (pt=left; pt<=right; ++pt) {
+            double temp = xbuffer[pt] - xmean;
+            var += temp * temp * work[pt];
+            covar += temp * (ybuffer[pt] - ymean) * work[pt];
+        }
+        if (var <= 0) { 
+            return ymean; 
+        }
 
-SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP iter, SEXP delta) {
-    if (!IS_NUMERIC(covariate)) { error("covariates must be double precision"); }
-    if (!IS_NUMERIC(response)) { error("responses must be double precision"); }
-    if (!IS_NUMERIC(weight)) { error("weights must be double precision"); }
+        const double slope=covar/var;
+        const double intercept=ymean-slope*xmean;
+        return slope * xbuffer[curpt] + intercept;
+    }
 
-	const int npts=LENGTH(covariate);
-	if (npts!=LENGTH(response) || npts!=LENGTH(weight)) { error("weight, covariate and response vectors have unequal lengths"); }
-	if (npts<2) { error("need at least two points"); }
-	const double* covptr=NUMERIC_POINTER(covariate);
-	const double* resptr=NUMERIC_POINTER(response);
-	const double* weiptr=NUMERIC_POINTER(weight);
+private:
+    double square (double x) {
+        return x*x;
+    }
 
-	if (!IS_NUMERIC(span) || LENGTH(span)!=1) { error("span should be a double-precision scalar"); }
-	const double spv=NUMERIC_VALUE(span);
-	if (!IS_INTEGER(iter) || LENGTH(iter)!=1) { error("number of robustness iterations should be an integer scalar"); }
-	const int niter=INTEGER_VALUE(iter);
-	if (niter<=0) { error("number of robustness iterations should be positive"); }
-	if (!IS_NUMERIC(delta) || LENGTH(delta)!=1) { error("delta should be a double-precision scalar"); }
-	const double dv=NUMERIC_VALUE(delta);
+    /* This is a C version of the local weighted regression (lowess) trend fitting algorithm,
+     * based on the Fortran code in lowess.f from http://www.netlib.org/go written by Cleveland.
+     * Consideration of non-equal prior weights is added to the span calculations and linear
+     * regression. These weights are intended to have the equivalent effect of frequency weights
+     * (at least, in the integer case; extended by analogy to all non-negative values).
+     */
+    void robust_lowess(const double* weights, double* fitted, double * residuals) {
+        size_t nobs = xbuffer.size();
 
-	/*** NO MORE ERRORS AT THIS POINT, MEMORY ASSIGNMENTS ARE ACTIVE. ***/
+        /* Computing the span weight that each span must achieve. */
+        double totalweight = 0;
+        if (weights != NULL){ 
+            totalweight = std::accumulate(weights, weights + nobs, 0.0); 
+        } else {
+            totalweight = nobs;
+        }
+        const double spanweight = totalweight * span;
 
-	/* Computing the span weight that each span must achieve. */
-	double totalweight=0;
-	int pt;
-	for (pt=0; pt<npts; ++pt) { totalweight+=weiptr[pt]; }
-	double spanweight=totalweight*spv;
-	const double subrange=(covptr[npts-1]-covptr[0])/npts;
+        // Finding the seeds.
+        auto seeds = find_seeds(delta);
+        auto limits = find_limits(weights, spanweight, seeds);
+        std::vector<size_t> residual_permutation(nobs);
+        std::vector<double> robustness(nobs);
 
-	/* Setting up the indices of points for sampling; the frame start and end for those indices, and the max dist. */
-	int *seed_index;
-	int nseeds;
-	find_seeds(&seed_index, &nseeds, covptr, npts, dv);
-   	int *frame_start, *frame_end;
-	double* max_dist;
-	find_limits (seed_index, nseeds, covptr, weiptr, npts, spanweight, &frame_start, &frame_end, &max_dist);
+        /* Robustness iterations. */
+        for (int it = 0; it < iterations; ++it) {
 
-	/* Setting up arrays to hold the fitted values, residuals and robustness weights. */
-	SEXP output=PROTECT(NEW_LIST(2));
-	SET_VECTOR_ELT(output, 0, NEW_NUMERIC(npts));
-	double* fitptr=NUMERIC_POINTER(VECTOR_ELT(output, 0));
-	double* rsdptr=(double*)R_alloc(npts, sizeof(double));
-	SET_VECTOR_ELT(output, 1, NEW_NUMERIC(npts));
-	double* robptr=NUMERIC_POINTER(VECTOR_ELT(output, 1));
-	int* rorptr=(int*)R_alloc(npts, sizeof(int));
-	for (pt=0; pt<npts; ++pt) { robptr[pt]=1; }
+            /* Computing fitted values for seed points, and interpolating to the intervening points. */
+            fitted[0] = lowess_fit(weights, 0, limits[0], residuals); // using `residuals` as the workspace.
+            size_t last_seed = 0;
 
-	/* Robustness iterations. */
-	int it=0;
-	for (it=0; it<niter; ++it) {
-		int cur_seed, last_pt=0, subpt;
-		double current;
+            for (size_t s = 1; s < seeds.size(); ++s) {
+                auto curpt = seeds[s];
+                auto curlim = limits[s];
+                fitted[curpt] = lowess_fit(weights, curpt, curlim, residuals);
 
-		/* Computing fitted values for seed points, and interpolating to the intervening points. */
-		fitptr[0]=lowess_fit(covptr, resptr, weiptr, robptr, npts, 0, frame_start[0], frame_end[0], max_dist[0], rsdptr);
-		for (cur_seed=1; cur_seed<nseeds; ++cur_seed) {
-			pt=seed_index[cur_seed];
-			fitptr[pt]=lowess_fit(covptr, resptr, weiptr, robptr, npts, pt, frame_start[cur_seed],
-				frame_end[cur_seed], max_dist[cur_seed], rsdptr); /* using rsdptr as a holding cell. */
+                /* Some protection is provided against infinite slopes. This shouldn't be
+                 * a problem for non-zero delta; the only concern is at the final point
+                 * where the covariate distance may be zero.
+                 */
+                current = xbuffer[s] - xbuffer[last_seed];
+                if (current > 0) {
+                    const double slope = (fitted[s] - fitted[last_seed])/current;
+                    const double intercept = fitted[s] - slope * xbuffer[s];
+                    for (size_t subpt = last_seed + 1; subpt < s; ++subpt) { 
+                        fitted[subpt] = slope * xbuffer[subpt] + intercept; 
+                    }
+                } else {
+                    const double ave = (xbuffer[pt] + xbuffer[last_pt]) / 2;
+                    for (size_t subpt = last_seed + 1; subpt < s; ++subpt) {
+                        fitted[subpt] = ave;
+                    }
+                }
 
-			if (pt-last_pt > 1) {
-	 			/* Some protection is provided against infinite slopes. This shouldn't be
- 				 * a problem for non-zero delta; the only concern is at the final point
- 				 * where the covariate distance may be zero. Besides, if delta is not
- 				 * positive, pt-last_pt could never be 1 so we'd never reach this point.
- 				 */
-				current = covptr[pt]-covptr[last_pt];
-				if (current > THRESHOLD*subrange) {
-					const double slope=(fitptr[pt]-fitptr[last_pt])/current;
-					const double intercept=fitptr[pt] - slope*covptr[pt];
-					for (subpt=last_pt+1; subpt<pt; ++subpt) { fitptr[subpt]=slope*covptr[subpt]+intercept; }
-				} else {
-					const double endave=0.5*(fitptr[pt]+fitptr[last_pt]);
-					for (subpt=last_pt+1; subpt<pt; ++subpt) { fitptr[subpt]=endave; }
-				}
-			}
-			last_pt=pt;
-		}
+                last_seed = s;
+            }
 
-		/* Computing the weighted MAD of the absolute values of the residuals. */
-		double resid_scale=0;
-		for (pt=0; pt<npts; ++pt) {
-			rsdptr[pt]=fabs(resptr[pt]-fitptr[pt]);
-			resid_scale+=rsdptr[pt];
-			rorptr[pt]=pt;
-		}
-		resid_scale/=npts;
-		rsort_with_index(rsdptr, rorptr, npts);
+            /* Computing the weighted MAD of the absolute values of the residuals. */
+            for (size_t pt = 0; pt < nobs; ++pt) {
+                residuals[pt] = std::abs(ybuffer[pt] - fitted[pt]);
+            }
 
-		current=0;
-		double cmad=0;
-		const double halfweight=totalweight/2;
-		for (pt=0; pt<npts; ++pt) {
-			current+=weiptr[rorptr[pt]];
-			if (current==halfweight) {  /* In the unlikely event of an exact match. */
-				cmad=3*(rsdptr[pt]+rsdptr[pt+1]);
-				break;
-			} else if (current>halfweight) {
-				cmad=6*rsdptr[pt];
-				break;
-			}
-		}
+            std::iota(residual_permutation.begin(), residual_permutation.end(), 0);
+            std::sort(residual_permutation.begin(), residual_permutation.end(), 
+                [&](size_t left, size_t right) -> bool {
+                    return residuals[left] < residuals[right];
+                }
+            );
 
-		/* If it's too small, then robustness weighting will have no further effect.
-		 * Any points with large residuals would already be pretty lowly weighted.
-		 * This is based on a similar step in lowess.c in the core R code.
-		 */
-		if (cmad <= THRESHOLD * resid_scale) { break; }
+            double curweight = 0;
+            double cmad = 0;
+            const double halfweight = totalweight/2;
+            for (size_t i = 0; i < nobs; ++i) {
+                auto pt = residual_permutation[i];
+                if (weights != NULL) {
+                    curweight += weights[pt];
+                } else {
+                    ++curweight;
+                }
 
-		/* Computing the robustness weights. */
-		for (pt=0; pt<npts; ++pt) {
-			if (rsdptr[pt]<cmad) {
-				robptr[rorptr[pt]]=pow(1-pow(rsdptr[pt]/cmad, 2.0), 2.0);
-			} else { robptr[rorptr[pt]]=0; }
-		}
-	}
+                if (curweight == halfweight) { // exact match, need to take the median.
+                    cmad = 3 * (residuals[pt] + residuals[residual_permutation[i+1]]);
+                    break;
+                } else if (current > halfweight) {
+                    cmad = 6 * residuals[pt];
+                    break;
+                }
+            }
 
-	UNPROTECT(1);
-	return output;
-}
+            /* If it's too small, then robustness weighting will have no further effect.
+             * Any points with large residuals would already be pretty lowly weighted.
+             * This is based on a similar step in lowess.c in the core R code.
+             */
+            double resid_scale = std::accumulate(residuals, residuals + nobs, 0.0)/nobs;
+            if (cmad <= 0.0000001 * resid_scale) { break; }
+
+            for (size_t i =0; i < nobs; ++i) {
+                if (residuals[i] < cmad) {
+                    robustness[i] = square(1 - square(residuals[i]/cmad));
+                } else { 
+                    robustness[i] = 0;
+                }
+            }
+        }
+
+        UNPROTECT(1);
+        return output;
+    }
 };
 
 }
