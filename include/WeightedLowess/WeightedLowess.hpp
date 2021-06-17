@@ -5,8 +5,11 @@
 #include <vector>
 #include <cstdint>
 #include <cmath>
+#include <numeric>
 
-namespace scran {
+#include <iostream>
+
+namespace WeightedLowess {
 
 class WeightedLowess {
 
@@ -15,65 +18,6 @@ private:
     int points = 200;
     int iterations = 4;
     double delta = -1;
-
-private:
-    void run(size_t n, const double* x, const double* y, const double* weights, double* fitted, double* residuals) {
-        /* Sorts the observations by the means, applies the same permutation to the
-         * variances. This makes downstream processing quite a lot easier.
-         */
-        xbuffer = std::vector<double>(x, x + n);
-        ybuffer = std::vector<double>(y, y + n);
-
-        permutation.resize(n);
-        std::iota(permutation.begin(), permutation.end(), 0);
-        std::sort(permutation.begin(), permutation.end(), [&](size_t left, size_t right) -> bool {
-            return xbuffer[left] < xbuffer[right];
-        });
-
-        // Reordering values in place.
-        std::vector<uint8_t> used(n);
-        for (size_t i = 0; i < permutation.size(); ++i) {
-            if (used[i]) {
-                continue;
-            }
-            used[i] = 1;
-
-            size_t current = i, replacement = permutation[i];
-            while (replacement != i) {
-                std::swap(xbuffer[current], xbuffer[replacement]);
-                std::swap(ybuffer[current], ybuffer[replacement]);
-
-                current = replacement;
-                used[replacement] = 1;
-                replacement = permutation[replacement]; 
-            } 
-        }
-
-        // Computing the fitted values and residuals.
-        weighted_lowess(weights, fitted, residuals); 
-
-        // Unpermuting the fitted values in place. This literally
-        // involves undoing the same series of swaps.
-        std::fill(used.begin(), used.end(), 0); 
-        for (size_t i = 0; i < permutation.size(); ++i) {
-            if (used[i]) {
-                continue;
-            }
-            used[i] = 1;
-
-            size_t current = i, replacement = permutation[i];
-            while (replacement != i) {
-                std::swap(fitted[current], fitted[replacement]);
-                std::swap(residuals[current], residuals[replacement]);
-
-                current = replacement;
-                used[replacement] = 1;
-                replacement = permutation[replacement]; 
-            } 
-        }
-
-        return;
-    }
 
     std::vector<size_t> permutation;
     std::vector<double> xbuffer, ybuffer;
@@ -127,13 +71,13 @@ private:
         std::vector<size_t> indices;
         indices.push_back(0);
         size_t last_pt = 0;
-        for (size_t pt = 1; pt < points - 1; ++pt) {
-            if (means[pt] - means[last_pt] > d) {
+        for (size_t pt = 1; pt < xbuffer.size() - 1; ++pt) {
+            if (xbuffer[pt] - xbuffer[last_pt] > d) {
                 indices.push_back(pt);
                 last_pt=pt;
             }
         }
-        indices.push_back(npoints - 1);
+        indices.push_back(xbuffer.size() - 1);
         return indices;
     }
 
@@ -154,9 +98,9 @@ private:
      * damage to scalability.
      */
     std::vector<window> find_limits(const double* weights, double spanweight, const std::vector<size_t>& seeds) const {
-        std::vector<window> output(indices.size());
         const size_t nobs = xbuffer.size(); 
         const size_t nseeds = seeds.size();
+        std::vector<window> output(nseeds);
 
         for (size_t s = 0; s < nseeds; ++s) {
             auto curpt = seeds[s], left = curpt, right = curpt;
@@ -174,7 +118,7 @@ private:
 
                 /* Move the span backwards. */
                 if (!ends) {
-                    if (ende || ldist < rdist) {
+                    if (ende || ldist <= rdist) {
                         --left;
 
                         if (weights != NULL) {
@@ -220,7 +164,7 @@ private:
                 --left; 
             }
 
-            while (right < npts-1 && xbuffer[right]==xbuffer[right+1]) { 
+            while (right < nobs - 1 && xbuffer[right]==xbuffer[right+1]) { 
                 ++right; 
             }
 
@@ -232,7 +176,7 @@ private:
     }
 
 private:
-    double cube(double x) {
+    static double cube(double x) {
         return x*x*x;
     }
 
@@ -272,7 +216,7 @@ private:
         ymean /= allweight;
 
         double var=0, covar=0;
-        for (pt=left; pt<=right; ++pt) {
+        for (size_t pt = left; pt <= right; ++pt) {
             double temp = xbuffer[pt] - xmean;
             var += temp * temp * work[pt];
             covar += temp * (ybuffer[pt] - ymean) * work[pt];
@@ -287,7 +231,7 @@ private:
     }
 
 private:
-    double square (double x) {
+    static double square (double x) {
         return x*x;
     }
 
@@ -310,7 +254,7 @@ private:
         const double spanweight = totalweight * span;
 
         // Finding the seeds.
-        auto seeds = find_seeds(delta);
+        auto seeds = find_seeds(derive_delta());
         auto limits = find_limits(weights, spanweight, seeds);
         std::vector<size_t> residual_permutation(nobs);
         std::vector<double> robustness(nobs, 1);
@@ -330,7 +274,7 @@ private:
                  * a problem for non-zero delta; the only concern is at the final point
                  * where the covariate distance may be zero.
                  */
-                current = xbuffer[s] - xbuffer[last_seed];
+                double current = xbuffer[s] - xbuffer[last_seed];
                 if (current > 0) {
                     const double slope = (fitted[s] - fitted[last_seed])/current;
                     const double intercept = fitted[s] - slope * xbuffer[s];
@@ -338,7 +282,7 @@ private:
                         fitted[subpt] = slope * xbuffer[subpt] + intercept; 
                     }
                 } else {
-                    const double ave = (xbuffer[pt] + xbuffer[last_pt]) / 2;
+                    const double ave = (fitted[s] + fitted[last_seed]) / 2;
                     for (size_t subpt = last_seed + 1; subpt < s; ++subpt) {
                         fitted[subpt] = ave;
                     }
@@ -373,7 +317,7 @@ private:
                 if (curweight == halfweight) { // exact match, need to take the median.
                     cmad = 3 * (residuals[pt] + residuals[residual_permutation[i+1]]);
                     break;
-                } else if (current > halfweight) {
+                } else if (curweight > halfweight) {
                     cmad = 6 * residuals[pt];
                     break;
                 }
@@ -393,6 +337,62 @@ private:
                     robustness[i] = 0;
                 }
             }
+        }
+
+        return;
+    }
+
+public:
+    void run(size_t n, const double* x, const double* y, const double* weights, double* fitted, double* residuals) {
+        /* Sorts the observations by the means, applies the same permutation to the
+         * variances. This makes downstream processing quite a lot easier.
+         */
+        xbuffer = std::vector<double>(x, x + n);
+        ybuffer = std::vector<double>(y, y + n);
+
+        permutation.resize(n);
+        std::iota(permutation.begin(), permutation.end(), 0);
+        std::sort(permutation.begin(), permutation.end(), [&](size_t left, size_t right) -> bool {
+            return xbuffer[left] < xbuffer[right];
+        });
+
+        // Reordering values in place.
+        std::vector<uint8_t> used(n);
+        for (size_t i = 0; i < permutation.size(); ++i) {
+            if (used[i]) {
+                continue;
+            }
+            used[i] = 1;
+
+            size_t current = i, replacement = permutation[i];
+            while (replacement != i) {
+                std::swap(xbuffer[current], xbuffer[replacement]);
+                std::swap(ybuffer[current], ybuffer[replacement]);
+
+                current = replacement;
+                used[replacement] = 1;
+                replacement = permutation[replacement]; 
+            } 
+        }
+
+        // Computing the fitted values and residuals.
+        robust_lowess(weights, fitted, residuals); 
+
+        // Unpermuting the fitted values in place. 
+        std::fill(used.begin(), used.end(), 0); 
+        for (size_t i = 0; i < permutation.size(); ++i) {
+            if (used[i]) {
+                continue;
+            }
+            used[i] = 1;
+
+            size_t replacement = permutation[i];
+            while (replacement != i) {
+                std::swap(fitted[i], fitted[replacement]);
+                std::swap(residuals[i], residuals[replacement]);
+                used[replacement] = 1;
+                replacement = permutation[replacement]; 
+            } 
         }
 
         return;
