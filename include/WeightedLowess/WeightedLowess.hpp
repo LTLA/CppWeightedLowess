@@ -17,10 +17,10 @@ private:
     double delta = -1;
 
 private:
-    /* Sorts the observations by the means, applies the same permutation to the
-     * variances. This makes downstream processing quite a lot easier.
-     */
-    void process_inputs(size_t n, const double* x, const double* y) {
+    void run(size_t n, const double* x, const double* y, const double* weights, double* fitted, double* residuals) {
+        /* Sorts the observations by the means, applies the same permutation to the
+         * variances. This makes downstream processing quite a lot easier.
+         */
         xbuffer = std::vector<double>(x, x + n);
         ybuffer = std::vector<double>(y, y + n);
 
@@ -38,16 +38,40 @@ private:
             }
             used[i] = 1;
 
-            size_t current = i, replacement = indices[i];
+            size_t current = i, replacement = permutation[i];
             while (replacement != i) {
                 std::swap(xbuffer[current], xbuffer[replacement]);
                 std::swap(ybuffer[current], ybuffer[replacement]);
 
                 current = replacement;
                 used[replacement] = 1;
-                replacement = indices[replacement]; 
+                replacement = permutation[replacement]; 
             } 
         }
+
+        // Computing the fitted values and residuals.
+        weighted_lowess(weights, fitted, residuals); 
+
+        // Unpermuting the fitted values in place. This literally
+        // involves undoing the same series of swaps.
+        std::fill(used.begin(), used.end(), 0); 
+        for (size_t i = 0; i < permutation.size(); ++i) {
+            if (used[i]) {
+                continue;
+            }
+            used[i] = 1;
+
+            size_t current = i, replacement = permutation[i];
+            while (replacement != i) {
+                std::swap(fitted[current], fitted[replacement]);
+                std::swap(residuals[current], residuals[replacement]);
+
+                current = replacement;
+                used[replacement] = 1;
+                replacement = permutation[replacement]; 
+            } 
+        }
+
         return;
     }
 
@@ -215,7 +239,7 @@ private:
     /* Computes the lowess fit at a given point using linear regression with a
      * combination of tricube, prior and robustness weighting. 
      */
-    double lowess_fit (const double* weights, const int curpt, const window& limits, double* work) const {
+    double lowess_fit (const double* weights, const int curpt, const window& limits, const std::vector<double>& robustness, double* work) const {
         double ymean = 0, allweight = 0;
         size_t left = limits.left, right = limits.right;
         double dist = limits.distance;
@@ -289,19 +313,18 @@ private:
         auto seeds = find_seeds(delta);
         auto limits = find_limits(weights, spanweight, seeds);
         std::vector<size_t> residual_permutation(nobs);
-        std::vector<double> robustness(nobs);
+        std::vector<double> robustness(nobs, 1);
 
         /* Robustness iterations. */
         for (int it = 0; it < iterations; ++it) {
 
             /* Computing fitted values for seed points, and interpolating to the intervening points. */
-            fitted[0] = lowess_fit(weights, 0, limits[0], residuals); // using `residuals` as the workspace.
+            fitted[0] = lowess_fit(weights, 0, limits[0], robustness, residuals); // using `residuals` as the workspace.
             size_t last_seed = 0;
 
             for (size_t s = 1; s < seeds.size(); ++s) {
                 auto curpt = seeds[s];
-                auto curlim = limits[s];
-                fitted[curpt] = lowess_fit(weights, curpt, curlim, residuals);
+                fitted[curpt] = lowess_fit(weights, curpt, limits[s], robustness, residuals); // using `residuals` as the workspace.
 
                 /* Some protection is provided against infinite slopes. This shouldn't be
                  * a problem for non-zero delta; the only concern is at the final point
@@ -372,8 +395,7 @@ private:
             }
         }
 
-        UNPROTECT(1);
-        return output;
+        return;
     }
 };
 
