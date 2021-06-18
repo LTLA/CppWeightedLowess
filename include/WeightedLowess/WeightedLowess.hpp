@@ -12,7 +12,26 @@
 namespace WeightedLowess {
 
 class WeightedLowess {
+public:
+    WeightedLowess& set_span(double s = 0.3) {
+        span = s;
+        return *this;
+    }
 
+    WeightedLowess& set_points(int p = 200) {
+        points = p;
+        return *this;
+    }
+
+    WeightedLowess& set_iterations(int i = 4) {
+        iterations = i;
+        return *this;
+    }
+
+    WeightedLowess& set_delta(double d = -1) {
+        delta = d;
+        return *this;
+    }
 private:
     double span = 0.3;
     int points = 200;
@@ -20,7 +39,7 @@ private:
     double delta = -1;
 
     std::vector<size_t> permutation;
-    std::vector<double> xbuffer, ybuffer;
+    std::vector<double> xbuffer, ybuffer, wbuffer;
 
 private:
     /* Determining the `delta`. For a seed point with x-coordinate `x`, we skip all
@@ -39,10 +58,6 @@ private:
      * degree of approximation in the final lowess calculation).
      */
     double derive_delta() const {
-        if (delta < 0) {
-            return delta;
-        }
-
         std::vector<double> diffs(xbuffer.size() - 1);
         for (size_t i = 0; i < diffs.size(); ++i) {
             diffs[i] = xbuffer[i + 1] - xbuffer[i];
@@ -97,16 +112,16 @@ private:
      * algorithm as a whole remains quadratic (as weights must be recomputed) so there's no
      * damage to scalability.
      */
-    std::vector<window> find_limits(const double* weights, double spanweight, const std::vector<size_t>& seeds) const {
+    std::vector<window> find_limits(double spanweight, const std::vector<size_t>& seeds) const {
         const size_t nobs = xbuffer.size(); 
         const size_t nseeds = seeds.size();
         std::vector<window> output(nseeds);
 
         for (size_t s = 0; s < nseeds; ++s) {
             auto curpt = seeds[s], left = curpt, right = curpt;
-            double curw = (weights == NULL ? 1 : weights[curpt]);
+            double curw = (wbuffer.empty() ? 1 : wbuffer[curpt]);
             bool ende = (curpt == nobs - 1), ends = (curpt == 0);
-            double mdist=0, ldist, rdist;
+            double mdist=0, ldist=0, rdist=0;
 
             while (curw < spanweight && (!ende || !ends)) {
                 if (!ends) {
@@ -121,8 +136,8 @@ private:
                     if (ende || ldist <= rdist) {
                         --left;
 
-                        if (weights != NULL) {
-                            curw += weights[left];
+                        if (!wbuffer.empty()) {
+                            curw += wbuffer[left];
                         } else {
                             ++curw;
                         }
@@ -142,8 +157,8 @@ private:
                     if (ends || ldist > rdist) {
                         ++right;
 
-                        if (weights != NULL) {
-                            curw += weights[right];
+                        if (!wbuffer.empty()) {
+                            curw += wbuffer[right];
                         } else {
                             ++curw;
                         }
@@ -183,16 +198,16 @@ private:
     /* Computes the lowess fit at a given point using linear regression with a
      * combination of tricube, prior and robustness weighting. 
      */
-    double lowess_fit (const double* weights, const int curpt, const window& limits, const std::vector<double>& robustness, double* work) const {
-        double ymean = 0, allweight = 0;
+    double lowess_fit (const size_t curpt, const window& limits, const std::vector<double>& robustness, double* work) const {
         size_t left = limits.left, right = limits.right;
         double dist = limits.distance;
 
         if (dist <= 0) {
+            double ymean = 0, allweight = 0;
             for (size_t pt = left; pt <= right; ++pt) {
                 double curweight = robustness[pt];
-                if (weights != NULL) {
-                    curweight *= weights[pt];
+                if (!wbuffer.empty()) {
+                    curweight *= wbuffer[pt];
                 }
                 ymean += ybuffer[pt] * curweight;
                 allweight += curweight;
@@ -201,12 +216,12 @@ private:
             return ymean;
         }
 
-        double xmean=0;
+        double xmean = 0, ymean = 0, allweight = 0;
         for (size_t pt = left; pt <= right; ++pt) {
             double& current = work[pt];
             current = cube(1 - cube(std::abs(xbuffer[curpt] - xbuffer[pt])/dist)) * robustness[pt];
-            if (weights != NULL) {
-                current *= weights[pt];
+            if (!wbuffer.empty()) {
+                current *= wbuffer[pt];
             }
             xmean += current * xbuffer[pt];
             ymean += current * ybuffer[pt];
@@ -241,54 +256,61 @@ private:
      * regression. These weights are intended to have the equivalent effect of frequency weights
      * (at least, in the integer case; extended by analogy to all non-negative values).
      */
-    void robust_lowess(const double* weights, double* fitted, double * residuals) {
+    void robust_lowess(double* fitted, double * residuals) {
         size_t nobs = xbuffer.size();
 
         /* Computing the span weight that each span must achieve. */
         double totalweight = 0;
-        if (weights != NULL){ 
-            totalweight = std::accumulate(weights, weights + nobs, 0.0); 
+        if (!wbuffer.empty()) {
+            totalweight = std::accumulate(wbuffer.begin(), wbuffer.end(), 0.0); 
         } else {
             totalweight = nobs;
         }
         const double spanweight = totalweight * span;
 
         // Finding the seeds.
-        auto seeds = find_seeds(derive_delta());
-        auto limits = find_limits(weights, spanweight, seeds);
+        std::vector<size_t> seeds;
+        if (points < nobs || delta > 0) {
+            double eff_delta = (delta < 0 ? derive_delta() : delta);
+            seeds = find_seeds(eff_delta);
+        } else {
+            seeds.resize(nobs);
+            std::iota(seeds.begin(), seeds.end(), 0);
+        }
+
+        auto limits = find_limits(spanweight, seeds);
         std::vector<size_t> residual_permutation(nobs);
         std::vector<double> robustness(nobs, 1);
 
-        /* Robustness iterations. */
-        for (int it = 0; it < iterations; ++it) {
-
-            /* Computing fitted values for seed points, and interpolating to the intervening points. */
-            fitted[0] = lowess_fit(weights, 0, limits[0], robustness, residuals); // using `residuals` as the workspace.
+        for (int it = 0; it < iterations; ++it) { // Robustness iterations.
+            fitted[0] = lowess_fit(0, limits[0], robustness, residuals); // using `residuals` as the workspace.
             size_t last_seed = 0;
 
-            for (size_t s = 1; s < seeds.size(); ++s) {
+            for (size_t s = 1; s < seeds.size(); ++s) { // fitted values for seed points, interpolating the rest.
                 auto curpt = seeds[s];
-                fitted[curpt] = lowess_fit(weights, curpt, limits[s], robustness, residuals); // using `residuals` as the workspace.
+                fitted[curpt] = lowess_fit(curpt, limits[s], robustness, residuals); // using `residuals` as the workspace.
 
-                /* Some protection is provided against infinite slopes. This shouldn't be
-                 * a problem for non-zero delta; the only concern is at the final point
-                 * where the covariate distance may be zero.
-                 */
-                double current = xbuffer[s] - xbuffer[last_seed];
-                if (current > 0) {
-                    const double slope = (fitted[s] - fitted[last_seed])/current;
-                    const double intercept = fitted[s] - slope * xbuffer[s];
-                    for (size_t subpt = last_seed + 1; subpt < s; ++subpt) { 
-                        fitted[subpt] = slope * xbuffer[subpt] + intercept; 
+                if (seeds.size() < nobs) {
+                    /* Some protection is provided against infinite slopes. This shouldn't be
+                     * a problem for non-zero delta; the only concern is at the final point
+                     * where the covariate distance may be zero.
+                     */
+                    double current = xbuffer[curpt] - xbuffer[last_seed];
+                    if (current > 0) {
+                        const double slope = (fitted[curpt] - fitted[last_seed])/current;
+                        const double intercept = fitted[curpt] - slope * xbuffer[curpt];
+                        for (size_t subpt = last_seed + 1; subpt < curpt; ++subpt) { 
+                            fitted[subpt] = slope * xbuffer[subpt] + intercept; 
+                        }
+                    } else {
+                        const double ave = (fitted[curpt] + fitted[last_seed]) / 2;
+                        for (size_t subpt = last_seed + 1; subpt < curpt; ++subpt) {
+                            fitted[subpt] = ave;
+                        }
                     }
-                } else {
-                    const double ave = (fitted[s] + fitted[last_seed]) / 2;
-                    for (size_t subpt = last_seed + 1; subpt < s; ++subpt) {
-                        fitted[subpt] = ave;
-                    }
+
+                    last_seed = curpt;
                 }
-
-                last_seed = s;
             }
 
             /* Computing the weighted MAD of the absolute values of the residuals. */
@@ -308,8 +330,8 @@ private:
             const double halfweight = totalweight/2;
             for (size_t i = 0; i < nobs; ++i) {
                 auto pt = residual_permutation[i];
-                if (weights != NULL) {
-                    curweight += weights[pt];
+                if (!wbuffer.empty()) {
+                    curweight += wbuffer[pt];
                 } else {
                     ++curweight;
                 }
@@ -349,6 +371,11 @@ public:
          */
         xbuffer = std::vector<double>(x, x + n);
         ybuffer = std::vector<double>(y, y + n);
+        if (weights) {
+            wbuffer = std::vector<double>(weights, weights + n);
+        } else {
+            wbuffer.clear();
+        }
 
         permutation.resize(n);
         std::iota(permutation.begin(), permutation.end(), 0);
@@ -368,6 +395,9 @@ public:
             while (replacement != i) {
                 std::swap(xbuffer[current], xbuffer[replacement]);
                 std::swap(ybuffer[current], ybuffer[replacement]);
+                if (!wbuffer.empty()) {
+                    std::swap(wbuffer[current], wbuffer[replacement]);
+                }
 
                 current = replacement;
                 used[replacement] = 1;
@@ -376,7 +406,7 @@ public:
         }
 
         // Computing the fitted values and residuals.
-        robust_lowess(weights, fitted, residuals); 
+        robust_lowess(fitted, residuals); 
 
         // Unpermuting the fitted values in place. 
         std::fill(used.begin(), used.end(), 0); 
@@ -396,6 +426,17 @@ public:
         }
 
         return;
+    }
+public:
+    struct Results {
+        Results(size_t n) : fitted(n), residuals(n) {}
+        std::vector<double> fitted, residuals;
+    };
+
+    Results run(size_t n, const double* x, const double* y, const double* weights=NULL) {
+        Results output(n);
+        run(n, x, y, weights, output.fitted.data(), output.residuals.data());
+        return output;
     }
 };
 

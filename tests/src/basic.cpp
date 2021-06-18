@@ -20,9 +20,130 @@ std::vector<double> y = {
      0.206,  0.232,  0.426,  1.113,  0.785
 };
 
-TEST(BasicTests, Basic) {
+void compare_almost_equal(const std::vector<double>& first, const std::vector<double>& second) {
+    ASSERT_EQ(first.size(), second.size());
+    for (size_t i = 0; i < first.size(); ++i) {
+        EXPECT_FLOAT_EQ(first[i], second[i]);
+    }
+    return;
+}
+
+void compare_to_zero(const std::vector<double>& resids) {
+    for (size_t i = 0; i < resids.size(); ++i) {
+        EXPECT_TRUE(resids[i] < 0.00000000001);
+    }
+    return;
+}
+
+TEST(BasicTests, Exact) {
     WeightedLowess::WeightedLowess wl;
 
-    std::vector<double> fitted(x.size()), residuals(x.size());
-    wl.run(x.size(), x.data(), y.data(), NULL, fitted.data(), residuals.data());
+    // y = x
+    auto res = wl.run(x.size(), x.data(), x.data());
+    compare_almost_equal(res.fitted, x);
+    compare_to_zero(res.residuals);
+
+    // y = 2x + 1
+    std::vector<double> alt(x);
+    for (auto& i : alt) {
+        i = 2*i + 1;
+    }
+    res = wl.run(x.size(), x.data(), alt.data());
+    compare_almost_equal(res.fitted, alt);
+
+    // y = 2.5 - x/4
+    alt = x;
+    for (auto& i : alt) {
+        i = 2.5 - i/4;
+    }
+    res = wl.run(x.size(), x.data(), alt.data());
+    compare_almost_equal(res.fitted, alt);
+}
+
+TEST(BasicTests, Interpolation) {
+    WeightedLowess::WeightedLowess wl;
+
+    // y = 2x + 1
+    std::vector<double> alt(x);
+    for (auto& i : alt) {
+        i = 2*i + 1;
+    }
+
+    auto res = wl.run(x.size(), x.data(), alt.data());
+    auto res2 = wl.set_points(10).run(x.size(), x.data(), alt.data());
+    compare_almost_equal(res.fitted, res2.fitted);
+    compare_to_zero(res2.residuals);
+
+    // Only two points; start and end.
+    res2 = wl.set_points(2).run(x.size(), x.data(), alt.data());
+    compare_almost_equal(res.fitted, res2.fitted);
+    compare_to_zero(res2.residuals);
+
+    // Interpolation has some kind of effect.
+    res = wl.set_points(200).run(x.size(), x.data(), y.data());
+    res2 = wl.set_points(5).run(x.size(), x.data(), y.data());
+    double sumdiff = 0;
+    for (size_t i = 0; i < res.fitted.size(); ++i) {
+        sumdiff += std::abs(res.fitted[i] - res2.fitted[i]);
+    }
+    EXPECT_TRUE(sumdiff > 0.01);
+}
+
+TEST(BasicTests, Weights) {
+    WeightedLowess::WeightedLowess wl;
+    wl.set_points(20);
+
+    // No effect when dealing with a straight line.
+    auto res = wl.run(x.size(), x.data(), x.data());
+    auto wres = wl.run(x.size(), x.data(), x.data(), x.data()); // reusing 'x' as positive weights.
+    compare_almost_equal(res.fitted, wres.fitted);
+
+    // Weights have some kind of effect for non-trivial trends.
+    res = wl.run(x.size(), x.data(), y.data());
+    wres = wl.run(x.size(), x.data(), y.data(), x.data()); // reusing 'x' as positive weights.
+    double sumdiff = 0;
+    for (size_t i = 0; i < res.fitted.size(); ++i) {
+        sumdiff += std::abs(res.fitted[i] - wres.fitted[i]);
+    }
+    EXPECT_TRUE(sumdiff > 0.01);
+
+    // Weighting has a frequency interpretation.
+    std::vector<double> fweights(x.size());
+    std::vector<double> expanded_x, expanded_y;
+    for (size_t i = 0; i < x.size(); ++i) {
+        fweights[i] = std::max(1.0, std::round(x[i] * 5));
+        expanded_x.insert(expanded_x.end(), fweights[i], x[i]);
+        expanded_y.insert(expanded_y.end(), fweights[i], y[i]);
+    }
+    auto eres = wl.run(expanded_x.size(), expanded_x.data(), expanded_y.data());
+
+    std::vector<double> ref;
+    wres = wl.run(x.size(), x.data(), y.data(), fweights.data()); 
+    for (size_t i =0; i < x.size(); ++i) { 
+        ref.insert(ref.end(), fweights[i], wres.fitted[i]);
+    }
+    compare_almost_equal(ref, eres.fitted);
+}
+
+TEST(BasicTests, Ties) {
+    WeightedLowess::WeightedLowess wl;
+    wl.set_points(20).set_iterations(1);
+
+    // Handles ties with elegance and grace.
+    auto res = wl.run(x.size(), x.data(), y.data());
+
+    auto x2 = x;
+    x2.insert(x2.end(), x.begin(), x.end());
+    auto y2 = y;
+    y2.insert(y2.end(), y.begin(), y.end());
+    auto res2 = wl.run(x2.size(), x2.data(), y2.data());
+
+    {
+        std::vector<double> sub(res2.fitted.begin(), res2.fitted.begin() + x.size());
+        compare_almost_equal(sub, res.fitted);
+    }
+    {
+        std::vector<double> sub(res2.fitted.begin() + x.size(), res2.fitted.begin() + 2*x.size());
+        compare_almost_equal(sub, res.fitted);
+    }
 }
