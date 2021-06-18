@@ -13,6 +13,8 @@ enable_testing()
 add_executable(
     libtest 
     src/basic.cpp
+    src/ties.cpp
+    src/utils.cpp
 )
 
 target_link_libraries(

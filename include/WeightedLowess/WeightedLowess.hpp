@@ -236,10 +236,8 @@ private:
             var += temp * temp * work[pt];
             covar += temp * (ybuffer[pt] - ymean) * work[pt];
         }
-        if (var <= 0) { 
-            return ymean; 
-        }
 
+        // Impossible for var = 0 here, as this would imply dist = 0 above.
         const double slope=covar/var;
         const double intercept=ymean-slope*xmean;
         return slope * xbuffer[curpt] + intercept;
