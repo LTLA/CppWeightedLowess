@@ -16,6 +16,7 @@ add_executable(
     src/ties.cpp
     src/options.cpp
     src/runners.cpp
+    src/reference.cpp
     src/utils.cpp
 )
 
