@@ -9,4 +9,6 @@ extern std::vector<double> y;
 
 void compare_almost_equal(const std::vector<double>&, const std::vector<double>&);
 
+double sum_abs_diff(const std::vector<double>&, const std::vector<double>&);
+
 #endif

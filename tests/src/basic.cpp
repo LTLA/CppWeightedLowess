@@ -52,15 +52,6 @@ TEST(BasicTests, Interpolation) {
     res2 = wl.set_points(2).run(x.size(), x.data(), alt.data());
     compare_almost_equal(res.fitted, res2.fitted);
     compare_to_zero(res2.residuals);
-
-    // Interpolation has some kind of effect.
-    res = wl.set_points(200).run(x.size(), x.data(), y.data());
-    res2 = wl.set_points(5).run(x.size(), x.data(), y.data());
-    double sumdiff = 0;
-    for (size_t i = 0; i < res.fitted.size(); ++i) {
-        sumdiff += std::abs(res.fitted[i] - res2.fitted[i]);
-    }
-    EXPECT_TRUE(sumdiff > 0.01);
 }
 
 TEST(BasicTests, Weights) {
@@ -75,11 +66,7 @@ TEST(BasicTests, Weights) {
     // Weights have some kind of effect for non-trivial trends.
     res = wl.run(x.size(), x.data(), y.data());
     wres = wl.run(x.size(), x.data(), y.data(), x.data()); // reusing 'x' as positive weights.
-    double sumdiff = 0;
-    for (size_t i = 0; i < res.fitted.size(); ++i) {
-        sumdiff += std::abs(res.fitted[i] - wres.fitted[i]);
-    }
-    EXPECT_TRUE(sumdiff > 0.01);
+    EXPECT_TRUE(sum_abs_diff(res.fitted, wres.fitted) > 0.01);
 
     // Weighting has a frequency interpretation.
     std::vector<double> fweights(x.size());

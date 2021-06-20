@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <gtest/gtest.h>
+#include <cmath>
 
 std::vector<double> x = { 
    0.506, 0.570, 0.043, 0.304, 0.343, 0.518, 0.180, 0.964, 0.491,
@@ -25,4 +26,17 @@ void compare_almost_equal(const std::vector<double>& first, const std::vector<do
         EXPECT_FLOAT_EQ(first[i], second[i]);
     }
     return;
+}
+
+double sum_abs_diff(const std::vector<double>& first, const std::vector<double>& second) {
+    EXPECT_EQ(first.size(), second.size());
+    if (first.size()==second.size()) {
+        double sumdiff = 0;
+        for (size_t i = 0; i < first.size(); ++i) {
+            sumdiff += std::abs(first[i] - second[i]);
+        }
+        return sumdiff;
+    } else {
+        return 0;
+    }
 }

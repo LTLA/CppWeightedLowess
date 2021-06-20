@@ -14,6 +14,7 @@ add_executable(
     libtest 
     src/basic.cpp
     src/ties.cpp
+    src/options.cpp
     src/utils.cpp
 )
 
