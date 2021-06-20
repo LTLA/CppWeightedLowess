@@ -434,7 +434,7 @@ private:
             );
 
             double curweight = 0;
-            double cmad = 0;
+            double cmad = 100;
             const double halfweight = totalweight/2;
 
             for (size_t i = 0; i < n; ++i) {
@@ -454,19 +454,27 @@ private:
                 }
             }
 
-            /* If it's too small, then robustness weighting will have no further effect.
-             * Any points with large residuals would already be pretty lowly weighted.
-             * This is based on a similar step in lowess.c in the core R code.
+            /* Both limma::weightedLowess and the original Fortran code have an early
+             * termination condition that stops the robustness iterations when the MAD
+             * is small. We do not implement this and just allow the specified number of
+             * iterations to run, as the termination can fail in pathological examples
+             * where a minority of points are affected by an outlier. In such cases,
+             * the MAD may indeed be very small as most residuals are fine, and we would
+             * fail to robustify against the few outliers.
              */
-            double resid_scale = std::accumulate(workspace.begin(), workspace.end(), 0.0)/n;
-            if (cmad <= 0.0000001 * resid_scale) { break; }
-
+             
             if (it < iterations) {
-                for (size_t i =0; i < n; ++i) {
-                    if (workspace[i] < cmad) {
-                        robust_weights[i] = square(1 - square(workspace[i]/cmad));
-                    } else { 
-                        robust_weights[i] = 0;
+                if (cmad) {
+                    for (size_t i =0; i < n; ++i) {
+                        if (workspace[i] < cmad) {
+                            robust_weights[i] = square(1 - square(workspace[i]/cmad));
+                        } else { 
+                            robust_weights[i] = 0;
+                        }
+                    }
+                } else {
+                    for (size_t i = 0; i < n; ++i) {
+                        robust_weights[i] = (workspace[i]==0);
                     }
                 }
             }

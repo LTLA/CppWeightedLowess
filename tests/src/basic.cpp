@@ -71,3 +71,23 @@ TEST(BasicTests, Weights) {
     compare_almost_equal(ref, eres.fitted);
 }
 
+TEST(BasicTests, Robustness) {
+    // Spiking in a crazy thing.
+    auto x1 = x;
+    auto y1 = y;
+    x1.push_back(0.5);
+    y1.push_back(100);
+
+    WeightedLowess::WeightedLowess wl;
+    auto wres = wl.run(x1.size(), x1.data(), y1.data());
+    EXPECT_EQ(wres.robust_weights[x1.size()-1], 0);
+
+    // Comparing to a straight line.
+    auto x2 = x;
+    x2.push_back(10);
+    auto res = wl.run(x.size(), x.data(), x.data());
+    wres = wl.run(x1.size(), x1.data(), x2.data());
+
+    std::vector<double> rest(wres.fitted.begin(), wres.fitted.begin() + x.size());
+    compare_almost_equal(res.fitted, rest);
+}
