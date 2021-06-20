@@ -63,11 +63,6 @@ TEST(BasicTests, Weights) {
     auto wres = wl.run(x.size(), x.data(), x.data(), x.data()); // reusing 'x' as positive weights.
     compare_almost_equal(res.fitted, wres.fitted);
 
-    // Weights have some kind of effect for non-trivial trends.
-    res = wl.run(x.size(), x.data(), y.data());
-    wres = wl.run(x.size(), x.data(), y.data(), x.data()); // reusing 'x' as positive weights.
-    EXPECT_TRUE(sum_abs_diff(res.fitted, wres.fitted) > 0.01);
-
     // Weighting has a frequency interpretation.
     std::vector<double> fweights(x.size());
     std::vector<double> expanded_x, expanded_y;

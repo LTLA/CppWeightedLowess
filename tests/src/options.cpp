@@ -26,6 +26,19 @@ TEST(OptionsTest, PointsEffect) {
     EXPECT_TRUE(sum_abs_diff(res.fitted, res2.fitted) > 0.01);
 }
 
+TEST(OptionsTest, WeightsEffect) {
+    WeightedLowess::WeightedLowess wl;
+
+    // Weights have some kind of effect for non-trivial trends.
+    auto res = wl.run(x.size(), x.data(), y.data());
+    auto wres = wl.run(x.size(), x.data(), y.data(), x.data()); // reusing 'x' as positive weights.
+    EXPECT_TRUE(sum_abs_diff(res.fitted, wres.fitted) > 0.01);
+
+    // Weighting can be treated as non-frequency weights.
+    auto wres2 = wl.set_as_frequency_weights(false).run(x.size(), x.data(), y.data(), x.data()); 
+    EXPECT_TRUE(sum_abs_diff(wres.fitted, wres2.fitted) > 0.01);
+}
+
 TEST(OptionsTest, SpanEffect) {
     WeightedLowess::WeightedLowess wl;
 

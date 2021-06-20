@@ -38,12 +38,19 @@ public:
         return *this;
     }
 
+    WeightedLowess& set_as_frequency_weights(bool f = true) {
+        freqweights = f;
+        return *this;
+    }
+
+
 private:
     double span = 0.3;
     int points = 200;
     int iterations = 3;
     double delta = -1;
     bool sorted = false;
+    bool freqweights = true;
 
 private:
     std::vector<double> diffs;
@@ -306,7 +313,10 @@ private:
             std::iota(seeds.begin(), seeds.end(), 0);
         }
 
-        find_limits(seeds, spanweight, n, x, weights, limits);
+        // If we're using them as frequency weights, we pass the weights in when
+        // we're looking for the limits of the span for each seed.
+        find_limits(seeds, spanweight, n, x, (freqweights ? weights : NULL), limits);
+
         std::fill(robust_weights, robust_weights + n, 1);
         residual_permutation.resize(n);
         auto workspace = residuals; // using `residuals` as the workspace.
