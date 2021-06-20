@@ -23,7 +23,7 @@ public:
         return *this;
     }
 
-    WeightedLowess& set_iterations(int i = 4) {
+    WeightedLowess& set_iterations(int i = 3) {
         iterations = i;
         return *this;
     }
@@ -41,7 +41,7 @@ public:
 private:
     double span = 0.3;
     int points = 200;
-    int iterations = 4;
+    int iterations = 3;
     double delta = -1;
     bool sorted = false;
 
@@ -220,7 +220,7 @@ private:
                               const double* x,
                               const double* y,
                               const double* weights, 
-                              const double* robustness, 
+                              const double* robust_weights, 
                               double* work) 
     {
         size_t left = limits.left, right = limits.right;
@@ -229,7 +229,7 @@ private:
         if (dist <= 0) {
             double ymean = 0, allweight = 0;
             for (size_t pt = left; pt <= right; ++pt) {
-                double curweight = robustness[pt];
+                double curweight = robust_weights[pt];
                 if (weights != NULL) {
                     curweight *= weights[pt];
                 }
@@ -243,7 +243,7 @@ private:
         double xmean = 0, ymean = 0, allweight = 0;
         for (size_t pt = left; pt <= right; ++pt) {
             double& current = work[pt];
-            current = cube(1 - cube(std::abs(x[curpt] - x[pt])/dist)) * robustness[pt];
+            current = cube(1 - cube(std::abs(x[curpt] - x[pt])/dist)) * robust_weights[pt];
             if (weights != NULL) {
                 current *= weights[pt];
             }
@@ -286,7 +286,7 @@ private:
                        const double* weights,
                        double* fitted, 
                        double* residuals,
-                       double* robustness)
+                       double* robust_weights)
     {
         /* Computing the span weight that each span must achieve. */
         double totalweight = 0;
@@ -307,16 +307,17 @@ private:
         }
 
         find_limits(seeds, spanweight, n, x, weights, limits);
-        std::fill(robustness, robustness + n, 1);
+        std::fill(robust_weights, robust_weights + n, 1);
         residual_permutation.resize(n);
+        auto workspace = residuals; // using `residuals` as the workspace.
 
-        for (int it = 0; it < iterations; ++it) { // Robustness iterations.
-            fitted[0] = lowess_fit(0, limits[0], n, x, y, weights, robustness, residuals); // using `residuals` as the workspace.
+        for (int it = 0; it <= iterations; ++it) { // Robustness iterations.
+            fitted[0] = lowess_fit(0, limits[0], n, x, y, weights, robust_weights, workspace); 
             size_t last_seed = 0;
 
             for (size_t s = 1; s < seeds.size(); ++s) { // fitted values for seed points, interpolating the rest.
                 auto curpt = seeds[s];
-                fitted[curpt] = lowess_fit(curpt, limits[s], n, x, y, weights, robustness, residuals); // using `residuals` as the workspace.
+                fitted[curpt] = lowess_fit(curpt, limits[s], n, x, y, weights, robust_weights, workspace); 
 
                 if (curpt - last_seed > 1) {
                     /* Some protection is provided against infinite slopes. This shouldn't be
@@ -383,9 +384,9 @@ private:
 
             for (size_t i =0; i < n; ++i) {
                 if (residuals[i] < cmad) {
-                    robustness[i] = square(1 - square(residuals[i]/cmad));
+                    robust_weights[i] = square(1 - square(residuals[i]/cmad));
                 } else { 
-                    robustness[i] = 0;
+                    robust_weights[i] = 0;
                 }
             }
         }
@@ -397,7 +398,7 @@ public:
     std::vector<uint8_t> used;
     std::vector<double> rbuffer;
 
-    void sort_and_run(size_t n, double* x, double* y, double* weights, double* fitted, double* residuals, double* robustness) {
+    void sort_and_run(size_t n, double* x, double* y, double* weights, double* fitted, double* residuals, double* robust_weights) {
         permutation.resize(n);
         std::iota(permutation.begin(), permutation.end(), 0);
         std::sort(permutation.begin(), permutation.end(), [&](size_t left, size_t right) -> bool {
@@ -428,8 +429,8 @@ public:
         }
 
         // Computing the fitted values and residuals.
-        double* rptr = robustness;
-        if (robustness == NULL) {
+        double* rptr = robust_weights;
+        if (robust_weights == NULL) {
             rbuffer.resize(n);
             rptr = rbuffer.data();
         }
@@ -447,8 +448,8 @@ public:
             while (replacement != i) {
                 std::swap(fitted[i], fitted[replacement]);
                 std::swap(residuals[i], residuals[replacement]);
-                if (robustness) {
-                    std::swap(robustness[i], robustness[replacement]);
+                if (robust_weights) {
+                    std::swap(robust_weights[i], robust_weights[replacement]);
                 }
 
                 used[replacement] = 1;
@@ -463,13 +464,13 @@ public:
     std::vector<size_t> permutation;
     std::vector<double> xbuffer, ybuffer, wbuffer;
 
-    void run(size_t n, const double* x, const double* y, const double* weights, double* fitted, double* residuals, double* robustness) {
+    void run(size_t n, const double* x, const double* y, const double* weights, double* fitted, double* residuals, double* robust_weights) {
         if (sorted) {
-            if (robustness == NULL) {
+            if (robust_weights == NULL) {
                 rbuffer.resize(n);
-                robustness = rbuffer.data();
+                robust_weights = rbuffer.data();
             }
-            robust_lowess(n, x, y, weights, fitted, residuals, robustness);
+            robust_lowess(n, x, y, weights, fitted, residuals, robust_weights);
         } else {
             /* Sorts the observations by the means, applies the same permutation to the
              * variances. This makes downstream processing quite a lot easier.
@@ -481,39 +482,39 @@ public:
                 wbuffer = std::vector<double>(weights, weights + n);
                 wptr = wbuffer.data();
             }
-            sort_and_run(n, xbuffer.data(), ybuffer.data(), wptr, fitted, residuals, robustness);
+            sort_and_run(n, xbuffer.data(), ybuffer.data(), wptr, fitted, residuals, robust_weights);
         }
         return;
     }
 
-    void run_in_place(size_t n, double* x, double* y, double* weights, double* fitted, double* residuals, double* robustness) {
+    void run_in_place(size_t n, double* x, double* y, double* weights, double* fitted, double* residuals, double* robust_weights) {
         if (sorted) {
-            if (robustness == NULL) {
+            if (robust_weights == NULL) {
                 rbuffer.resize(n);
-                robustness = rbuffer.data();
+                robust_weights = rbuffer.data();
             }
-            robust_lowess(n, x, y, weights, fitted, residuals, robustness);
+            robust_lowess(n, x, y, weights, fitted, residuals, robust_weights);
         } else {
-            sort_and_run(n, x, y, weights, fitted, residuals, robustness);
+            sort_and_run(n, x, y, weights, fitted, residuals, robust_weights);
         }
         return;
     }
 
 public:
     struct Results {
-        Results(size_t n) : fitted(n), residuals(n), robustness(n) {}
-        std::vector<double> fitted, residuals, robustness;
+        Results(size_t n) : fitted(n), residuals(n), robust_weights(n) {}
+        std::vector<double> fitted, residuals, robust_weights;
     };
 
     Results run(size_t n, const double* x, const double* y, const double* weights=NULL) {
         Results output(n);
-        run(n, x, y, weights, output.fitted.data(), output.residuals.data(), output.robustness.data());
+        run(n, x, y, weights, output.fitted.data(), output.residuals.data(), output.robust_weights.data());
         return output;
     }
 
     Results run_in_place(size_t n, double* x, double* y, double* weights=NULL) {
         Results output(n);
-        run_in_place(n, x, y, weights, output.fitted.data(), output.residuals.data(), output.robustness.data());
+        run_in_place(n, x, y, weights, output.fitted.data(), output.residuals.data(), output.robust_weights.data());
         return output;
     }
 };

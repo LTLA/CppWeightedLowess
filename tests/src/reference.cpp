@@ -136,7 +136,7 @@ TEST(ReferenceTest, Vanilla) {
     WeightedLowess::WeightedLowess wl;
     auto res = wl.run(test_x.size(), test_x.data(), test_y.data());
     compare_almost_equal(res.fitted, expected_fitted);
-    compare_almost_equal(res.robustness, expected_weights);
+    compare_almost_equal(res.robust_weights, expected_weights);
 
     // Checking behavior with interpolation.
     res = wl.set_points(10).run(test_x.size(), test_x.data(), test_y.data());
