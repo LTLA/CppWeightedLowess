@@ -136,7 +136,6 @@ TEST(ReferenceTest, Vanilla) {
     WeightedLowess::WeightedLowess wl;
     auto res = wl.run(test_x.size(), test_x.data(), test_y.data());
     compare_almost_equal(res.fitted, expected_fitted);
-    compare_almost_equal(res.robust_weights, expected_weights);
 
     // Checking behavior with interpolation.
     res = wl.set_anchors(10).run(test_x.size(), test_x.data(), test_y.data());
@@ -145,4 +144,14 @@ TEST(ReferenceTest, Vanilla) {
     // Checking behavior with odd number of points.
     res = wl.set_anchors(200).run(test_x.size() - 1, test_x.data(), test_y.data());
     compare_almost_equal(res.fitted, expected_fitted_m1);
+}
+
+TEST(ReferenceTest, Weights) {
+    // Checking weights are correctly computed. Note that limma::weightedLowess
+    // recomputes the weights _after_ the last iteration, while WeightedLowess::WeightedLowess
+    // reports the weights used _during_ the last iteration. Thus, we need to add 
+    // an extra iteration to get the same matching weights.
+    WeightedLowess::WeightedLowess wl;
+    auto res = wl.set_iterations(4).run(test_x.size(), test_x.data(), test_y.data());
+    compare_almost_equal(res.robust_weights, expected_weights);
 }

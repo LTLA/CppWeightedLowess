@@ -461,11 +461,13 @@ private:
             double resid_scale = std::accumulate(residuals, residuals + n, 0.0)/n;
             if (cmad <= 0.0000001 * resid_scale) { break; }
 
-            for (size_t i =0; i < n; ++i) {
-                if (residuals[i] < cmad) {
-                    robust_weights[i] = square(1 - square(residuals[i]/cmad));
-                } else { 
-                    robust_weights[i] = 0;
+            if (it < iterations) {
+                for (size_t i =0; i < n; ++i) {
+                    if (residuals[i] < cmad) {
+                        robust_weights[i] = square(1 - square(residuals[i]/cmad));
+                    } else { 
+                        robust_weights[i] = 0;
+                    }
                 }
             }
         }
