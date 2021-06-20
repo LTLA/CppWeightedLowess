@@ -32,16 +32,22 @@ public:
         delta = d;
         return *this;
     }
+
+    WeightedLowess& set_sorted(bool s = false) {
+        sorted = s;
+        return *this;
+    }
+
 private:
     double span = 0.3;
     int points = 200;
     int iterations = 4;
     double delta = -1;
-
-    std::vector<size_t> permutation;
-    std::vector<double> xbuffer, ybuffer, wbuffer;
+    bool sorted = false;
 
 private:
+    std::vector<double> diffs;
+
     /* Determining the `delta`. For a seed point with x-coordinate `x`, we skip all
      * points in `[x, x + delta]` before finding the next seed point. 
      * We try to choose a `delta` that satisfies the constraints on the number
@@ -57,10 +63,10 @@ private:
      * iteration to find the compromise that minimizes the 'delta' (and thus the 
      * degree of approximation in the final lowess calculation).
      */
-    double derive_delta() const {
-        std::vector<double> diffs(xbuffer.size() - 1);
+    static double derive_delta(int points, size_t n, const double* x, std::vector<double>& diffs) {
+        diffs.resize(n - 1);
         for (size_t i = 0; i < diffs.size(); ++i) {
-            diffs[i] = xbuffer[i + 1] - xbuffer[i];
+            diffs[i] = x[i + 1] - x[i];
         }
 
         std::sort(diffs.begin(), diffs.end());
@@ -78,22 +84,26 @@ private:
     }
 
 private:
+    std::vector<size_t> seeds;
+
     /* Finding the seed points, given the deltas. As previously mentioned, for
      * a seed point with x-coordinate `x`, we skip all points in `[x, x +
      * delta]` before finding the next seed point.
      */
-    std::vector<size_t> find_seeds(double d) const {
-        std::vector<size_t> indices;
-        indices.push_back(0);
+    static void find_seeds(size_t n, const double* x, double d, std::vector<size_t>& seeds) {
+        seeds.clear();
+        seeds.push_back(0);
+
         size_t last_pt = 0;
-        for (size_t pt = 1; pt < xbuffer.size() - 1; ++pt) {
-            if (xbuffer[pt] - xbuffer[last_pt] > d) {
-                indices.push_back(pt);
-                last_pt=pt;
+        for (size_t pt = 1; pt < n - 1; ++pt) {
+            if (x[pt] - x[last_pt] > d) {
+                seeds.push_back(pt);
+                last_pt = pt;
             }
         }
-        indices.push_back(xbuffer.size() - 1);
-        return indices;
+
+        seeds.push_back(n - 1);
+        return;
     }
 
 private:
@@ -101,6 +111,8 @@ private:
         size_t left, right;
         double distance;
     };
+
+    std::vector<window> limits;
 
     /* This function identifies the start and end index in the span for each chosen sampling
      * point. It returns two arrays via reference containing said indices. It also returns
@@ -112,23 +124,28 @@ private:
      * algorithm as a whole remains quadratic (as weights must be recomputed) so there's no
      * damage to scalability.
      */
-    std::vector<window> find_limits(double spanweight, const std::vector<size_t>& seeds) const {
-        const size_t nobs = xbuffer.size(); 
+    static void find_limits(const std::vector<size_t>& seeds, 
+                            double spanweight,
+                            size_t n,
+                            const double* x, 
+                            const double* weights,
+                            std::vector<window>& limits)
+    {
         const size_t nseeds = seeds.size();
-        std::vector<window> output(nseeds);
+        limits.resize(nseeds);
 
         for (size_t s = 0; s < nseeds; ++s) {
             auto curpt = seeds[s], left = curpt, right = curpt;
-            double curw = (wbuffer.empty() ? 1 : wbuffer[curpt]);
-            bool ende = (curpt == nobs - 1), ends = (curpt == 0);
+            double curw = (weights == NULL ? 1 : weights[curpt]);
+            bool ende = (curpt == n - 1), ends = (curpt == 0);
             double mdist=0, ldist=0, rdist=0;
 
             while (curw < spanweight && (!ende || !ends)) {
                 if (!ends) {
-                    ldist = xbuffer[curpt] - xbuffer[left - 1];
+                    ldist = x[curpt] - x[left - 1];
                 }
                 if (!ende) {
-                    rdist = xbuffer[right + 1] - xbuffer[curpt];
+                    rdist = x[right + 1] - x[curpt];
                 }
 
                 /* Move the span backwards. */
@@ -136,8 +153,8 @@ private:
                     if (ende || ldist <= rdist) {
                         --left;
 
-                        if (!wbuffer.empty()) {
-                            curw += wbuffer[left];
+                        if (weights != NULL) {
+                            curw += weights[left];
                         } else {
                             ++curw;
                         }
@@ -157,13 +174,13 @@ private:
                     if (ends || ldist > rdist) {
                         ++right;
 
-                        if (!wbuffer.empty()) {
-                            curw += wbuffer[right];
+                        if (weights != NULL) {
+                            curw += weights[right];
                         } else {
                             ++curw;
                         }
 
-                        if (right == nobs - 1) { 
+                        if (right == n - 1) { 
                             ende=1; 
                         }
 
@@ -175,19 +192,19 @@ private:
             }
 
             /* Once we've found the span, we stretch it out to include all ties. */
-            while (left > 0 && xbuffer[left] == xbuffer[left-1]) {
+            while (left > 0 && x[left] == x[left-1]) {
                 --left; 
             }
 
-            while (right < nobs - 1 && xbuffer[right]==xbuffer[right+1]) { 
+            while (right < n - 1 && x[right]==x[right+1]) { 
                 ++right; 
             }
 
-            output[s].left = left;
-            output[s].right = right;
-            output[s].distance = mdist;
+            limits[s].left = left;
+            limits[s].right = right;
+            limits[s].distance = mdist;
         }
-        return output;
+        return;
     }
 
 private:
@@ -198,7 +215,14 @@ private:
     /* Computes the lowess fit at a given point using linear regression with a
      * combination of tricube, prior and robustness weighting. 
      */
-    double lowess_fit (const size_t curpt, const window& limits, const std::vector<double>& robustness, double* work) const {
+    static double lowess_fit (const size_t curpt, const window& limits, 
+                              size_t n,
+                              const double* x,
+                              const double* y,
+                              const double* weights, 
+                              const double* robustness, 
+                              double* work) 
+    {
         size_t left = limits.left, right = limits.right;
         double dist = limits.distance;
 
@@ -206,10 +230,10 @@ private:
             double ymean = 0, allweight = 0;
             for (size_t pt = left; pt <= right; ++pt) {
                 double curweight = robustness[pt];
-                if (!wbuffer.empty()) {
-                    curweight *= wbuffer[pt];
+                if (weights != NULL) {
+                    curweight *= weights[pt];
                 }
-                ymean += ybuffer[pt] * curweight;
+                ymean += y[pt] * curweight;
                 allweight += curweight;
             }
             ymean /= allweight;
@@ -219,12 +243,12 @@ private:
         double xmean = 0, ymean = 0, allweight = 0;
         for (size_t pt = left; pt <= right; ++pt) {
             double& current = work[pt];
-            current = cube(1 - cube(std::abs(xbuffer[curpt] - xbuffer[pt])/dist)) * robustness[pt];
-            if (!wbuffer.empty()) {
-                current *= wbuffer[pt];
+            current = cube(1 - cube(std::abs(x[curpt] - x[pt])/dist)) * robustness[pt];
+            if (weights != NULL) {
+                current *= weights[pt];
             }
-            xmean += current * xbuffer[pt];
-            ymean += current * ybuffer[pt];
+            xmean += current * x[pt];
+            ymean += current * y[pt];
             allweight += current;
         }
         xmean /= allweight;
@@ -232,15 +256,15 @@ private:
 
         double var=0, covar=0;
         for (size_t pt = left; pt <= right; ++pt) {
-            double temp = xbuffer[pt] - xmean;
+            double temp = x[pt] - xmean;
             var += temp * temp * work[pt];
-            covar += temp * (ybuffer[pt] - ymean) * work[pt];
+            covar += temp * (y[pt] - ymean) * work[pt];
         }
 
         // Impossible for var = 0 here, as this would imply dist = 0 above.
-        const double slope=covar/var;
-        const double intercept=ymean-slope*xmean;
-        return slope * xbuffer[curpt] + intercept;
+        const double slope = covar / var;
+        const double intercept = ymean - slope * xmean;
+        return slope * x[curpt] + intercept;
     }
 
 private:
@@ -248,57 +272,63 @@ private:
         return x*x;
     }
 
+    std::vector<size_t> residual_permutation;
+
     /* This is a C version of the local weighted regression (lowess) trend fitting algorithm,
      * based on the Fortran code in lowess.f from http://www.netlib.org/go written by Cleveland.
      * Consideration of non-equal prior weights is added to the span calculations and linear
      * regression. These weights are intended to have the equivalent effect of frequency weights
      * (at least, in the integer case; extended by analogy to all non-negative values).
      */
-    void robust_lowess(double* fitted, double * residuals) {
-        size_t nobs = xbuffer.size();
-
+    void robust_lowess(size_t n,
+                       const double* x,
+                       const double* y,
+                       const double* weights,
+                       double* fitted, 
+                       double* residuals,
+                       double* robustness)
+    {
         /* Computing the span weight that each span must achieve. */
         double totalweight = 0;
-        if (!wbuffer.empty()) {
-            totalweight = std::accumulate(wbuffer.begin(), wbuffer.end(), 0.0); 
+        if (weights != NULL) {
+            totalweight = std::accumulate(weights, weights + n, 0.0); 
         } else {
-            totalweight = nobs;
+            totalweight = n;
         }
         const double spanweight = totalweight * span;
 
         // Finding the seeds.
-        std::vector<size_t> seeds;
-        if (points < nobs || delta > 0) {
-            double eff_delta = (delta < 0 ? derive_delta() : delta);
-            seeds = find_seeds(eff_delta);
+        if (points < n || delta > 0) {
+            double eff_delta = (delta < 0 ? derive_delta(points, n, x, diffs) : delta);
+            find_seeds(n, x, eff_delta, seeds);
         } else {
-            seeds.resize(nobs);
+            seeds.resize(n);
             std::iota(seeds.begin(), seeds.end(), 0);
         }
 
-        auto limits = find_limits(spanweight, seeds);
-        std::vector<size_t> residual_permutation(nobs);
-        std::vector<double> robustness(nobs, 1);
+        find_limits(seeds, spanweight, n, x, weights, limits);
+        std::fill(robustness, robustness + n, 1);
+        residual_permutation.resize(n);
 
         for (int it = 0; it < iterations; ++it) { // Robustness iterations.
-            fitted[0] = lowess_fit(0, limits[0], robustness, residuals); // using `residuals` as the workspace.
+            fitted[0] = lowess_fit(0, limits[0], n, x, y, weights, robustness, residuals); // using `residuals` as the workspace.
             size_t last_seed = 0;
 
             for (size_t s = 1; s < seeds.size(); ++s) { // fitted values for seed points, interpolating the rest.
                 auto curpt = seeds[s];
-                fitted[curpt] = lowess_fit(curpt, limits[s], robustness, residuals); // using `residuals` as the workspace.
+                fitted[curpt] = lowess_fit(curpt, limits[s], n, x, y, weights, robustness, residuals); // using `residuals` as the workspace.
 
-                if (seeds.size() < nobs) {
+                if (curpt - last_seed > 1) {
                     /* Some protection is provided against infinite slopes. This shouldn't be
                      * a problem for non-zero delta; the only concern is at the final point
                      * where the covariate distance may be zero.
                      */
-                    double current = xbuffer[curpt] - xbuffer[last_seed];
+                    double current = x[curpt] - x[last_seed];
                     if (current > 0) {
                         const double slope = (fitted[curpt] - fitted[last_seed])/current;
-                        const double intercept = fitted[curpt] - slope * xbuffer[curpt];
+                        const double intercept = fitted[curpt] - slope * x[curpt];
                         for (size_t subpt = last_seed + 1; subpt < curpt; ++subpt) { 
-                            fitted[subpt] = slope * xbuffer[subpt] + intercept; 
+                            fitted[subpt] = slope * x[subpt] + intercept; 
                         }
                     } else {
                         const double ave = (fitted[curpt] + fitted[last_seed]) / 2;
@@ -306,14 +336,14 @@ private:
                             fitted[subpt] = ave;
                         }
                     }
-
-                    last_seed = curpt;
                 }
+
+                last_seed = curpt;
             }
 
             /* Computing the weighted MAD of the absolute values of the residuals. */
-            for (size_t pt = 0; pt < nobs; ++pt) {
-                residuals[pt] = std::abs(ybuffer[pt] - fitted[pt]);
+            for (size_t pt = 0; pt < n; ++pt) {
+                residuals[pt] = std::abs(y[pt] - fitted[pt]);
             }
 
             std::iota(residual_permutation.begin(), residual_permutation.end(), 0);
@@ -326,10 +356,11 @@ private:
             double curweight = 0;
             double cmad = 0;
             const double halfweight = totalweight/2;
-            for (size_t i = 0; i < nobs; ++i) {
+
+            for (size_t i = 0; i < n; ++i) {
                 auto pt = residual_permutation[i];
-                if (!wbuffer.empty()) {
-                    curweight += wbuffer[pt];
+                if (weights != NULL) {
+                    curweight += weights[pt];
                 } else {
                     ++curweight;
                 }
@@ -347,10 +378,10 @@ private:
              * Any points with large residuals would already be pretty lowly weighted.
              * This is based on a similar step in lowess.c in the core R code.
              */
-            double resid_scale = std::accumulate(residuals, residuals + nobs, 0.0)/nobs;
+            double resid_scale = std::accumulate(residuals, residuals + n, 0.0)/n;
             if (cmad <= 0.0000001 * resid_scale) { break; }
 
-            for (size_t i =0; i < nobs; ++i) {
+            for (size_t i =0; i < n; ++i) {
                 if (residuals[i] < cmad) {
                     robustness[i] = square(1 - square(residuals[i]/cmad));
                 } else { 
@@ -363,26 +394,19 @@ private:
     }
 
 public:
-    void run(size_t n, const double* x, const double* y, const double* weights, double* fitted, double* residuals) {
-        /* Sorts the observations by the means, applies the same permutation to the
-         * variances. This makes downstream processing quite a lot easier.
-         */
-        xbuffer = std::vector<double>(x, x + n);
-        ybuffer = std::vector<double>(y, y + n);
-        if (weights) {
-            wbuffer = std::vector<double>(weights, weights + n);
-        } else {
-            wbuffer.clear();
-        }
+    std::vector<uint8_t> used;
+    std::vector<double> rbuffer;
 
+    void sort_and_run(size_t n, double* x, double* y, double* weights, double* fitted, double* residuals, double* robustness) {
         permutation.resize(n);
         std::iota(permutation.begin(), permutation.end(), 0);
         std::sort(permutation.begin(), permutation.end(), [&](size_t left, size_t right) -> bool {
-            return xbuffer[left] < xbuffer[right];
+            return x[left] < x[right];
         });
 
         // Reordering values in place.
-        std::vector<uint8_t> used(n);
+        used.resize(n);
+        std::fill(used.begin(), used.end(), 0);
         for (size_t i = 0; i < permutation.size(); ++i) {
             if (used[i]) {
                 continue;
@@ -391,10 +415,10 @@ public:
 
             size_t current = i, replacement = permutation[i];
             while (replacement != i) {
-                std::swap(xbuffer[current], xbuffer[replacement]);
-                std::swap(ybuffer[current], ybuffer[replacement]);
-                if (!wbuffer.empty()) {
-                    std::swap(wbuffer[current], wbuffer[replacement]);
+                std::swap(x[current], x[replacement]);
+                std::swap(y[current], y[replacement]);
+                if (weights != NULL) {
+                    std::swap(weights[current], weights[replacement]);
                 }
 
                 current = replacement;
@@ -404,7 +428,12 @@ public:
         }
 
         // Computing the fitted values and residuals.
-        robust_lowess(fitted, residuals); 
+        double* rptr = robustness;
+        if (robustness == NULL) {
+            rbuffer.resize(n);
+            rptr = rbuffer.data();
+        }
+        robust_lowess(n, x, y, weights, fitted, residuals, rptr);
 
         // Unpermuting the fitted values in place. 
         std::fill(used.begin(), used.end(), 0); 
@@ -418,6 +447,10 @@ public:
             while (replacement != i) {
                 std::swap(fitted[i], fitted[replacement]);
                 std::swap(residuals[i], residuals[replacement]);
+                if (robustness) {
+                    std::swap(robustness[i], robustness[replacement]);
+                }
+
                 used[replacement] = 1;
                 replacement = permutation[replacement]; 
             } 
@@ -425,15 +458,62 @@ public:
 
         return;
     }
+
+public:
+    std::vector<size_t> permutation;
+    std::vector<double> xbuffer, ybuffer, wbuffer;
+
+    void run(size_t n, const double* x, const double* y, const double* weights, double* fitted, double* residuals, double* robustness) {
+        if (sorted) {
+            if (robustness == NULL) {
+                rbuffer.resize(n);
+                robustness = rbuffer.data();
+            }
+            robust_lowess(n, x, y, weights, fitted, residuals, robustness);
+        } else {
+            /* Sorts the observations by the means, applies the same permutation to the
+             * variances. This makes downstream processing quite a lot easier.
+             */
+            xbuffer = std::vector<double>(x, x + n);
+            ybuffer = std::vector<double>(y, y + n);
+            double* wptr = NULL;
+            if (weights) {
+                wbuffer = std::vector<double>(weights, weights + n);
+                wptr = wbuffer.data();
+            }
+            sort_and_run(n, xbuffer.data(), ybuffer.data(), wptr, fitted, residuals, robustness);
+        }
+        return;
+    }
+
+    void run_in_place(size_t n, double* x, double* y, double* weights, double* fitted, double* residuals, double* robustness) {
+        if (sorted) {
+            if (robustness == NULL) {
+                rbuffer.resize(n);
+                robustness = rbuffer.data();
+            }
+            robust_lowess(n, x, y, weights, fitted, residuals, robustness);
+        } else {
+            sort_and_run(n, x, y, weights, fitted, residuals, robustness);
+        }
+        return;
+    }
+
 public:
     struct Results {
-        Results(size_t n) : fitted(n), residuals(n) {}
-        std::vector<double> fitted, residuals;
+        Results(size_t n) : fitted(n), residuals(n), robustness(n) {}
+        std::vector<double> fitted, residuals, robustness;
     };
 
     Results run(size_t n, const double* x, const double* y, const double* weights=NULL) {
         Results output(n);
-        run(n, x, y, weights, output.fitted.data(), output.residuals.data());
+        run(n, x, y, weights, output.fitted.data(), output.residuals.data(), output.robustness.data());
+        return output;
+    }
+
+    Results run_in_place(size_t n, double* x, double* y, double* weights=NULL) {
+        Results output(n);
+        run_in_place(n, x, y, weights, output.fitted.data(), output.residuals.data(), output.robustness.data());
         return output;
     }
 };
