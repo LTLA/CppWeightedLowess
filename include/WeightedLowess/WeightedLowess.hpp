@@ -349,6 +349,7 @@ private:
     }
 
     std::vector<size_t> residual_permutation;
+    std::vector<double> workspace;
 
     /* This is a C version of the local weighted regression (lowess) trend fitting algorithm,
      * based on the Fortran code in lowess.f from http://www.netlib.org/go written by Cleveland.
@@ -361,7 +362,6 @@ private:
                        const double* y,
                        const double* weights,
                        double* fitted, 
-                       double* residuals,
                        double* robust_weights)
     {
         /* Computing the span weight that each span must achieve. */
@@ -388,15 +388,15 @@ private:
 
         std::fill(robust_weights, robust_weights + n, 1);
         residual_permutation.resize(n);
-        auto workspace = residuals; // using `residuals` as the workspace.
+        workspace.resize(n);
 
         for (int it = 0; it <= iterations; ++it) { // Robustness iterations.
-            fitted[0] = lowess_fit(0, limits[0], n, x, y, weights, robust_weights, workspace); 
+            fitted[0] = lowess_fit(0, limits[0], n, x, y, weights, robust_weights, workspace.data()); 
             size_t last_anchor = 0;
 
             for (size_t s = 1; s < anchors.size(); ++s) { // fitted values for anchor points, interpolating the rest.
                 auto curpt = anchors[s];
-                fitted[curpt] = lowess_fit(curpt, limits[s], n, x, y, weights, robust_weights, workspace); 
+                fitted[curpt] = lowess_fit(curpt, limits[s], n, x, y, weights, robust_weights, workspace.data()); 
 
                 if (curpt - last_anchor > 1) {
                     /* Some protection is provided against infinite slopes. This shouldn't be
@@ -423,13 +423,13 @@ private:
 
             /* Computing the weighted MAD of the absolute values of the residuals. */
             for (size_t pt = 0; pt < n; ++pt) {
-                residuals[pt] = std::abs(y[pt] - fitted[pt]);
+                workspace[pt] = std::abs(y[pt] - fitted[pt]);
             }
 
             std::iota(residual_permutation.begin(), residual_permutation.end(), 0);
             std::sort(residual_permutation.begin(), residual_permutation.end(), 
                 [&](size_t left, size_t right) -> bool {
-                    return residuals[left] < residuals[right];
+                    return workspace[left] < workspace[right];
                 }
             );
 
@@ -446,10 +446,10 @@ private:
                 }
 
                 if (curweight == halfweight) { // exact match, need to take the median.
-                    cmad = 3 * (residuals[pt] + residuals[residual_permutation[i+1]]);
+                    cmad = 3 * (workspace[pt] + workspace[residual_permutation[i+1]]);
                     break;
                 } else if (curweight > halfweight) {
-                    cmad = 6 * residuals[pt];
+                    cmad = 6 * workspace[pt];
                     break;
                 }
             }
@@ -458,13 +458,13 @@ private:
              * Any points with large residuals would already be pretty lowly weighted.
              * This is based on a similar step in lowess.c in the core R code.
              */
-            double resid_scale = std::accumulate(residuals, residuals + n, 0.0)/n;
+            double resid_scale = std::accumulate(workspace.begin(), workspace.end(), 0.0)/n;
             if (cmad <= 0.0000001 * resid_scale) { break; }
 
             if (it < iterations) {
                 for (size_t i =0; i < n; ++i) {
-                    if (residuals[i] < cmad) {
-                        robust_weights[i] = square(1 - square(residuals[i]/cmad));
+                    if (workspace[i] < cmad) {
+                        robust_weights[i] = square(1 - square(workspace[i]/cmad));
                     } else { 
                         robust_weights[i] = 0;
                     }
@@ -480,7 +480,7 @@ private:
     std::vector<double> rbuffer;
     std::vector<size_t> permutation;
 
-    void sort_and_run(size_t n, double* x, double* y, double* weights, double* fitted, double* residuals, double* robust_weights) {
+    void sort_and_run(size_t n, double* x, double* y, double* weights, double* fitted, double* robust_weights) {
         permutation.resize(n);
         std::iota(permutation.begin(), permutation.end(), 0);
         std::sort(permutation.begin(), permutation.end(), [&](size_t left, size_t right) -> bool {
@@ -510,13 +510,13 @@ private:
             } 
         }
 
-        // Computing the fitted values and residuals.
+        // Computing the fitted values and robustness weights.
         double* rptr = robust_weights;
         if (robust_weights == NULL) {
             rbuffer.resize(n);
             rptr = rbuffer.data();
         }
-        robust_lowess(n, x, y, weights, fitted, residuals, rptr);
+        robust_lowess(n, x, y, weights, fitted, rptr);
 
         // Unpermuting the fitted values in place. 
         std::fill(used.begin(), used.end(), 0); 
@@ -529,7 +529,6 @@ private:
             size_t replacement = permutation[i];
             while (replacement != i) {
                 std::swap(fitted[i], fitted[replacement]);
-                std::swap(residuals[i], residuals[replacement]);
                 if (robust_weights) {
                     std::swap(robust_weights[i], robust_weights[replacement]);
                 }
@@ -555,16 +554,15 @@ public:
      * @param weights Pointer to an array of `n` positive weights.
      * Alternatively `NULL` if no weights are available.
      * @param fitted Pointer to an output array of length `n`, in which the fitted values of the smoother can be stored.
-     * @param residuals Pointer to an output array of length `n`, in which the residuals of the fit can be stored.
      * @param robust_weights Pointer to an output array of length `n`, in which the robustness weights can be stored.
      */
-   void run(size_t n, const double* x, const double* y, const double* weights, double* fitted, double* residuals, double* robust_weights) {
+   void run(size_t n, const double* x, const double* y, const double* weights, double* fitted, double* robust_weights) {
         if (sorted) {
             if (robust_weights == NULL) {
                 rbuffer.resize(n);
                 robust_weights = rbuffer.data();
             }
-            robust_lowess(n, x, y, weights, fitted, residuals, robust_weights);
+            robust_lowess(n, x, y, weights, fitted, robust_weights);
         } else {
             /* Sorts the observations by the means, applies the same permutation to the
              * variances. This makes downstream processing quite a lot easier.
@@ -576,7 +574,7 @@ public:
                 wbuffer = std::vector<double>(weights, weights + n);
                 wptr = wbuffer.data();
             }
-            sort_and_run(n, xbuffer.data(), ybuffer.data(), wptr, fitted, residuals, robust_weights);
+            sort_and_run(n, xbuffer.data(), ybuffer.data(), wptr, fitted, robust_weights);
         }
         return;
     }
@@ -592,18 +590,17 @@ public:
      * @param weights Pointer to an array of `n` positive weights.
      * Alternatively `NULL` if no weights are available.
      * @param fitted Pointer to an output array of length `n`, in which the fitted values of the smoother can be stored.
-     * @param residuals Pointer to an output array of length `n`, in which the residuals of the fit can be stored.
      * @param robust_weights Pointer to an output array of length `n`, in which the robustness weights can be stored.
      */
-    void run_in_place(size_t n, double* x, double* y, double* weights, double* fitted, double* residuals, double* robust_weights) {
+    void run_in_place(size_t n, double* x, double* y, double* weights, double* fitted, double* robust_weights) {
         if (sorted) {
             if (robust_weights == NULL) {
                 rbuffer.resize(n);
                 robust_weights = rbuffer.data();
             }
-            robust_lowess(n, x, y, weights, fitted, residuals, robust_weights);
+            robust_lowess(n, x, y, weights, fitted, robust_weights);
         } else {
-            sort_and_run(n, x, y, weights, fitted, residuals, robust_weights);
+            sort_and_run(n, x, y, weights, fitted, robust_weights);
         }
         return;
     }
@@ -616,17 +613,12 @@ public:
         /**
          * @param n Number of points.
          */
-        Results(size_t n) : fitted(n), residuals(n), robust_weights(n) {}
+        Results(size_t n) : fitted(n), robust_weights(n) {}
 
         /**
          * Fitted values from the LOWESS smoother. 
          */
         std::vector<double> fitted;
-
-        /**
-         * Residual of each point's y-value from its fitted value.
-         */
-        std::vector<double> residuals;
 
         /**
          * Robustness weight for each point.
@@ -644,11 +636,11 @@ public:
      * @param weights Pointer to an array of `n` positive weights.
      * Alternatively `NULL` if no weights are available.
      *
-     * @return A `Results` object containing the fitted values, residuals and robustness weights.
+     * @return A `Results` object containing the fitted values and robustness weights.
      */
     Results run(size_t n, const double* x, const double* y, const double* weights=NULL) {
         Results output(n);
-        run(n, x, y, weights, output.fitted.data(), output.residuals.data(), output.robust_weights.data());
+        run(n, x, y, weights, output.fitted.data(), output.robust_weights.data());
         return output;
     }
 
@@ -663,11 +655,11 @@ public:
      * @param weights Pointer to an array of `n` positive weights.
      * Alternatively `NULL` if no weights are available.
      *
-     * @return A `Results` object containing the fitted values, residuals and robustness weights.
+     * @return A `Results` object containing the fitted values and robustness weights.
      */
     Results run_in_place(size_t n, double* x, double* y, double* weights=NULL) {
         Results output(n);
-        run_in_place(n, x, y, weights, output.fitted.data(), output.residuals.data(), output.robust_weights.data());
+        run_in_place(n, x, y, weights, output.fitted.data(), output.robust_weights.data());
         return output;
     }
 };

@@ -2,20 +2,12 @@
 #include "WeightedLowess/WeightedLowess.hpp"
 #include "utils.h"
 
-void compare_to_zero(const std::vector<double>& resids) {
-    for (size_t i = 0; i < resids.size(); ++i) {
-        EXPECT_TRUE(resids[i] < 0.00000000001);
-    }
-    return;
-}
-
 TEST(BasicTests, Exact) {
     WeightedLowess::WeightedLowess wl;
 
     // y = x
     auto res = wl.run(x.size(), x.data(), x.data());
     compare_almost_equal(res.fitted, x);
-    compare_to_zero(res.residuals);
 
     // y = 2x + 1
     std::vector<double> alt(x);
@@ -46,12 +38,10 @@ TEST(BasicTests, Interpolation) {
     auto res = wl.run(x.size(), x.data(), alt.data());
     auto res2 = wl.set_anchors(10).run(x.size(), x.data(), alt.data());
     compare_almost_equal(res.fitted, res2.fitted);
-    compare_to_zero(res2.residuals);
 
     // Only two points; start and end.
     res2 = wl.set_anchors(2).run(x.size(), x.data(), alt.data());
     compare_almost_equal(res.fitted, res2.fitted);
-    compare_to_zero(res2.residuals);
 }
 
 TEST(BasicTests, Weights) {
