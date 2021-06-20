@@ -4,7 +4,7 @@
 
 TEST(OptionsTest, IterationsEffect) {
     WeightedLowess::WeightedLowess wl;
-    wl.set_points(20);
+    wl.set_anchors(20);
 
     auto res = wl.run(x.size(), x.data(), y.data());
 
@@ -18,11 +18,11 @@ TEST(OptionsTest, IterationsEffect) {
 TEST(OptionsTest, PointsEffect) {
     WeightedLowess::WeightedLowess wl;
 
-    auto res = wl.set_points(200).run(x.size(), x.data(), y.data());
-    auto res1 = wl.set_points(10).run(x.size(), x.data(), y.data());
+    auto res = wl.set_anchors(200).run(x.size(), x.data(), y.data());
+    auto res1 = wl.set_anchors(10).run(x.size(), x.data(), y.data());
     EXPECT_TRUE(sum_abs_diff(res.fitted, res1.fitted) > 0.01);
 
-    auto res2 = wl.set_points(5).run(x.size(), x.data(), y.data());
+    auto res2 = wl.set_anchors(5).run(x.size(), x.data(), y.data());
     EXPECT_TRUE(sum_abs_diff(res.fitted, res2.fitted) > 0.01);
 }
 
@@ -61,10 +61,10 @@ TEST(OptionsTest, DeltaTest) {
     EXPECT_TRUE(sum_abs_diff(res.fitted, res0.fitted) > 0.01);
 
     // Should be equal to the case where each point is a seed.
-    auto res_full  = wl.set_delta(-1).set_points(100).run(x.size(), x.data(), y.data());
+    auto res_full  = wl.set_delta(-1).set_anchors(100).run(x.size(), x.data(), y.data());
     EXPECT_EQ(res0.fitted, res_full.fitted);
 
     // Points has no effect if delta is set.
-    auto res0_2 = wl.set_delta(0).set_points(5).run(x.size(), x.data(), y.data());
+    auto res0_2 = wl.set_delta(0).set_anchors(5).run(x.size(), x.data(), y.data());
     EXPECT_EQ(res0.fitted, res0_2.fitted);
 }

@@ -40,17 +40,17 @@ public:
     }
 
     /**
-     * Set the number of points that can be used as "seeds".
-     * LOWESS smoothing is performed exactly for each seed, while the fitted values for all intervening points are computed by linear interpolation.
-     * A higher number of seed points improves accuracy at the cost of computational work.
-     * If the specified number of seeds is greater than the number of points, LOWESS smoothing is performed directly for each point.
+     * Set the number of points that can be used as "anchors".
+     * LOWESS smoothing is performed exactly for each anchor, while the fitted values for all intervening points are computed by linear interpolation.
+     * A higher number of anchor points improves accuracy at the cost of computational work.
+     * If the specified number of anchors is greater than the number of points, LOWESS smoothing is performed directly for each point.
      * This setting is ignored if `set_delta()` is set to a non-negative value.
      *
-     * @param p Number of seeds.
+     * @param p Number of anchors.
      *
      * @return A reference to the modified `WeightedLowess` object is returned.
      */
-    WeightedLowess& set_points(int p = 200) {
+    WeightedLowess& set_anchors(int p = 200) {
         points = p;
         return *this;
     }
@@ -70,9 +70,9 @@ public:
     }
 
     /**
-     * Set the delta value used to identify seeds.
-     * Seeds are identified greedily, by walking through the ordered x-coordinate values and marking a point `y` as a seed if there are no seeds in `[y - delta, y]`.
-     * If set to zero, all unique points are used as seeds.
+     * Set the delta value used to identify anchors.
+     * Seeds are identified greedily, by walking through the ordered x-coordinate values and marking a point `y` as a anchor if there are no anchors in `[y - delta, y]`.
+     * If set to zero, all unique points are used as anchors.
      * If set to a negative value, an appropriate delta is determined from the number of points specified in `set_points()`.
      *
      * @param d The delta value.
@@ -124,18 +124,18 @@ private:
 private:
     std::vector<double> diffs;
 
-    /* Determining the `delta`. For a seed point with x-coordinate `x`, we skip all
-     * points in `[x, x + delta]` before finding the next seed point. 
+    /* Determining the `delta`. For a anchor point with x-coordinate `x`, we skip all
+     * points in `[x, x + delta]` before finding the next anchor point. 
      * We try to choose a `delta` that satisfies the constraints on the number
-     * of seed points in `points`. A naive approach would be to simply divide the
-     * range of `x` by `points - 1`. However, this may place seed points inside 
+     * of anchor points in `points`. A naive approach would be to simply divide the
+     * range of `x` by `points - 1`. However, this may place anchor points inside 
      * large gaps on the x-axis intervals where there are no actual observations. 
      * 
-     * Instead, we try to distribute the seed points so that they don't fall
+     * Instead, we try to distribute the anchor points so that they don't fall
      * inside such large gaps. We do so by looking at the largest gaps and seeing
-     * what happens if we were to shift the seed points to avoid such gaps. If we
-     * jump across a gap, though, we need to "use up" a seed point to restart
-     * the sequence of seed points on the other side of the gap. This requires some
+     * what happens if we were to shift the anchor points to avoid such gaps. If we
+     * jump across a gap, though, we need to "use up" a anchor point to restart
+     * the sequence of anchor points on the other side of the gap. This requires some
      * iteration to find the compromise that minimizes the 'delta' (and thus the 
      * degree of approximation in the final lowess calculation).
      */
@@ -160,25 +160,25 @@ private:
     }
 
 private:
-    std::vector<size_t> seeds;
+    std::vector<size_t> anchors;
 
-    /* Finding the seed points, given the deltas. As previously mentioned, for
-     * a seed point with x-coordinate `x`, we skip all points in `[x, x +
-     * delta]` before finding the next seed point.
+    /* Finding the anchor points, given the deltas. As previously mentioned, for
+     * a anchor point with x-coordinate `x`, we skip all points in `[x, x +
+     * delta]` before finding the next anchor point.
      */
-    static void find_seeds(size_t n, const double* x, double d, std::vector<size_t>& seeds) {
-        seeds.clear();
-        seeds.push_back(0);
+    static void find_anchors(size_t n, const double* x, double d, std::vector<size_t>& anchors) {
+        anchors.clear();
+        anchors.push_back(0);
 
         size_t last_pt = 0;
         for (size_t pt = 1; pt < n - 1; ++pt) {
             if (x[pt] - x[last_pt] > d) {
-                seeds.push_back(pt);
+                anchors.push_back(pt);
                 last_pt = pt;
             }
         }
 
-        seeds.push_back(n - 1);
+        anchors.push_back(n - 1);
         return;
     }
 
@@ -200,18 +200,18 @@ private:
      * algorithm as a whole remains quadratic (as weights must be recomputed) so there's no
      * damage to scalability.
      */
-    static void find_limits(const std::vector<size_t>& seeds, 
+    static void find_limits(const std::vector<size_t>& anchors, 
                             double spanweight,
                             size_t n,
                             const double* x, 
                             const double* weights,
                             std::vector<window>& limits)
     {
-        const size_t nseeds = seeds.size();
-        limits.resize(nseeds);
+        const size_t nanchors = anchors.size();
+        limits.resize(nanchors);
 
-        for (size_t s = 0; s < nseeds; ++s) {
-            auto curpt = seeds[s], left = curpt, right = curpt;
+        for (size_t s = 0; s < nanchors; ++s) {
+            auto curpt = anchors[s], left = curpt, right = curpt;
             double curw = (weights == NULL ? 1 : weights[curpt]);
             bool ende = (curpt == n - 1), ends = (curpt == 0);
             double mdist=0, ldist=0, rdist=0;
@@ -373,18 +373,18 @@ private:
         }
         const double spanweight = totalweight * span;
 
-        // Finding the seeds.
+        // Finding the anchors.
         if (points < n || delta > 0) {
             double eff_delta = (delta < 0 ? derive_delta(points, n, x, diffs) : delta);
-            find_seeds(n, x, eff_delta, seeds);
+            find_anchors(n, x, eff_delta, anchors);
         } else {
-            seeds.resize(n);
-            std::iota(seeds.begin(), seeds.end(), 0);
+            anchors.resize(n);
+            std::iota(anchors.begin(), anchors.end(), 0);
         }
 
         // If we're using them as frequency weights, we pass the weights in when
-        // we're looking for the limits of the span for each seed.
-        find_limits(seeds, spanweight, n, x, (freqweights ? weights : NULL), limits);
+        // we're looking for the limits of the span for each anchor.
+        find_limits(anchors, spanweight, n, x, (freqweights ? weights : NULL), limits);
 
         std::fill(robust_weights, robust_weights + n, 1);
         residual_permutation.resize(n);
@@ -392,33 +392,33 @@ private:
 
         for (int it = 0; it <= iterations; ++it) { // Robustness iterations.
             fitted[0] = lowess_fit(0, limits[0], n, x, y, weights, robust_weights, workspace); 
-            size_t last_seed = 0;
+            size_t last_anchor = 0;
 
-            for (size_t s = 1; s < seeds.size(); ++s) { // fitted values for seed points, interpolating the rest.
-                auto curpt = seeds[s];
+            for (size_t s = 1; s < anchors.size(); ++s) { // fitted values for anchor points, interpolating the rest.
+                auto curpt = anchors[s];
                 fitted[curpt] = lowess_fit(curpt, limits[s], n, x, y, weights, robust_weights, workspace); 
 
-                if (curpt - last_seed > 1) {
+                if (curpt - last_anchor > 1) {
                     /* Some protection is provided against infinite slopes. This shouldn't be
                      * a problem for non-zero delta; the only concern is at the final point
                      * where the covariate distance may be zero.
                      */
-                    double current = x[curpt] - x[last_seed];
+                    double current = x[curpt] - x[last_anchor];
                     if (current > 0) {
-                        const double slope = (fitted[curpt] - fitted[last_seed])/current;
+                        const double slope = (fitted[curpt] - fitted[last_anchor])/current;
                         const double intercept = fitted[curpt] - slope * x[curpt];
-                        for (size_t subpt = last_seed + 1; subpt < curpt; ++subpt) { 
+                        for (size_t subpt = last_anchor + 1; subpt < curpt; ++subpt) { 
                             fitted[subpt] = slope * x[subpt] + intercept; 
                         }
                     } else {
-                        const double ave = (fitted[curpt] + fitted[last_seed]) / 2;
-                        for (size_t subpt = last_seed + 1; subpt < curpt; ++subpt) {
+                        const double ave = (fitted[curpt] + fitted[last_anchor]) / 2;
+                        for (size_t subpt = last_anchor + 1; subpt < curpt; ++subpt) {
                             fitted[subpt] = ave;
                         }
                     }
                 }
 
-                last_seed = curpt;
+                last_anchor = curpt;
             }
 
             /* Computing the weighted MAD of the absolute values of the residuals. */

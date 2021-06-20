@@ -44,19 +44,19 @@ TEST(BasicTests, Interpolation) {
     }
 
     auto res = wl.run(x.size(), x.data(), alt.data());
-    auto res2 = wl.set_points(10).run(x.size(), x.data(), alt.data());
+    auto res2 = wl.set_anchors(10).run(x.size(), x.data(), alt.data());
     compare_almost_equal(res.fitted, res2.fitted);
     compare_to_zero(res2.residuals);
 
     // Only two points; start and end.
-    res2 = wl.set_points(2).run(x.size(), x.data(), alt.data());
+    res2 = wl.set_anchors(2).run(x.size(), x.data(), alt.data());
     compare_almost_equal(res.fitted, res2.fitted);
     compare_to_zero(res2.residuals);
 }
 
 TEST(BasicTests, Weights) {
     WeightedLowess::WeightedLowess wl;
-    wl.set_points(20);
+    wl.set_anchors(20);
 
     // No effect when dealing with a straight line.
     auto res = wl.run(x.size(), x.data(), x.data());

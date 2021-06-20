@@ -4,7 +4,7 @@
 
 TEST(TiesTest, DuplicatedTies) {
     WeightedLowess::WeightedLowess wl;
-    wl.set_points(20);
+    wl.set_anchors(20);
 
     // Handles ties with elegance and grace.
     auto res = wl.run(x.size(), x.data(), y.data());
@@ -35,7 +35,7 @@ TEST(TiesTest, StartTies) {
     y2.insert(y2.end(), y.begin(), y.begin() + ninserts);
 
     WeightedLowess::WeightedLowess wl;
-    auto res = wl.set_points(20).run(x2.size(), x2.data(), y2.data());
+    auto res = wl.set_anchors(20).run(x2.size(), x2.data(), y2.data());
 
     // No one is NA or Inf'd.
     for (auto x : res.fitted) {
@@ -59,7 +59,7 @@ TEST(TiesTest, EndTies) {
     y2.insert(y2.end(), y.begin(), y.begin() + ninserts);
 
     WeightedLowess::WeightedLowess wl;
-    auto res = wl.set_points(20).run(x2.size(), x2.data(), y2.data());
+    auto res = wl.set_anchors(20).run(x2.size(), x2.data(), y2.data());
 
     // No one is NA or Inf'd.
     for (auto x : res.fitted) {

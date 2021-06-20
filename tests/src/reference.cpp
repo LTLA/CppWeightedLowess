@@ -139,10 +139,10 @@ TEST(ReferenceTest, Vanilla) {
     compare_almost_equal(res.robust_weights, expected_weights);
 
     // Checking behavior with interpolation.
-    res = wl.set_points(10).run(test_x.size(), test_x.data(), test_y.data());
+    res = wl.set_anchors(10).run(test_x.size(), test_x.data(), test_y.data());
     compare_almost_equal(res.fitted, expected_fitted_10);
 
     // Checking behavior with odd number of points.
-    res = wl.set_points(200).run(test_x.size() - 1, test_x.data(), test_y.data());
+    res = wl.set_anchors(200).run(test_x.size() - 1, test_x.data(), test_y.data());
     compare_almost_equal(res.fitted, expected_fitted_m1);
 }
