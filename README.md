@@ -7,18 +7,19 @@ This implements the method described by Cleveland (1979, 1981):
 
 1. Define a set of anchor points, more-or-less evenly spaced throughout the range of x-values.
 2. Perform a local linear regression around each anchor, using only points within a window centered at each anchor.
-In this regression, points inside the windoware weighted based on their distances from the anchor on the x-axis.
+In this regression, points inside the window are weighted based on their distances from the anchor on the x-axis.
+(If additional sets of weights are provided, the product of weights is used for each point.)
 Each anchor's window must be wide enough to contain a given proportion of all points.
 4. Interpolate to obtain smoothed values for all points in between two anchors.
-5. Weight each point based on their residual, i.e., difference from the fitted value.
+5. Compute a robustness weight for each point based on the absolute value of its residual from the fitted value.
 Points with very large residuals are assigned zero weight.
 6. Repeat steps 1-5 using the computed weights in each anchor's local linear regression.
 This is iterated several times to eliminate the effect of outliers on the fit.
 
 In here and `limma::weightedLowess`, we implement some (optional) modifications from the original FORTRAN code:
 
-- We allow weights to be interpreted as frequencies, in which case they are used in determining the width of the smoothing window around each point.
-This is in addition to their usual role in the local linear regression.
+- If additional weights are specified, we allow them to be interpreted as frequencies.
+As a result, the weights are used in determining the width of the smoothing window around each point, in addition to their usual role in the local linear regression.
 - The `delta` value can be automatically determined from a pre-specified number of anchor points.
 This provides a convenient way of controlling the approximation fidelity.
 
