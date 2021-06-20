@@ -9,35 +9,104 @@
 
 #include <iostream>
 
+/**
+ * @file WeightedLowess.hpp
+ *
+ * A C++ implementation of the LOWESS method, generalized for frequency weights.
+ */
+
 namespace WeightedLowess {
 
+/**
+ * @brief Run the weighted LOWESS algorithm given vectors of x- and y-coordinates (and possibly weights).
+ *
+ * The `run()` method performs the smoothing while the various `set_*()` methods allow users to easily modify optional parameters.
+ */
 class WeightedLowess {
 public:
+    /**
+     * Set the width of the smoothing window around each point, parametrized as a proportion of the total number of points.
+     * Each window is defined as the smallest interval centered on the current point that covers the specified proportion.
+     * If `weights` are provided to `run()` and `set_as_frequency_weights()` is set to `true`, the span is defined from the proportion of the total weight across all points.
+     * This interprets the weights on each observation as relative frequencies.
+     *
+     * @param s Span value, between 0 and 1.
+     *
+     * @return A reference to the modified `WeightedLowess` object is returned.
+     */
     WeightedLowess& set_span(double s = 0.3) {
         span = s;
         return *this;
     }
 
+    /**
+     * Set the number of points that can be used as "seeds".
+     * LOWESS smoothing is performed exactly for each seed, while the fitted values for all intervening points are computed by linear interpolation.
+     * A higher number of seed points improves accuracy at the cost of computational work.
+     * If the specified number of seeds is greater than the number of points, LOWESS smoothing is performed directly for each point.
+     * This setting is ignored if `set_delta()` is set to a non-negative value.
+     *
+     * @param p Number of seeds.
+     *
+     * @return A reference to the modified `WeightedLowess` object is returned.
+     */
     WeightedLowess& set_points(int p = 200) {
         points = p;
         return *this;
     }
 
+    /**
+     * Set the number of robustness iterations.
+     * At each iteration, each point is weighted according to its difference from the smoothed value, and the smoothing is repeated with these weights. 
+     * More iterations increase robustness to outliers at the cost of computational work.
+     *
+     * @param i Number of robustness iterations.
+     *
+     * @return A reference to the modified `WeightedLowess` object is returned.
+     */
     WeightedLowess& set_iterations(int i = 3) {
         iterations = i;
         return *this;
     }
 
+    /**
+     * Set the delta value used to identify seeds.
+     * Seeds are identified greedily, by walking through the ordered x-coordinate values and marking a point `y` as a seed if there are no seeds in `[y - delta, y]`.
+     * If set to zero, all unique points are used as seeds.
+     * If set to a negative value, an appropriate delta is determined from the number of points specified in `set_points()`.
+     *
+     * @param d The delta value.
+     * This should have similar magnitude to the range of the x-values.
+     *
+     * @return A reference to the modified `WeightedLowess` object is returned.
+     */
     WeightedLowess& set_delta(double d = -1) {
         delta = d;
         return *this;
     }
 
+    /** 
+     * Specify that the input data are already sorted on the x-values.
+     * This will cause `run()` to skip the sorting step.
+     *
+     * @param s Whether the input data are already sorted.
+     *
+     * @return A reference to the modified `WeightedLowess` object is returned.
+     */
     WeightedLowess& set_sorted(bool s = false) {
         sorted = s;
         return *this;
     }
 
+    /** 
+     * Specify that the weights should be interpreted as frequency weights.
+     * This means that they will be involved in both the span calculations for the smoothing window around each point, as well as in the LOWESS calculations themselves.
+     * If `false`, the weights will only be used for the latter.
+     *
+     * @param f Whether the weights are frequency weights.
+     *
+     * @return A reference to the modified `WeightedLowess` object is returned.
+     */
     WeightedLowess& set_as_frequency_weights(bool f = true) {
         freqweights = f;
         return *this;
@@ -404,9 +473,10 @@ private:
         return;
     }
 
-public:
+private:
     std::vector<uint8_t> used;
     std::vector<double> rbuffer;
+    std::vector<size_t> permutation;
 
     void sort_and_run(size_t n, double* x, double* y, double* weights, double* fitted, double* residuals, double* robust_weights) {
         permutation.resize(n);
@@ -470,11 +540,23 @@ public:
         return;
     }
 
-public:
-    std::vector<size_t> permutation;
+private:
     std::vector<double> xbuffer, ybuffer, wbuffer;
 
-    void run(size_t n, const double* x, const double* y, const double* weights, double* fitted, double* residuals, double* robust_weights) {
+public:
+    /**
+     * Run the LOWESS smoother and fill output arrays with the smoothed values.
+     *
+     * @param n Number of points.
+     * @param x Pointer to an array of `n` x-values.
+     * @param y Pointer to an array of `n` y-values.
+     * @param weights Pointer to an array of `n` positive weights.
+     * Alternatively `NULL` if no weights are available.
+     * @param fitted Pointer to an output array of length `n`, in which the fitted values of the smoother can be stored.
+     * @param residuals Pointer to an output array of length `n`, in which the residuals of the fit can be stored.
+     * @param robust_weights Pointer to an output array of length `n`, in which the robustness weights can be stored.
+     */
+   void run(size_t n, const double* x, const double* y, const double* weights, double* fitted, double* residuals, double* robust_weights) {
         if (sorted) {
             if (robust_weights == NULL) {
                 rbuffer.resize(n);
@@ -497,6 +579,20 @@ public:
         return;
     }
 
+    /**
+     * Run the LOWESS smoother and fill output arrays with the smoothed values.
+     * This differs from `run()` in that `x` and `y` (and `weights`, if supplied) will be arbitrarily modified on output,
+     * allowing us to avoid a copy if they are no longer needed after this method call. 
+     *
+     * @param n Number of points.
+     * @param x Pointer to an array of `n` x-values.
+     * @param y Pointer to an array of `n` y-values.
+     * @param weights Pointer to an array of `n` positive weights.
+     * Alternatively `NULL` if no weights are available.
+     * @param fitted Pointer to an output array of length `n`, in which the fitted values of the smoother can be stored.
+     * @param residuals Pointer to an output array of length `n`, in which the residuals of the fit can be stored.
+     * @param robust_weights Pointer to an output array of length `n`, in which the robustness weights can be stored.
+     */
     void run_in_place(size_t n, double* x, double* y, double* weights, double* fitted, double* residuals, double* robust_weights) {
         if (sorted) {
             if (robust_weights == NULL) {
@@ -511,17 +607,62 @@ public:
     }
 
 public:
+    /** 
+     * @brief Store the smoothing results.
+     */
     struct Results {
+        /**
+         * @param n Number of points.
+         */
         Results(size_t n) : fitted(n), residuals(n), robust_weights(n) {}
-        std::vector<double> fitted, residuals, robust_weights;
+
+        /**
+         * Fitted values from the LOWESS smoother. 
+         */
+        std::vector<double> fitted;
+
+        /**
+         * Residual of each point's y-value from its fitted value.
+         */
+        std::vector<double> residuals;
+
+        /**
+         * Robustness weight for each point.
+         */
+        std::vector<double> robust_weights;
     };
 
+    /**
+     * Run the LOWESS smoother and return a `Results` object.
+     * This avoids the need to instantiate the various output arrays manually. 
+     *
+     * @param n Number of points.
+     * @param x Pointer to an array of `n` x-values.
+     * @param y Pointer to an array of `n` y-values.
+     * @param weights Pointer to an array of `n` positive weights.
+     * Alternatively `NULL` if no weights are available.
+     *
+     * @return A `Results` object containing the fitted values, residuals and robustness weights.
+     */
     Results run(size_t n, const double* x, const double* y, const double* weights=NULL) {
         Results output(n);
         run(n, x, y, weights, output.fitted.data(), output.residuals.data(), output.robust_weights.data());
         return output;
     }
 
+    /**
+     * Run the LOWESS smoother and return a `Results` object.
+     * This differs from `run()` in that `x` and `y` (and `weights`, if supplied) will be arbitrarily modified on output,
+     * allowing us to avoid a copy if they are no longer needed after this method call. 
+     *
+     * @param n Number of points.
+     * @param x Pointer to an array of `n` x-values.
+     * @param y Pointer to an array of `n` y-values.
+     * @param weights Pointer to an array of `n` positive weights.
+     * Alternatively `NULL` if no weights are available.
+     *
+     * @return A `Results` object containing the fitted values, residuals and robustness weights.
+     */
     Results run_in_place(size_t n, double* x, double* y, double* weights=NULL) {
         Results output(n);
         run_in_place(n, x, y, weights, output.fitted.data(), output.residuals.data(), output.robust_weights.data());
