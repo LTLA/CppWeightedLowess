@@ -17,6 +17,7 @@ add_executable(
     src/options.cpp
     src/runners.cpp
     src/reference.cpp
+    src/divzero.cpp
     src/utils.cpp
 )
 

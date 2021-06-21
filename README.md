@@ -30,6 +30,8 @@ while the number of robustness iterations in `limma::weightedLowess` includes th
 So 3 iterations here are equivalent to 4 iterations in `limma::weightedLowess`.
 - We omit the early termination condition when the MAD of the residuals is much lower than the mean.
 This avoids inappropriate termination of the robustness iterations in pathological scenarios.
+- We provide extra protection for the edge case where the robustness weighting causes the sum of weights in a window to be zero.
+In such cases, we simply ignore the robustness weights when computing the smoothed value.
 
 See the [`?weightedLowess` documentation](https://rdrr.io/bioc/limma/man/weightedLowess.html) for more details.
 

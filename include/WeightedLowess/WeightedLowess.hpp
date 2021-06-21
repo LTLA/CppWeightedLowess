@@ -312,6 +312,18 @@ private:
                 ymean += y[pt] * curweight;
                 allweight += curweight;
             }
+
+            if (allweight == 0) { // ignore the robustness weights.
+                for (size_t pt = left; pt <= right; ++pt) {
+                    double curweight = 1;
+                    if (weights != NULL) {
+                        curweight = weights[pt];
+                    }
+                    ymean += y[pt] * curweight;
+                    allweight += curweight;
+                }
+            }
+
             ymean /= allweight;
             return ymean;
         }
@@ -327,6 +339,20 @@ private:
             ymean += current * y[pt];
             allweight += current;
         }
+
+        if (allweight == 0) { // ignore the robustness weights.
+            for (size_t pt = left; pt <= right; ++pt) {
+                double& current = work[pt];
+                current = cube(1 - cube(std::abs(x[curpt] - x[pt])/dist));
+                if (weights != NULL) {
+                    current *= weights[pt];
+                }
+                xmean += current * x[pt];
+                ymean += current * y[pt];
+                allweight += current;
+            }
+        }
+
         xmean /= allweight;
         ymean /= allweight;
 

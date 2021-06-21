@@ -91,15 +91,3 @@ TEST(BasicTests, Robustness) {
     std::vector<double> rest(wres.fitted.begin(), wres.fitted.begin() + x.size());
     compare_almost_equal(res.fitted, rest);
 }
-
-TEST(BasicTests, FewElements) {
-    // Just large enough that, with the default span, each window contains the
-    // centered element and two elements on the boundaries (and thus have zero
-    // weight). This provides a test for what happens when the variance is zero
-    // in the local regression, which is not usually possible.
-    std::vector<double> small{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-
-    WeightedLowess::WeightedLowess wl;
-    auto output = wl.run(small.size(), small.data(), small.data());
-    compare_almost_equal(output.fitted, small);
-}
