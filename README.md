@@ -12,21 +12,22 @@ In this regression, points inside the window are weighted based on their distanc
 Each anchor's window must be wide enough to contain a given proportion of all points.
 4. Interpolate to obtain smoothed values for all points in between two anchors.
 5. Compute a robustness weight for each point based on the absolute value of its residual from the fitted value.
-Points with very large residuals are assigned zero weight.
+Points with very large residuals are considered outliers and are assigned zero weight.
 6. Repeat steps 1-5 using the computed weights in each anchor's local linear regression.
 This is iterated several times to eliminate the effect of outliers on the fit.
 
-In here and `limma::weightedLowess`, we implement some (optional) modifications from the original FORTRAN code:
+`limma::weightedLowess` implements some (optional) modifications from the original FORTRAN code, which are also available in this library:
 
 - If additional weights are specified, we allow them to be interpreted as frequencies.
-As a result, the weights are used in determining the width of the smoothing window around each point, in addition to their usual role in the local linear regression.
+As a result, the weights are used in determining the width of the smoothing window around each anchor, in addition to their usual role in the local linear regression.
 - The `delta` value can be automatically determined from a pre-specified number of anchor points.
 This provides a convenient way of controlling the approximation fidelity.
 
-In this library, we also implement some modifications from `limma::weightedLowess`:
+In this library, we also implement some further modifications from `limma::weightedLowess`:
 
 - The number of robustness iterations in this library refers to additional iterations beyond the first fit,
-while the number of robustness iterations in `limma:;weightedLowess` includes the first fit.
+while the number of robustness iterations in `limma::weightedLowess` includes the first fit.
+So 3 iterations here are equivalent to 4 iterations in `limma::weightedLowess`.
 - We omit the early termination condition when the MAD of the residuals is much lower than the mean.
 This avoids inappropriate termination of the robustness iterations in pathological scenarios.
 
