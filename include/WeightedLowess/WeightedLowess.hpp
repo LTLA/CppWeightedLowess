@@ -337,10 +337,14 @@ private:
             covar += temp * (y[pt] - ymean) * work[pt];
         }
 
-        // Impossible for var = 0 here, as this would imply dist = 0 above.
-        const double slope = covar / var;
-        const double intercept = ymean - slope * xmean;
-        return slope * x[curpt] + intercept;
+        // Still possible for var = 0 if all other points have zero weight.
+        if (var == 0) {
+            return ymean;
+        } else {
+            const double slope = covar / var;
+            const double intercept = ymean - slope * xmean;
+            return slope * x[curpt] + intercept;
+        }
     }
 
 private:
