@@ -72,17 +72,17 @@ $(function() {
 <li>Define a set of anchor points, more-or-less evenly spaced throughout the range of x-values.</li>
 <li>Perform a local linear regression around each anchor, using only points within a window centered at each anchor. In this regression, points inside the window are weighted based on their distances from the anchor on the x-axis. (If additional sets of weights are provided, the product of weights is used for each point.) Each anchor's window must be wide enough to contain a given proportion of all points.</li>
 <li>Interpolate to obtain smoothed values for all points in between two anchors.</li>
-<li>Compute a robustness weight for each point based on the absolute value of its residual from the fitted value. Points with very large residuals are assigned zero weight.</li>
+<li>Compute a robustness weight for each point based on the absolute value of its residual from the fitted value. Points with very large residuals are considered outliers and are assigned zero weight.</li>
 <li>Repeat steps 1-5 using the computed weights in each anchor's local linear regression. This is iterated several times to eliminate the effect of outliers on the fit.</li>
 </ol>
-<p>In here and <code>limma::weightedLowess</code>, we implement some (optional) modifications from the original FORTRAN code:</p>
+<p><code>limma::weightedLowess</code> implements some (optional) modifications from the original FORTRAN code, which are also available in this library:</p>
 <ul>
-<li>If additional weights are specified, we allow them to be interpreted as frequencies. As a result, the weights are used in determining the width of the smoothing window around each point, in addition to their usual role in the local linear regression.</li>
+<li>If additional weights are specified, we allow them to be interpreted as frequencies. As a result, the weights are used in determining the width of the smoothing window around each anchor, in addition to their usual role in the local linear regression.</li>
 <li>The <code>delta</code> value can be automatically determined from a pre-specified number of anchor points. This provides a convenient way of controlling the approximation fidelity.</li>
 </ul>
-<p>In this library, we also implement some modifications from <code>limma::weightedLowess</code>:</p>
+<p>In this library, we also implement some further modifications from <code>limma::weightedLowess</code>:</p>
 <ul>
-<li>The number of robustness iterations in this library refers to additional iterations beyond the first fit, while the number of robustness iterations in <code>limma:;weightedLowess</code> includes the first fit.</li>
+<li>The number of robustness iterations in this library refers to additional iterations beyond the first fit, while the number of robustness iterations in <code>limma::weightedLowess</code> includes the first fit. So 3 iterations here are equivalent to 4 iterations in <code>limma::weightedLowess</code>.</li>
 <li>We omit the early termination condition when the MAD of the residuals is much lower than the mean. This avoids inappropriate termination of the robustness iterations in pathological scenarios.</li>
 </ul>
 <p>See the <a href="https://rdrr.io/bioc/limma/man/weightedLowess.html"><code>?weightedLowess</code> documentation</a> for more details.</p>
@@ -102,7 +102,7 @@ $(function() {
 <div class="ttc" id="aclassWeightedLowess_1_1WeightedLowess_html"><div class="ttname"><a href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess::WeightedLowess</a></div><div class="ttdoc">Run the weighted LOWESS algorithm given vectors of x- and y-coordinates (and possibly weights).</div><div class="ttdef"><b>Definition:</b> WeightedLowess.hpp:25</div></div>
 <div class="ttc" id="aclassWeightedLowess_1_1WeightedLowess_html_a346936b142a499ba9ffa10805e6f5eb2"><div class="ttname"><a href="classWeightedLowess_1_1WeightedLowess.html#a346936b142a499ba9ffa10805e6f5eb2">WeightedLowess::WeightedLowess::set_span</a></div><div class="ttdeci">WeightedLowess &amp; set_span(double s=0.3)</div><div class="ttdef"><b>Definition:</b> WeightedLowess.hpp:37</div></div>
 <div class="ttc" id="aclassWeightedLowess_1_1WeightedLowess_html_a82a2425e53d00c760a401b2c013b10f8"><div class="ttname"><a href="classWeightedLowess_1_1WeightedLowess.html#a82a2425e53d00c760a401b2c013b10f8">WeightedLowess::WeightedLowess::set_anchors</a></div><div class="ttdeci">WeightedLowess &amp; set_anchors(int p=200)</div><div class="ttdef"><b>Definition:</b> WeightedLowess.hpp:53</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1WeightedLowess_html_af24c296590119c25d844eff1edd4169d"><div class="ttname"><a href="classWeightedLowess_1_1WeightedLowess.html#af24c296590119c25d844eff1edd4169d">WeightedLowess::WeightedLowess::run</a></div><div class="ttdeci">void run(size_t n, const double *x, const double *y, const double *weights, double *fitted, double *robust_weights)</div><div class="ttdef"><b>Definition:</b> WeightedLowess.hpp:567</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1WeightedLowess_html_af24c296590119c25d844eff1edd4169d"><div class="ttname"><a href="classWeightedLowess_1_1WeightedLowess.html#af24c296590119c25d844eff1edd4169d">WeightedLowess::WeightedLowess::run</a></div><div class="ttdeci">void run(size_t n, const double *x, const double *y, const double *weights, double *fitted, double *robust_weights)</div><div class="ttdef"><b>Definition:</b> WeightedLowess.hpp:571</div></div>
 </div><!-- fragment --><p>See the <a href="https://ltla.github.io/CppWeightedLowess">reference documentation</a> for more details.</p>
 <p>If you're already using CMake, then you just need to add something like this to your <code>CMakeLists.txt</code>:</p>
 <div class="fragment"><div class="line">include(FetchContent)</div>
