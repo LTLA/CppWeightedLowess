@@ -72,3 +72,12 @@ TEST(TiesTest, EndTies) {
         EXPECT_FLOAT_EQ(last, res.fitted[res.fitted.size() - i - 1]);
     }
 }
+
+TEST(TiesTest, TiedYValues) {
+    // Behaves properly when all y-values are tied.
+    std::vector<double> constant(x.size(), 1.2);
+    WeightedLowess::WeightedLowess wl;
+    auto res = wl.run(x.size(), x.data(), constant.data());
+    EXPECT_EQ(res.fitted, constant);
+    EXPECT_EQ(res.robust_weights, std::vector<double>(x.size(), 1));
+}

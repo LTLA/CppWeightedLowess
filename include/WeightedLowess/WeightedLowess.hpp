@@ -368,6 +368,8 @@ private:
                        double* fitted, 
                        double* robust_weights)
     {
+        workspace.resize(n);
+
         /* Computing the span weight that each span must achieve. */
         double totalweight = 0;
         if (weights != NULL) {
@@ -377,7 +379,9 @@ private:
         }
         const double spanweight = totalweight * span;
 
-        // Finding the anchors.
+        /* Finding the anchors. If we're using the weights as frequencies, we
+         * pass them in when we're looking for the span limits for each anchor.
+         */
         if (points < n || delta > 0) {
             double eff_delta = (delta < 0 ? derive_delta(points, n, x, diffs) : delta);
             find_anchors(n, x, eff_delta, anchors);
@@ -385,14 +389,28 @@ private:
             anchors.resize(n);
             std::iota(anchors.begin(), anchors.end(), 0);
         }
-
-        // If we're using them as frequency weights, we pass the weights in when
-        // we're looking for the limits of the span for each anchor.
         find_limits(anchors, spanweight, n, x, (freqweights ? weights : NULL), limits);
 
+        /* Setting up the robustness weights, if robustification is requested.
+         */ 
         std::fill(robust_weights, robust_weights + n, 1);
-        residual_permutation.resize(n);
-        workspace.resize(n);
+        double min_mad = 0; 
+        if (iterations) {
+            residual_permutation.resize(n);
+
+            /* We use the range so guarantee that we catch the scale. Otherwise
+             * if we used the MAD of 'y', it could be conceivable that we would
+             * end up with a min_mad of zero again, e.g., if the majority of
+             * points have the same value. In contrast, if the range is zero,
+             * we just quit early.
+             */
+            double range = (*std::max_element(y, y + n) - *std::min_element(y, y + n));
+            if (range == 0) {
+                std::copy(y, y + n, fitted);
+                return;
+            }
+            min_mad = 0.00000000001 * range;
+        }
 
         for (int it = 0; it <= iterations; ++it) { // Robustness iterations.
             fitted[0] = lowess_fit(0, limits[0], n, x, y, weights, robust_weights, workspace.data()); 
@@ -425,60 +443,55 @@ private:
                 last_anchor = curpt;
             }
 
-            /* Computing the weighted MAD of the absolute values of the residuals. */
-            for (size_t pt = 0; pt < n; ++pt) {
-                workspace[pt] = std::abs(y[pt] - fitted[pt]);
-            }
-
-            std::iota(residual_permutation.begin(), residual_permutation.end(), 0);
-            std::sort(residual_permutation.begin(), residual_permutation.end(), 
-                [&](size_t left, size_t right) -> bool {
-                    return workspace[left] < workspace[right];
-                }
-            );
-
-            double curweight = 0;
-            double cmad = 100;
-            const double halfweight = totalweight/2;
-
-            for (size_t i = 0; i < n; ++i) {
-                auto pt = residual_permutation[i];
-                if (weights != NULL) {
-                    curweight += weights[pt];
-                } else {
-                    ++curweight;
-                }
-
-                if (curweight == halfweight) { // exact match, need to take the median.
-                    cmad = 3 * (workspace[pt] + workspace[residual_permutation[i+1]]);
-                    break;
-                } else if (curweight > halfweight) {
-                    cmad = 6 * workspace[pt];
-                    break;
-                }
-            }
-
-            /* Both limma::weightedLowess and the original Fortran code have an early
-             * termination condition that stops the robustness iterations when the MAD
-             * is small. We do not implement this and just allow the specified number of
-             * iterations to run, as the termination can fail in pathological examples
-             * where a minority of points are affected by an outlier. In such cases,
-             * the MAD may indeed be very small as most residuals are fine, and we would
-             * fail to robustify against the few outliers.
-             */
-             
             if (it < iterations) {
-                if (cmad) {
-                    for (size_t i =0; i < n; ++i) {
-                        if (workspace[i] < cmad) {
-                            robust_weights[i] = square(1 - square(workspace[i]/cmad));
-                        } else { 
-                            robust_weights[i] = 0;
-                        }
+                /* Computing the weighted MAD of the absolute values of the residuals. */
+                for (size_t pt = 0; pt < n; ++pt) {
+                    workspace[pt] = std::abs(y[pt] - fitted[pt]);
+                }
+
+                std::iota(residual_permutation.begin(), residual_permutation.end(), 0);
+                std::sort(residual_permutation.begin(), residual_permutation.end(), 
+                    [&](size_t left, size_t right) -> bool {
+                        return workspace[left] < workspace[right];
                     }
-                } else {
-                    for (size_t i = 0; i < n; ++i) {
-                        robust_weights[i] = (workspace[i]==0);
+                );
+
+                double curweight = 0;
+                double cmad = 100;
+                const double halfweight = totalweight/2;
+
+                for (size_t i = 0; i < n; ++i) {
+                    auto pt = residual_permutation[i];
+                    if (weights != NULL) {
+                        curweight += weights[pt];
+                    } else {
+                        ++curweight;
+                    }
+
+                    if (curweight == halfweight) { // exact match, need to take the median.
+                        cmad = 3 * (workspace[pt] + workspace[residual_permutation[i+1]]);
+                        break;
+                    } else if (curweight > halfweight) {
+                        cmad = 6 * workspace[pt];
+                        break;
+                    }
+                }
+
+                /* Both limma::weightedLowess and the original Fortran code have an early
+                 * termination condition that stops the robustness iterations when the MAD
+                 * is small. We do not implement this and just allow the specified number of
+                 * iterations to run, as the termination can fail in pathological examples
+                 * where a minority of points are affected by an outlier. In such cases,
+                 * the MAD may indeed be very small as most residuals are fine, and we would
+                 * fail to robustify against the few outliers.
+                 */
+
+                cmad = std::max(cmad, min_mad); // avoid difficulties from numerical precision when all residuals are theoretically zero.
+                for (size_t i =0; i < n; ++i) {
+                    if (workspace[i] < cmad) {
+                        robust_weights[i] = square(1 - square(workspace[i]/cmad));
+                    } else { 
+                        robust_weights[i] = 0;
                     }
                 }
             }
