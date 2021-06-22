@@ -2,8 +2,15 @@
 
 ## Overview
 
-A header-only C++ library for weighted LOWESS calculations, directly ported from the `weightedLowess()` function in the [**limma**](https://bioconductor.org/packages/limma/) package.
-This implements the method described by Cleveland (1979, 1981):
+This C++ library implements the Locally Weighted Scatterplot Smoothing (LOWESS) method described by Cleveland (1979, 1981).
+LOWESS is a non-parametric smoothing algorithm that is simple and computationally efficient yet can accommodate a wide variety of curves.
+The libary itself is header-only and thus can be easily used in any C++ project by adding the relevant `#include` directives.
+This implementation is derived from the [**limma**](https://bioconductor.org/packages/limma/) package and contains some modifications from Cleveland's original code.
+Of particular interest is the ability to treat the weights as frequencies such that they are involved in the window span calculations for each anchor point - hence the name.
+
+## Algorithm details
+
+Cleveland's original Fortran implementation is quite simple:
 
 1. Define a set of anchor points, more-or-less evenly spaced throughout the range of x-values.
 2. Perform a local linear regression around each anchor, using only points within a window centered at each anchor.
@@ -16,14 +23,15 @@ Points with very large residuals are considered outliers and are assigned zero w
 6. Repeat steps 1-5 using the computed weights in each anchor's local linear regression.
 This is iterated several times to eliminate the effect of outliers on the fit.
 
-`limma::weightedLowess` implements some (optional) modifications from the original FORTRAN code, which are also available in this library:
+In `limma::weightedLowess`, we implemented some (optional) modifications that are also available in this library.
+See the [`?weightedLowess` documentation](https://rdrr.io/bioc/limma/man/weightedLowess.html) for more details.
 
 - If additional weights are specified, we allow them to be interpreted as frequencies.
 As a result, the weights are used in determining the width of the smoothing window around each anchor, in addition to their usual role in the local linear regression.
 - The `delta` value can be automatically determined from a pre-specified number of anchor points.
 This provides a convenient way of controlling the approximation fidelity.
 
-In this library, we also implement some further modifications from `limma::weightedLowess`:
+In this library, we implement some further modifications from `limma::weightedLowess`:
 
 - The number of robustness iterations in this library refers to additional iterations beyond the first fit,
 while the number of robustness iterations in `limma::weightedLowess` includes the first fit.
@@ -32,8 +40,6 @@ So 3 iterations here are equivalent to 4 iterations in `limma::weightedLowess`.
 This avoids inappropriate termination of the robustness iterations in pathological scenarios.
 - We provide extra protection for the edge case where the robustness weighting causes the sum of weights in a window to be zero.
 In such cases, we simply ignore the robustness weights when computing the smoothed value.
-
-See the [`?weightedLowess` documentation](https://rdrr.io/bioc/limma/man/weightedLowess.html) for more details.
 
 ## Usage
 
