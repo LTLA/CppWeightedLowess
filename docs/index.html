@@ -67,7 +67,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md__github_workspace_README"></a> </p><h1>Overview</h1>
-<p>A header-only C++ library for weighted LOWESS calculations, directly ported from the <code>weightedLowess()</code> function in the <a href="https://bioconductor.org/packages/limma/"><b>limma</b></a> package. This implements the method described by Cleveland (1979, 1981):</p>
+<p>This C++ library implements the Locally Weighted Scatterplot Smoothing (LOWESS) method described by Cleveland (1979, 1981). LOWESS is a non-parametric smoothing algorithm that is simple and computationally efficient yet can accommodate a wide variety of curves. The libary itself is header-only and thus can be easily used in any C++ project by adding the relevant <code>#include</code> directives. This implementation is derived from the <a href="https://bioconductor.org/packages/limma/"><b>limma</b></a> package and contains some modifications from Cleveland's original code. Of particular interest is the ability to treat the weights as frequencies such that they are involved in the window span calculations for each anchor point - hence the name.</p>
+<h1>Algorithm details</h1>
+<p>Cleveland's original Fortran implementation is quite simple:</p>
 <ol type="1">
 <li>Define a set of anchor points, more-or-less evenly spaced throughout the range of x-values.</li>
 <li>Perform a local linear regression around each anchor, using only points within a window centered at each anchor. In this regression, points inside the window are weighted based on their distances from the anchor on the x-axis. (If additional sets of weights are provided, the product of weights is used for each point.) Each anchor's window must be wide enough to contain a given proportion of all points.</li>
@@ -75,18 +77,17 @@ $(function() {
 <li>Compute a robustness weight for each point based on the absolute value of its residual from the fitted value. Points with very large residuals are considered outliers and are assigned zero weight.</li>
 <li>Repeat steps 1-5 using the computed weights in each anchor's local linear regression. This is iterated several times to eliminate the effect of outliers on the fit.</li>
 </ol>
-<p><code>limma::weightedLowess</code> implements some (optional) modifications from the original FORTRAN code, which are also available in this library:</p>
+<p>In <code>limma::weightedLowess</code>, we implemented some (optional) modifications that are also available in this library. See the <a href="https://rdrr.io/bioc/limma/man/weightedLowess.html"><code>?weightedLowess</code> documentation</a> for more details.</p>
 <ul>
 <li>If additional weights are specified, we allow them to be interpreted as frequencies. As a result, the weights are used in determining the width of the smoothing window around each anchor, in addition to their usual role in the local linear regression.</li>
 <li>The <code>delta</code> value can be automatically determined from a pre-specified number of anchor points. This provides a convenient way of controlling the approximation fidelity.</li>
 </ul>
-<p>In this library, we also implement some further modifications from <code>limma::weightedLowess</code>:</p>
+<p>In this library, we implement some further modifications from <code>limma::weightedLowess</code>:</p>
 <ul>
 <li>The number of robustness iterations in this library refers to additional iterations beyond the first fit, while the number of robustness iterations in <code>limma::weightedLowess</code> includes the first fit. So 3 iterations here are equivalent to 4 iterations in <code>limma::weightedLowess</code>.</li>
 <li>We omit the early termination condition when the MAD of the residuals is much lower than the mean. This avoids inappropriate termination of the robustness iterations in pathological scenarios.</li>
 <li>We provide extra protection for the edge case where the robustness weighting causes the sum of weights in a window to be zero. In such cases, we simply ignore the robustness weights when computing the smoothed value.</li>
 </ul>
-<p>See the <a href="https://rdrr.io/bioc/limma/man/weightedLowess.html"><code>?weightedLowess</code> documentation</a> for more details.</p>
 <h1>Usage</h1>
 <p>Using this library is as simple as including the header file in your source code:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="WeightedLowess_8hpp.html">WeightedLowess/WeightedLowess.hpp</a>&quot;</span></div>
