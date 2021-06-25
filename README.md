@@ -1,5 +1,8 @@
 # Weighted LOWESS for C++
 
+![Unit tests](https://github.com/LTLA/CppWeightedLowess/actions/workflows/run-tests.yaml/badge.svg)
+![Documentation](https://github.com/LTLA/CppWeightedLowess/actions/workflows/doxygenate.yaml/badge.svg)
+
 ## Overview
 
 This C++ library implements the Locally Weighted Scatterplot Smoothing (LOWESS) method described by Cleveland (1979, 1981).

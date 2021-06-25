@@ -3,7 +3,7 @@ on:
     branches:
       - master
 
-name: Doxygenate the API
+name: Build documentation
 
 jobs:
   doxygenator:
