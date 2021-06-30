@@ -19,6 +19,8 @@ jobs:
         BiocManager::install(c("limma", "Rcpp", "testthat"))
 
     - name: Run the comparisons
+      shell: Rscript {0}
       run: |
-        cd tests/R
-        R -e 'testthat::test_file("build.R")'
+        setwd("tests/R")
+        output <- testthat::test_file("run.R")
+        q(status=any(as.data.frame(output)$failed), save="no")
