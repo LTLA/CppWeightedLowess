@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - master
+
+name: limma comparison
+
+jobs:
+  build:
+    name: Compare to limma reference
+    runs-on: ubuntu-latest
+    container: bioconductor/bioconductor_docker:devel
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install packages
+      shell: Rscript {0}
+      run: |
+        BiocManager::install(c("limma", "Rcpp", "testthat"))
+
+    - name: Run the comparisons
+      run: |
+        cd tests/R
+        R -e 'testthat::test_file("build.R")'

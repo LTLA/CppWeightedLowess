@@ -2,6 +2,7 @@
 
 ![Unit tests](https://github.com/LTLA/CppWeightedLowess/actions/workflows/run-tests.yaml/badge.svg)
 ![Documentation](https://github.com/LTLA/CppWeightedLowess/actions/workflows/doxygenate.yaml/badge.svg)
+![Limma comparison](https://github.com/LTLA/CppWeightedLowess/actions/workflows/compare-limma.yaml/badge.svg)
 
 ## Overview
 
