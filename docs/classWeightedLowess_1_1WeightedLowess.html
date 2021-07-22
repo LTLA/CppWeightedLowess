@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>WeightedLowess: WeightedLowess::WeightedLowess Class Reference</title>
+<title>WeightedLowess: WeightedLowess::WeightedLowess&lt; Data_t &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,11 +72,11 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classWeightedLowess_1_1WeightedLowess-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">WeightedLowess::WeightedLowess Class Reference</div>  </div>
+<div class="title">WeightedLowess::WeightedLowess&lt; Data_t &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Run the weighted LOWESS algorithm given vectors of x- and y-coordinates (and possibly weights).  
+<p>Run a (weighted) LOWESS algorithm from vectors of x- and y-coordinates.  
  <a href="classWeightedLowess_1_1WeightedLowess.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="WeightedLowess_8hpp_source.html">WeightedLowess.hpp</a>&gt;</code></p>
@@ -89,42 +89,53 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a346936b142a499ba9ffa10805e6f5eb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a346936b142a499ba9ffa10805e6f5eb2">set_span</a> (double s=0.3)</td></tr>
-<tr class="separator:a346936b142a499ba9ffa10805e6f5eb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82a2425e53d00c760a401b2c013b10f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a82a2425e53d00c760a401b2c013b10f8">set_anchors</a> (int p=200)</td></tr>
-<tr class="separator:a82a2425e53d00c760a401b2c013b10f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33f6c6087c07fe077c94dee142d0a528"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a33f6c6087c07fe077c94dee142d0a528">set_iterations</a> (int i=3)</td></tr>
-<tr class="separator:a33f6c6087c07fe077c94dee142d0a528"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a048362e9255e82979fc58ab0b2eaf8c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a048362e9255e82979fc58ab0b2eaf8c8">set_delta</a> (double d=-1)</td></tr>
-<tr class="separator:a048362e9255e82979fc58ab0b2eaf8c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2ba900e8a6e6081c7e55236012e7757"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#ac2ba900e8a6e6081c7e55236012e7757">set_sorted</a> (bool s=false)</td></tr>
-<tr class="separator:ac2ba900e8a6e6081c7e55236012e7757"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62b637fba5bf26488674c7107b7657ce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a62b637fba5bf26488674c7107b7657ce">set_as_frequency_weights</a> (bool f=true)</td></tr>
-<tr class="separator:a62b637fba5bf26488674c7107b7657ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af24c296590119c25d844eff1edd4169d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#af24c296590119c25d844eff1edd4169d">run</a> (size_t n, const double *x, const double *y, const double *weights, double *fitted, double *robust_weights)</td></tr>
-<tr class="separator:af24c296590119c25d844eff1edd4169d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe8ef4d4f31171d4ad9d6cb6c3199de4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#abe8ef4d4f31171d4ad9d6cb6c3199de4">run_in_place</a> (size_t n, double *x, double *y, double *weights, double *fitted, double *robust_weights)</td></tr>
-<tr class="separator:abe8ef4d4f31171d4ad9d6cb6c3199de4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec478b6ddb58b53cd5930f0f3d587505"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structWeightedLowess_1_1WeightedLowess_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#aec478b6ddb58b53cd5930f0f3d587505">run</a> (size_t n, const double *x, const double *y, const double *weights=NULL)</td></tr>
-<tr class="separator:aec478b6ddb58b53cd5930f0f3d587505"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1e4dfc3d4ccb21a7e9fa15e5bdb94cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structWeightedLowess_1_1WeightedLowess_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#ae1e4dfc3d4ccb21a7e9fa15e5bdb94cc">run_in_place</a> (size_t n, double *x, double *y, double *weights=NULL)</td></tr>
-<tr class="separator:ae1e4dfc3d4ccb21a7e9fa15e5bdb94cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a8e9331a145540b24919335e2a359fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a0a8e9331a145540b24919335e2a359fa">set_span</a> (Data_t s=0.3)</td></tr>
+<tr class="separator:a0a8e9331a145540b24919335e2a359fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac78ecfaca1284705b398aed2cacdcbe6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#ac78ecfaca1284705b398aed2cacdcbe6">set_anchors</a> (int p=200)</td></tr>
+<tr class="separator:ac78ecfaca1284705b398aed2cacdcbe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abec967953e671ea341fe8bcd7e05727f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#abec967953e671ea341fe8bcd7e05727f">set_iterations</a> (int i=3)</td></tr>
+<tr class="separator:abec967953e671ea341fe8bcd7e05727f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75011e69b6f66a5a2679b131bc0dab88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a75011e69b6f66a5a2679b131bc0dab88">set_delta</a> (Data_t d=-1)</td></tr>
+<tr class="separator:a75011e69b6f66a5a2679b131bc0dab88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2d9cdaf9a440155461a7a37b25bd4ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#af2d9cdaf9a440155461a7a37b25bd4ca">set_sorted</a> (bool s=false)</td></tr>
+<tr class="separator:af2d9cdaf9a440155461a7a37b25bd4ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34c3c4d1ba7a03ba6d8e7df92b7c9249"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a34c3c4d1ba7a03ba6d8e7df92b7c9249">set_as_frequency_weights</a> (bool f=true)</td></tr>
+<tr class="separator:a34c3c4d1ba7a03ba6d8e7df92b7c9249"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61a061b4cd183bf44a4ab13ba90e3879"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a61a061b4cd183bf44a4ab13ba90e3879">run</a> (size_t n, const Data_t *x, const Data_t *y, const Data_t *weights, Data_t *fitted, Data_t *robust_weights)</td></tr>
+<tr class="separator:a61a061b4cd183bf44a4ab13ba90e3879"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c19ef6a8e943791886a833045d0b5a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a9c19ef6a8e943791886a833045d0b5a3">run_in_place</a> (size_t n, Data_t *x, Data_t *y, Data_t *weights, Data_t *fitted, Data_t *robust_weights)</td></tr>
+<tr class="separator:a9c19ef6a8e943791886a833045d0b5a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a545efcf2f6c22632eed44879096d2980"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structWeightedLowess_1_1WeightedLowess_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a545efcf2f6c22632eed44879096d2980">run</a> (size_t n, const Data_t *x, const Data_t *y, const Data_t *weights=NULL)</td></tr>
+<tr class="separator:a545efcf2f6c22632eed44879096d2980"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5f7b93b3976cca04612c221944b27f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structWeightedLowess_1_1WeightedLowess_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#ac5f7b93b3976cca04612c221944b27f2">run_in_place</a> (size_t n, Data_t *x, Data_t *y, Data_t *weights=NULL)</td></tr>
+<tr class="separator:ac5f7b93b3976cca04612c221944b27f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Run the weighted LOWESS algorithm given vectors of x- and y-coordinates (and possibly weights). </p>
-<p>The <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#af24c296590119c25d844eff1edd4169d">run()</a></code> method performs the smoothing while the various <code>set_*()</code> methods allow users to easily modify optional parameters. </p>
+<div class="textblock"><h3>template&lt;typename Data_t = double&gt;<br />
+class WeightedLowess::WeightedLowess&lt; Data_t &gt;</h3>
+
+<p>Run a (weighted) LOWESS algorithm from vectors of x- and y-coordinates. </p>
+<p>LOWESS is a simple, efficient, general-purpose non-parametric smoothing algorithm. As the name suggests, the idea is to perform linear regressions on subsets of neighboring points, yielding a smooth curve fit to the data. The <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a61a061b4cd183bf44a4ab13ba90e3879">run()</a></code> method performs the smoothing while the various setter methods (e.g., <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a0a8e9331a145540b24919335e2a359fa">set_span()</a></code>) allow users to easily modify optional parameters.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Data_t</td><td>Floating-point type for the data. </td></tr>
+  </table>
+  </dd>
+</dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="af24c296590119c25d844eff1edd4169d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af24c296590119c25d844eff1edd4169d">&#9670;&nbsp;</a></span>run() <span class="overload">[1/2]</span></h2>
+<a id="a61a061b4cd183bf44a4ab13ba90e3879"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61a061b4cd183bf44a4ab13ba90e3879">&#9670;&nbsp;</a></span>run() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_t  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void WeightedLowess::WeightedLowess::run </td>
+          <td class="memname">void <a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess::WeightedLowess</a>&lt; Data_t &gt;::run </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>n</em>, </td>
@@ -132,31 +143,31 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double *&#160;</td>
+          <td class="paramtype">const Data_t *&#160;</td>
           <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double *&#160;</td>
+          <td class="paramtype">const Data_t *&#160;</td>
           <td class="paramname"><em>y</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double *&#160;</td>
+          <td class="paramtype">const Data_t *&#160;</td>
           <td class="paramname"><em>weights</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&#160;</td>
+          <td class="paramtype">Data_t *&#160;</td>
           <td class="paramname"><em>fitted</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&#160;</td>
+          <td class="paramtype">Data_t *&#160;</td>
           <td class="paramname"><em>robust_weights</em>&#160;</td>
         </tr>
         <tr>
@@ -186,17 +197,19 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aec478b6ddb58b53cd5930f0f3d587505"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec478b6ddb58b53cd5930f0f3d587505">&#9670;&nbsp;</a></span>run() <span class="overload">[2/2]</span></h2>
+<a id="a545efcf2f6c22632eed44879096d2980"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a545efcf2f6c22632eed44879096d2980">&#9670;&nbsp;</a></span>run() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_t  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structWeightedLowess_1_1WeightedLowess_1_1Results.html">Results</a> WeightedLowess::WeightedLowess::run </td>
+          <td class="memname"><a class="el" href="structWeightedLowess_1_1WeightedLowess_1_1Results.html">Results</a> <a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess::WeightedLowess</a>&lt; Data_t &gt;::run </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>n</em>, </td>
@@ -204,19 +217,19 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double *&#160;</td>
+          <td class="paramtype">const Data_t *&#160;</td>
           <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double *&#160;</td>
+          <td class="paramtype">const Data_t *&#160;</td>
           <td class="paramname"><em>y</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double *&#160;</td>
+          <td class="paramtype">const Data_t *&#160;</td>
           <td class="paramname"><em>weights</em> = <code>NULL</code>&#160;</td>
         </tr>
         <tr>
@@ -245,17 +258,19 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="abe8ef4d4f31171d4ad9d6cb6c3199de4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe8ef4d4f31171d4ad9d6cb6c3199de4">&#9670;&nbsp;</a></span>run_in_place() <span class="overload">[1/2]</span></h2>
+<a id="a9c19ef6a8e943791886a833045d0b5a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c19ef6a8e943791886a833045d0b5a3">&#9670;&nbsp;</a></span>run_in_place() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_t  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void WeightedLowess::WeightedLowess::run_in_place </td>
+          <td class="memname">void <a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess::WeightedLowess</a>&lt; Data_t &gt;::run_in_place </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>n</em>, </td>
@@ -263,31 +278,31 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&#160;</td>
+          <td class="paramtype">Data_t *&#160;</td>
           <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&#160;</td>
+          <td class="paramtype">Data_t *&#160;</td>
           <td class="paramname"><em>y</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&#160;</td>
+          <td class="paramtype">Data_t *&#160;</td>
           <td class="paramname"><em>weights</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&#160;</td>
+          <td class="paramtype">Data_t *&#160;</td>
           <td class="paramname"><em>fitted</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&#160;</td>
+          <td class="paramtype">Data_t *&#160;</td>
           <td class="paramname"><em>robust_weights</em>&#160;</td>
         </tr>
         <tr>
@@ -302,7 +317,7 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Run the LOWESS smoother and fill output arrays with the smoothed values. This differs from <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#af24c296590119c25d844eff1edd4169d">run()</a></code> in that <code>x</code> and <code>y</code> (and <code>weights</code>, if supplied) will be arbitrarily modified on output, allowing us to avoid a copy if they are no longer needed after this method call.</p>
+<p>Run the LOWESS smoother and fill output arrays with the smoothed values. This differs from <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a61a061b4cd183bf44a4ab13ba90e3879">run()</a></code> in that <code>x</code> and <code>y</code> (and <code>weights</code>, if supplied) will be arbitrarily modified on output, allowing us to avoid a copy if they are no longer needed after this method call.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">n</td><td>Number of points. </td></tr>
@@ -317,17 +332,19 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae1e4dfc3d4ccb21a7e9fa15e5bdb94cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1e4dfc3d4ccb21a7e9fa15e5bdb94cc">&#9670;&nbsp;</a></span>run_in_place() <span class="overload">[2/2]</span></h2>
+<a id="ac5f7b93b3976cca04612c221944b27f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5f7b93b3976cca04612c221944b27f2">&#9670;&nbsp;</a></span>run_in_place() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_t  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structWeightedLowess_1_1WeightedLowess_1_1Results.html">Results</a> WeightedLowess::WeightedLowess::run_in_place </td>
+          <td class="memname"><a class="el" href="structWeightedLowess_1_1WeightedLowess_1_1Results.html">Results</a> <a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess::WeightedLowess</a>&lt; Data_t &gt;::run_in_place </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>n</em>, </td>
@@ -335,19 +352,19 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&#160;</td>
+          <td class="paramtype">Data_t *&#160;</td>
           <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&#160;</td>
+          <td class="paramtype">Data_t *&#160;</td>
           <td class="paramname"><em>y</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&#160;</td>
+          <td class="paramtype">Data_t *&#160;</td>
           <td class="paramname"><em>weights</em> = <code>NULL</code>&#160;</td>
         </tr>
         <tr>
@@ -362,7 +379,7 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Run the LOWESS smoother and return a <code><a class="el" href="structWeightedLowess_1_1WeightedLowess_1_1Results.html" title="Store the smoothing results.">Results</a></code> object. This differs from <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#af24c296590119c25d844eff1edd4169d">run()</a></code> in that <code>x</code> and <code>y</code> (and <code>weights</code>, if supplied) will be arbitrarily modified on output, allowing us to avoid a copy if they are no longer needed after this method call.</p>
+<p>Run the LOWESS smoother and return a <code><a class="el" href="structWeightedLowess_1_1WeightedLowess_1_1Results.html" title="Store the smoothing results.">Results</a></code> object. This differs from <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a61a061b4cd183bf44a4ab13ba90e3879">run()</a></code> in that <code>x</code> and <code>y</code> (and <code>weights</code>, if supplied) will be arbitrarily modified on output, allowing us to avoid a copy if they are no longer needed after this method call.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">n</td><td>Number of points. </td></tr>
@@ -376,17 +393,19 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a82a2425e53d00c760a401b2c013b10f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82a2425e53d00c760a401b2c013b10f8">&#9670;&nbsp;</a></span>set_anchors()</h2>
+<a id="ac78ecfaca1284705b398aed2cacdcbe6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac78ecfaca1284705b398aed2cacdcbe6">&#9670;&nbsp;</a></span>set_anchors()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_t  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; WeightedLowess::WeightedLowess::set_anchors </td>
+          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; <a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess::WeightedLowess</a>&lt; Data_t &gt;::set_anchors </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>p</em> = <code>200</code></td><td>)</td>
@@ -399,28 +418,30 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Set the number of points that can be used as "anchors". LOWESS smoothing is performed exactly for each anchor, while the fitted values for all intervening points are computed by linear interpolation. A higher number of anchor points improves accuracy at the cost of computational work. If the specified number of anchors is greater than the number of points, LOWESS smoothing is performed directly for each point. This setting is ignored if <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a048362e9255e82979fc58ab0b2eaf8c8">set_delta()</a></code> is set to a non-negative value.</p>
+<p>Set the number of points that can be used as "anchors". LOWESS smoothing is performed exactly for each anchor, while the fitted values for all intervening points are computed by linear interpolation. A higher number of anchor points improves accuracy at the cost of computational work. If the specified number of anchors is greater than the number of points, LOWESS smoothing is performed directly for each point. This setting is ignored if <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a75011e69b6f66a5a2679b131bc0dab88">set_delta()</a></code> is set to a non-negative value.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">p</td><td>Number of anchors.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run the weighted LOWESS algorithm given vectors of x- and y-coordinates (and possibly weights).">WeightedLowess</a></code> object is returned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run a (weighted) LOWESS algorithm from vectors of x- and y-coordinates.">WeightedLowess</a></code> object is returned. </dd></dl>
 
 </div>
 </div>
-<a id="a62b637fba5bf26488674c7107b7657ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62b637fba5bf26488674c7107b7657ce">&#9670;&nbsp;</a></span>set_as_frequency_weights()</h2>
+<a id="a34c3c4d1ba7a03ba6d8e7df92b7c9249"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34c3c4d1ba7a03ba6d8e7df92b7c9249">&#9670;&nbsp;</a></span>set_as_frequency_weights()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_t  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; WeightedLowess::WeightedLowess::set_as_frequency_weights </td>
+          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; <a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess::WeightedLowess</a>&lt; Data_t &gt;::set_as_frequency_weights </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>f</em> = <code>true</code></td><td>)</td>
@@ -440,23 +461,25 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run the weighted LOWESS algorithm given vectors of x- and y-coordinates (and possibly weights).">WeightedLowess</a></code> object is returned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run a (weighted) LOWESS algorithm from vectors of x- and y-coordinates.">WeightedLowess</a></code> object is returned. </dd></dl>
 
 </div>
 </div>
-<a id="a048362e9255e82979fc58ab0b2eaf8c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a048362e9255e82979fc58ab0b2eaf8c8">&#9670;&nbsp;</a></span>set_delta()</h2>
+<a id="a75011e69b6f66a5a2679b131bc0dab88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75011e69b6f66a5a2679b131bc0dab88">&#9670;&nbsp;</a></span>set_delta()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_t  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; WeightedLowess::WeightedLowess::set_delta </td>
+          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; <a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess::WeightedLowess</a>&lt; Data_t &gt;::set_delta </td>
           <td>(</td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">Data_t&#160;</td>
           <td class="paramname"><em>d</em> = <code>-1</code></td><td>)</td>
           <td></td>
         </tr>
@@ -474,21 +497,23 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run the weighted LOWESS algorithm given vectors of x- and y-coordinates (and possibly weights).">WeightedLowess</a></code> object is returned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run a (weighted) LOWESS algorithm from vectors of x- and y-coordinates.">WeightedLowess</a></code> object is returned. </dd></dl>
 
 </div>
 </div>
-<a id="a33f6c6087c07fe077c94dee142d0a528"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33f6c6087c07fe077c94dee142d0a528">&#9670;&nbsp;</a></span>set_iterations()</h2>
+<a id="abec967953e671ea341fe8bcd7e05727f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abec967953e671ea341fe8bcd7e05727f">&#9670;&nbsp;</a></span>set_iterations()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_t  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; WeightedLowess::WeightedLowess::set_iterations </td>
+          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; <a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess::WeightedLowess</a>&lt; Data_t &gt;::set_iterations </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>i</em> = <code>3</code></td><td>)</td>
@@ -508,21 +533,23 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run the weighted LOWESS algorithm given vectors of x- and y-coordinates (and possibly weights).">WeightedLowess</a></code> object is returned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run a (weighted) LOWESS algorithm from vectors of x- and y-coordinates.">WeightedLowess</a></code> object is returned. </dd></dl>
 
 </div>
 </div>
-<a id="ac2ba900e8a6e6081c7e55236012e7757"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac2ba900e8a6e6081c7e55236012e7757">&#9670;&nbsp;</a></span>set_sorted()</h2>
+<a id="af2d9cdaf9a440155461a7a37b25bd4ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2d9cdaf9a440155461a7a37b25bd4ca">&#9670;&nbsp;</a></span>set_sorted()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_t  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; WeightedLowess::WeightedLowess::set_sorted </td>
+          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; <a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess::WeightedLowess</a>&lt; Data_t &gt;::set_sorted </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>s</em> = <code>false</code></td><td>)</td>
@@ -535,30 +562,32 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Specify that the input data are already sorted on the x-values. This will cause <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#af24c296590119c25d844eff1edd4169d">run()</a></code> to skip the sorting step.</p>
+<p>Specify that the input data are already sorted on the x-values. This will cause <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a61a061b4cd183bf44a4ab13ba90e3879">run()</a></code> to skip the sorting step.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">s</td><td>Whether the input data are already sorted.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run the weighted LOWESS algorithm given vectors of x- and y-coordinates (and possibly weights).">WeightedLowess</a></code> object is returned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run a (weighted) LOWESS algorithm from vectors of x- and y-coordinates.">WeightedLowess</a></code> object is returned. </dd></dl>
 
 </div>
 </div>
-<a id="a346936b142a499ba9ffa10805e6f5eb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a346936b142a499ba9ffa10805e6f5eb2">&#9670;&nbsp;</a></span>set_span()</h2>
+<a id="a0a8e9331a145540b24919335e2a359fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a8e9331a145540b24919335e2a359fa">&#9670;&nbsp;</a></span>set_span()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_t  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; WeightedLowess::WeightedLowess::set_span </td>
+          <td class="memname"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a>&amp; <a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess::WeightedLowess</a>&lt; Data_t &gt;::set_span </td>
           <td>(</td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">Data_t&#160;</td>
           <td class="paramname"><em>s</em> = <code>0.3</code></td><td>)</td>
           <td></td>
         </tr>
@@ -569,14 +598,14 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Set the width of the smoothing window around each point, parametrized as a proportion of the total number of points. Each window is defined as the smallest interval centered on the current point that covers the specified proportion. If <code>weights</code> are provided to <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#af24c296590119c25d844eff1edd4169d">run()</a></code> and <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a62b637fba5bf26488674c7107b7657ce">set_as_frequency_weights()</a></code> is set to <code>true</code>, the span is defined from the proportion of the total weight across all points. This interprets the weights on each observation as relative frequencies.</p>
+<p>Set the width of the smoothing window around each point, parametrized as a proportion of the total number of points. Each window is defined as the smallest interval centered on the current point that covers the specified proportion. If <code>weights</code> are provided to <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a61a061b4cd183bf44a4ab13ba90e3879">run()</a></code> and <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#a34c3c4d1ba7a03ba6d8e7df92b7c9249">set_as_frequency_weights()</a></code> is set to <code>true</code>, the span is defined from the proportion of the total weight across all points. This interprets the weights on each observation as relative frequencies.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">s</td><td>Span value, between 0 and 1.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run the weighted LOWESS algorithm given vectors of x- and y-coordinates (and possibly weights).">WeightedLowess</a></code> object is returned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the modified <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html" title="Run a (weighted) LOWESS algorithm from vectors of x- and y-coordinates.">WeightedLowess</a></code> object is returned. </dd></dl>
 
 </div>
 </div>
