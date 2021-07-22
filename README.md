@@ -53,19 +53,34 @@ Using this library is as simple as including the header file in your source code
 ```cpp
 #include "WeightedLowess/WeightedLowess.hpp"
 
+// ... standard boilerplate here...
+
 WeightedLowess::WeightedLowess smoother;
-
-// Optional: set parameters.
-smoother.set_span(0.5).set_anchors(100);
-
-// Run on some input values.
 auto results = smoother.run(num_points, x, y);
 results.fitted;
 ```
 
+We can set parameters in the `WeightedLowess` instance by calling the various `set_*` methods.
+Note that these changes will persist for the lifetime of the object (or until they are changed back).
+
+```cpp
+// Optional: set parameters.
+smoother.set_span(0.5).set_anchors(100);
+auto results2 = smoother.run(num_points, x, y);
+```
+
+If users already have an appropriate buffer for the fitted values and residuals, they can be filled directly with the results:
+
+```cpp
+std::vector<double> fitted(num_points), resids(num_points);
+smoother.run(num_points, x, y, NULL, fitted.data(), resids.data());
+```
+
 See the [reference documentation](https://ltla.github.io/CppWeightedLowess) for more details.
 
-If you're already using CMake, then you just need to add something like this to your `CMakeLists.txt`:
+## Building projects
+
+If you're already using CMake, you can add something like this to your `CMakeLists.txt`:
 
 ```
 include(FetchContent)
@@ -100,4 +115,3 @@ _Journal of the American Statistical Association_ 74(368), 829-836.
 Cleveland, W.S. (1981). 
 LOWESS: A program for smoothing scatterplots by robust locally weighted regression. 
 _The American Statistician_ 35(1), 54.
-
