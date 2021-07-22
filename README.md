@@ -3,6 +3,7 @@
 ![Unit tests](https://github.com/LTLA/CppWeightedLowess/actions/workflows/run-tests.yaml/badge.svg)
 ![Documentation](https://github.com/LTLA/CppWeightedLowess/actions/workflows/doxygenate.yaml/badge.svg)
 ![Limma comparison](https://github.com/LTLA/CppWeightedLowess/actions/workflows/compare-limma.yaml/badge.svg)
+[![Codecov](https://codecov.io/gh/LTLA/CppWeightedLowess/branch/master/graph/badge.svg?token=GBHWVK9MFY)](https://codecov.io/gh/LTLA/CppWeightedLowess)
 
 ## Overview
 
