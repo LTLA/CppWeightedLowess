@@ -623,13 +623,18 @@ public:
             /* Sorts the observations by the means, applies the same permutation to the
              * variances. This makes downstream processing quite a lot easier.
              */
-            xbuffer = std::vector<Data_t>(x, x + n);
-            ybuffer = std::vector<Data_t>(y, y + n);
+            xbuffer.resize(n);
+            std::copy(x, x + n, xbuffer.data());
+            ybuffer.resize(n);
+            std::copy(y, y + n, ybuffer.data());
+
             Data_t* wptr = NULL;
             if (weights) {
-                wbuffer = std::vector<Data_t>(weights, weights + n);
+                wbuffer.resize(n);
+                std::copy(weights, weights + n, wbuffer.data());
                 wptr = wbuffer.data();
             }
+
             sort_and_run(n, xbuffer.data(), ybuffer.data(), wptr, fitted, robust_weights);
         }
         return;
