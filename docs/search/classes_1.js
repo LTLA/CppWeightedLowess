@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['weightedlowess_15',['WeightedLowess',['../classWeightedLowess_1_1WeightedLowess.html',1,'WeightedLowess']]]
+  ['results_0',['Results',['../structWeightedLowess_1_1WeightedLowess_1_1Results.html',1,'WeightedLowess::WeightedLowess']]]
 ];
