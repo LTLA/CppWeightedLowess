@@ -30,6 +30,42 @@ template<typename Data_t = double>
 class WeightedLowess {
 public:
     /**
+     * @brief Default parameter settings.
+     */
+    struct Defaults {
+        /**
+         * See `set_span()` for more details.
+         */
+        static constexpr Data_t span = 0.3;
+
+        /**
+         * See `set_anchors()` for more details.
+         */
+        static constexpr int anchors = 200;
+
+        /**
+         * See `set_iterations()` for more details.
+         */
+        static constexpr int iterations = 3;
+
+        /**
+         * See `set_delta()` for more details.
+         */
+        static constexpr Data_t delta = -1;
+
+        /**
+         * See `set_sorted()` for more details.
+         */
+        static constexpr bool sorted = false;
+
+        /**
+         * See `set_frequency_weights()` for more details.
+         */
+        static constexpr bool frequency_weights = true;
+    };
+
+public:
+    /**
      * Set the width of the smoothing window around each point, parametrized as a proportion of the total number of points.
      * Each window is defined as the smallest interval centered on the current point that covers the specified proportion.
      * If `weights` are provided to `run()` and `set_as_frequency_weights()` is set to `true`, the span is defined from the proportion of the total weight across all points.
@@ -39,7 +75,7 @@ public:
      *
      * @return A reference to the modified `WeightedLowess` object is returned.
      */
-    WeightedLowess& set_span(Data_t s = 0.3) {
+    WeightedLowess& set_span(Data_t s = Defaults::span) {
         span = s;
         return *this;
     }
@@ -55,7 +91,7 @@ public:
      *
      * @return A reference to the modified `WeightedLowess` object is returned.
      */
-    WeightedLowess& set_anchors(int p = 200) {
+    WeightedLowess& set_anchors(int p = Defaults::anchors) {
         points = p;
         return *this;
     }
@@ -69,7 +105,7 @@ public:
      *
      * @return A reference to the modified `WeightedLowess` object is returned.
      */
-    WeightedLowess& set_iterations(int i = 3) {
+    WeightedLowess& set_iterations(int i = Defaults::iterations) {
         iterations = i;
         return *this;
     }
@@ -85,7 +121,7 @@ public:
      *
      * @return A reference to the modified `WeightedLowess` object is returned.
      */
-    WeightedLowess& set_delta(Data_t d = -1) {
+    WeightedLowess& set_delta(Data_t d = Defaults::delta) {
         delta = d;
         return *this;
     }
@@ -98,7 +134,7 @@ public:
      *
      * @return A reference to the modified `WeightedLowess` object is returned.
      */
-    WeightedLowess& set_sorted(bool s = false) {
+    WeightedLowess& set_sorted(bool s = Defaults::sorted) {
         sorted = s;
         return *this;
     }
@@ -112,19 +148,19 @@ public:
      *
      * @return A reference to the modified `WeightedLowess` object is returned.
      */
-    WeightedLowess& set_as_frequency_weights(bool f = true) {
+    WeightedLowess& set_as_frequency_weights(bool f = Defaults::frequency_weights) {
         freqweights = f;
         return *this;
     }
 
 
 private:
-    Data_t span = 0.3;
-    int points = 200;
-    int iterations = 3;
-    Data_t delta = -1;
-    bool sorted = false;
-    bool freqweights = true;
+    Data_t span = Defaults::span;
+    int points = Defaults::anchors;
+    int iterations = Defaults::iterations;
+    Data_t delta = Defaults::delta;
+    bool sorted = Defaults::sorted;
+    bool freqweights = Defaults::frequency_weights;
 
 private:
     std::vector<Data_t> diffs;
