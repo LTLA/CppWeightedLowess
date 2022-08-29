@@ -1,9 +1,9 @@
 <map id="WeightedLowess/WeightedLowess.hpp" name="WeightedLowess/WeightedLowess.hpp">
-<area shape="rect" id="node1" title="LOWESS implementation generalized for frequency weights." alt="" coords="133,5,384,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,80,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="104,80,163,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="187,80,248,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="272,80,331,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="355,80,423,107"/>
-<area shape="rect" id="node7" title=" " alt="" coords="448,80,520,107"/>
+<area shape="rect" id="node1" title="LOWESS implementation generalized for frequency weights." alt="" coords="133,5,384,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,80,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="104,79,163,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="187,79,248,104"/>
+<area shape="rect" id="node5" title=" " alt="" coords="272,79,331,104"/>
+<area shape="rect" id="node6" title=" " alt="" coords="355,79,423,104"/>
+<area shape="rect" id="node7" title=" " alt="" coords="448,79,520,104"/>
 </map>
