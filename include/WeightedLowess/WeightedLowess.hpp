@@ -39,6 +39,16 @@ public:
         static constexpr Data_t span = 0.3;
 
         /**
+         * See `set_span_as_proportion()` for more details.
+         */
+        static constexpr bool span_as_proportion = true;
+
+        /**
+         * See `set_min_width()` for more details.
+         */
+        static constexpr Data_t min_width = 0;
+
+        /**
          * See `set_anchors()` for more details.
          */
         static constexpr int anchors = 200;
@@ -77,6 +87,33 @@ public:
      */
     WeightedLowess& set_span(Data_t s = Defaults::span) {
         span = s;
+        return *this;
+    }
+
+    /**
+     * Specify whether the span should be interpreted as a proportion of the total number of points.
+     * If `false`, the value used in `set_span()` is directly interpreted as the number of points that must fall inside the window.
+     * If `false` and `weights` are provided to `run()` and `set_as_frequency_weights()` is set to `true`, the value in `set_span()` is interpreted as the sum of weights inside the window.
+     *
+     * @param s Whether to interpret the span as a proportion.
+     * 
+     * @return A reference to the modified `WeightedLowess` object is returned.
+     */
+    WeightedLowess& set_span_as_proportion(bool s = Defaults::span_as_proportion) {
+        span_as_proportion = s;
+        return *this;
+    }
+
+    /**
+     * Set the minimum width of the window centered around each point.
+     * This is useful for forcing a larger window in highly dense regions of the covariate range.
+     *
+     * @param m Minimum width of the window.
+     *
+     * @return A reference to the modified `WeightedLowess` object is returned.
+     */
+    WeightedLowess& set_min_width(Data_t m = Defaults::min_width) {
+        min_width = m;
         return *this;
     }
 
@@ -153,9 +190,10 @@ public:
         return *this;
     }
 
-
 private:
     Data_t span = Defaults::span;
+    bool span_as_proportion = Defaults::span_as_proportion;
+    Data_t min_width = Defaults::min_width;
     int points = Defaults::anchors;
     int iterations = Defaults::iterations;
     Data_t delta = Defaults::delta;
@@ -246,23 +284,26 @@ private:
                             size_t n,
                             const Data_t* x, 
                             const Data_t* weights,
+                            Data_t min_width,
                             std::vector<window>& limits)
     {
         const size_t nanchors = anchors.size();
         limits.resize(nanchors);
+        auto half_min_width = min_width / 2;
 
         for (size_t s = 0; s < nanchors; ++s) {
             auto curpt = anchors[s], left = curpt, right = curpt;
+            auto curx = x[curpt];
             Data_t curw = (weights == NULL ? 1 : weights[curpt]);
             bool ende = (curpt == n - 1), ends = (curpt == 0);
             Data_t mdist=0, ldist=0, rdist=0;
 
             while (curw < spanweight && (!ende || !ends)) {
                 if (!ends) {
-                    ldist = x[curpt] - x[left - 1];
+                    ldist = curx - x[left - 1];
                 }
                 if (!ende) {
-                    rdist = x[right + 1] - x[curpt];
+                    rdist = x[right + 1] - curx;
                 }
 
                 /* Move the span backwards. */
@@ -315,6 +356,25 @@ private:
 
             while (right < n - 1 && x[right]==x[right+1]) { 
                 ++right; 
+            }
+
+            /* Forcibly extending the span if it fails the min width.  We use
+             * the existing 'left' and 'right' to truncate the search space.
+             */
+            if (mdist < half_min_width) {
+                left = std::lower_bound(x, x + left, curx - half_min_width) - x; 
+
+                /* 'right' still refers to a point inside the window, and we
+                 * already know that the window is too small, so we shift it
+                 * forward by one to start searching outside. However,
+                 * upper_bound gives us the first element that is _outside_ the
+                 * window, so we need to subtract one to get to the last
+                 * element _inside_ the window.
+                 */
+                right = std::upper_bound(x + right + 1, x + n, curx + half_min_width) - x;
+                --right;
+
+                mdist = std::max(curx - x[left], x[right] - curx);
             }
 
             limits[s].left = left;
@@ -438,13 +498,8 @@ private:
         workspace.resize(n);
 
         /* Computing the span weight that each span must achieve. */
-        Data_t totalweight = 0;
-        if (weights != NULL) {
-            totalweight = std::accumulate(weights, weights + n, 0.0); 
-        } else {
-            totalweight = n;
-        }
-        const Data_t spanweight = totalweight * span;
+        const Data_t totalweight = (weights != NULL ? std::accumulate(weights, weights + n, 0.0) : n);
+        const Data_t spanweight = (span_as_proportion ? span * totalweight : span);
 
         /* Finding the anchors. If we're using the weights as frequencies, we
          * pass them in when we're looking for the span limits for each anchor.
@@ -456,7 +511,7 @@ private:
             anchors.resize(n);
             std::iota(anchors.begin(), anchors.end(), 0);
         }
-        find_limits(anchors, spanweight, n, x, (freqweights ? weights : NULL), limits);
+        find_limits(anchors, spanweight, n, x, (freqweights ? weights : NULL), min_width, limits);
 
         /* Setting up the robustness weights, if robustification is requested.
          */ 
