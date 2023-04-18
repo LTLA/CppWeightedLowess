@@ -17,6 +17,7 @@ test_that("default", {
     output <- weightedLowess(x, y)
     values <- run_weighted_lowess(x, y, w=numeric(0), span=0.3, npts=200, iterations=3)
     expect_equal(output$fitted, values[[1]])
+    expect_true(output$delta == 0)
 
     # Checking weights are correctly computed. Note that limma::weightedLowess
     # recomputes the weights _after_ the last iteration, while
@@ -25,6 +26,14 @@ test_that("default", {
     # matching weights.
     output <- weightedLowess(x, y, iterations=3)
     expect_equal(output$weights, values[[2]])
+
+    # Ramping up the number of points to force delta calculations.
+    x2 <- runif(10000)
+    y2 <- runif(10000)
+    output2 <- weightedLowess(x2, y2)
+    expect_true(output2$delta > 0)
+    values2 <- run_weighted_lowess(x2, y2, w=numeric(0), span=0.3, npts=200, iterations=3)
+    expect_equal(output2$fitted, values2[[1]])
 })
 
 test_that("approximations", {
