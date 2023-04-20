@@ -299,45 +299,48 @@ private:
                     rdist = x[right + 1] - curx;
                 }
 
-                /* Move the span backwards. */
+                // Go backwards if the left edge is not at the start already
+                // and the left distance is lower (or the right edge is at the end). 
+                bool go_back = false;
                 if (!ends) {
                     if (ende || ldist <= rdist) {
-                        --left;
+                        go_back = true;
+                    }
+                } 
 
-                        if (weights != NULL) {
-                            curw += weights[left];
-                        } else {
-                            ++curw;
-                        }
+                if (go_back)  {
+                    /* Move the span backwards. */
+                    --left;
 
-                        if (left==0) { 
-                            ends=1;
-                        }
+                    if (weights != NULL) {
+                        curw += weights[left];
+                    } else {
+                        ++curw;
+                    }
 
-                        if (mdist < ldist) { 
-                            mdist=ldist; 
-                        }
-                    } 
-                }
-                
-                /* Move the span forwards. */
-                if (!ende) {
-                    if (ends || ldist > rdist) {
-                        ++right;
+                    if (left==0) { 
+                        ends = true;
+                    }
 
-                        if (weights != NULL) {
-                            curw += weights[right];
-                        } else {
-                            ++curw;
-                        }
+                    if (mdist < ldist) { 
+                        mdist = ldist; 
+                    }
+                }  else {
+                    /* Move the span forwards. */
+                    ++right;
 
-                        if (right == n - 1) { 
-                            ende=1; 
-                        }
+                    if (weights != NULL) {
+                        curw += weights[right];
+                    } else {
+                        ++curw;
+                    }
 
-                        if (mdist < rdist) { 
-                            mdist=rdist; 
-                        }
+                    if (right == n - 1) { 
+                        ende = true; 
+                    }
+
+                    if (mdist < rdist) { 
+                        mdist = rdist; 
                     }
                 }
             }
