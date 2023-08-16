@@ -232,7 +232,7 @@ private:
         }
 
         std::sort(diffs.begin(), diffs.end());
-        for (size_t i = 1; i < diffs.size(); ++i) {
+        for (size_t i = 1; i < n_m1; ++i) {
             diffs[i] += diffs[i-1];            
         }
 
@@ -654,7 +654,7 @@ private:
         // Reordering values in place.
         std::vector<uint8_t> used(n);
         std::fill(used.begin(), used.end(), 0);
-        for (size_t i = 0; i < permutation.size(); ++i) {
+        for (size_t i = 0; i < n; ++i) {
             if (used[i]) {
                 continue;
             }
@@ -685,7 +685,7 @@ private:
 
         // Unpermuting the fitted values in place. 
         std::fill(used.begin(), used.end(), 0); 
-        for (size_t i = 0; i < permutation.size(); ++i) {
+        for (size_t i = 0; i < n; ++i) {
             if (used[i]) {
                 continue;
             }
