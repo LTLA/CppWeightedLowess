@@ -12,9 +12,13 @@
 /**
  * @file WeightedLowess.hpp
  *
- * @brief LOWESS implementation generalized for frequency weights.
+ * @brief LOWESS implementation with various weight schemes.
  */
 
+/**
+ * @namespace WeightedLowess
+ * @brief Namespace for LOWESS functions.
+ */
 namespace WeightedLowess {
 
 /**
@@ -121,7 +125,11 @@ public:
      * Set the number of points that can be used as "anchors".
      * LOWESS smoothing is performed exactly for each anchor, while the fitted values for all intervening points are computed by linear interpolation.
      * A higher number of anchor points improves accuracy at the cost of computational work.
+     *
+     * Note that this number is only used as a guideline by our LOWESS implementation.
+     * The actual number of selected anchors depends on the distribution of x-values; in addition, the first and last points are always used as the anchors,.
      * If the specified number of anchors is greater than the number of points, LOWESS smoothing is performed directly for each point.
+     *
      * This setting is ignored if `set_delta()` is set to a non-negative value.
      *
      * @param p Number of anchors.
@@ -241,7 +249,11 @@ private:
 private:
     /* Finding the anchor points, given the deltas. As previously mentioned, for
      * a anchor point with x-coordinate `x`, we skip all points in `[x, x +
-     * delta]` before finding the next anchor point.
+     * delta]` before finding the next anchor point. 
+     *
+     * We start at the first point (so it is always an anchor) and we do this
+     * skipping up to but not including the last point; the last point itself
+     * is always included as an anchor to ensure we have exactness at the ends.
      */
     static void find_anchors(size_t n, const Data_t* x, Data_t d, std::vector<size_t>& anchors) {
         anchors.clear();
