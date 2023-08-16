@@ -30,6 +30,8 @@ target_link_libraries(
     WeightedLowess
 )
 
+target_compile_options(libtest PRIVATE -Wall -Werror -Wpedantic -Wextra)
+
 set(CODE_COVERAGE "Enable coverage testing" OFF)
 if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(libtest PRIVATE -O0 -g --coverage)

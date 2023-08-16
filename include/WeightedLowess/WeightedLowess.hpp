@@ -51,7 +51,7 @@ public:
         /**
          * See `set_anchors()` for more details.
          */
-        static constexpr int anchors = 200;
+        static constexpr size_t anchors = 200;
 
         /**
          * See `set_iterations()` for more details.
@@ -128,7 +128,7 @@ public:
      *
      * @return A reference to the modified `WeightedLowess` object is returned.
      */
-    WeightedLowess& set_anchors(int p = Defaults::anchors) {
+    WeightedLowess& set_anchors(size_t p = Defaults::anchors) {
         points = p;
         return *this;
     }
@@ -194,7 +194,7 @@ private:
     Data_t span = Defaults::span;
     bool span_as_proportion = Defaults::span_as_proportion;
     Data_t min_width = Defaults::min_width;
-    int points = Defaults::anchors;
+    size_t points = Defaults::anchors;
     int iterations = Defaults::iterations;
     Data_t delta = Defaults::delta;
     bool sorted = Defaults::sorted;
@@ -216,9 +216,10 @@ private:
      * iteration to find the compromise that minimizes the 'delta' (and thus the 
      * degree of approximation in the final lowess calculation).
      */
-    static Data_t derive_delta(int points, size_t n, const Data_t* x) {
-        std::vector<Data_t> diffs(n - 1);
-        for (size_t i = 0; i < diffs.size(); ++i) {
+    static Data_t derive_delta(size_t points, size_t n, const Data_t* x) {
+        size_t n_m1 = n - 1;
+        std::vector<Data_t> diffs(n_m1);
+        for (size_t i = 0; i < n_m1; ++i) {
             diffs[i] = x[i + 1] - x[i];
         }
 
@@ -228,7 +229,8 @@ private:
         }
 
         Data_t lowest_delta = diffs.back();
-        for (size_t nskips = 0; nskips < points - 1 && nskips < diffs.size() - 1; ++nskips) {
+        size_t p_m1 = points - 1;
+        for (size_t nskips = 0; nskips < p_m1 && nskips < n_m1; ++nskips) {
             Data_t candidate_delta = diffs[diffs.size() - nskips - 1] / (points - nskips);
             lowest_delta = std::min(candidate_delta, lowest_delta);
         }
@@ -246,14 +248,15 @@ private:
         anchors.push_back(0);
 
         size_t last_pt = 0;
-        for (size_t pt = 1; pt < n - 1; ++pt) {
+        size_t n_m1 = n - 1;
+        for (size_t pt = 1; pt < n_m1; ++pt) {
             if (x[pt] - x[last_pt] > d) {
                 anchors.push_back(pt);
                 last_pt = pt;
             }
         }
 
-        anchors.push_back(n - 1);
+        anchors.push_back(n_m1);
         return;
     }
 
@@ -390,7 +393,6 @@ private:
      * combination of tricube, prior and robustness weighting. 
      */
     static Data_t lowess_fit (const size_t curpt, const window& limits, 
-                              size_t n,
                               const Data_t* x,
                               const Data_t* y,
                               const Data_t* weights, 
@@ -532,12 +534,12 @@ private:
         }
 
         for (int it = 0; it <= iterations; ++it) { // Robustness iterations.
-            fitted[0] = lowess_fit(0, limits[0], n, x, y, weights, robust_weights, workspace.data()); 
+            fitted[0] = lowess_fit(0, limits[0], x, y, weights, robust_weights, workspace.data()); 
             size_t last_anchor = 0;
 
-            for (size_t s = 1; s < anchors.size(); ++s) { // fitted values for anchor points, interpolating the rest.
+            for (size_t s = 1, nanchors = anchors.size(); s < nanchors; ++s) { // fitted values for anchor points, interpolating the rest.
                 auto curpt = anchors[s];
-                fitted[curpt] = lowess_fit(curpt, limits[s], n, x, y, weights, robust_weights, workspace.data()); 
+                fitted[curpt] = lowess_fit(curpt, limits[s], x, y, weights, robust_weights, workspace.data()); 
 
                 if (curpt - last_anchor > 1) {
                     /* Some protection is provided against infinite slopes. This shouldn't be
