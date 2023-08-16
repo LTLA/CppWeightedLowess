@@ -80,9 +80,11 @@ See the [reference documentation](https://ltla.github.io/CppWeightedLowess) for 
 
 ## Building projects
 
+### CMake with `FetchContent`
+
 If you're already using CMake, you can add something like this to your `CMakeLists.txt`:
 
-```
+```cmake
 include(FetchContent)
 
 FetchContent_Declare(
@@ -96,7 +98,7 @@ FetchContent_MakeAvailable(tatami)
 
 And then:
 
-```
+```cmake
 # For executables:
 target_link_libraries(myexe WeightedLowess)
 
@@ -104,7 +106,27 @@ target_link_libraries(myexe WeightedLowess)
 target_link_libraries(mylib INTERFACE WeightedLowess)
 ```
 
-Otherwise, you can just copy the header file into some location that is visible to your compiler.
+### CMake with `find_package()`
+
+You can install the library by cloning a suitable version of this repository and running the following commands:
+
+```sh
+mkdir build && cd build
+cmake .. -DWEIGHTEDLOWESS_TESTS=OFF
+cmake --build . --target install
+```
+
+Then you can use `find_package()` as usual:
+
+```cmake
+find_package(ltla_WeightedLowess CONFIG REQUIRED)
+target_link_libraries(mylib INTERFACE ltla::WeightedLowess)
+```
+
+### Manual
+
+If you're not using CMake, the simple approach is to just copy the files in the [`include/`](include) subdirectory - 
+either directly or with Git submodules - and include their path during compilation with, e.g., GCC's `-I`.
 
 ## References 
 
