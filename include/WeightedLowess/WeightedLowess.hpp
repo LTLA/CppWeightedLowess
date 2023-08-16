@@ -519,12 +519,12 @@ private:
          * pass them in when we're looking for the span limits for each anchor.
          */
         std::vector<size_t> anchors;
-        if (points < n || delta > 0) {
-            Data_t eff_delta = (delta < 0 ? derive_delta(points, n, x) : delta);
-            find_anchors(n, x, eff_delta, anchors);
-        } else {
+        if (delta == 0 || (delta < 0 && points >= n)) {
             anchors.resize(n);
             std::iota(anchors.begin(), anchors.end(), 0);
+        } else {
+            Data_t eff_delta = (delta < 0 ? derive_delta(points, n, x) : delta);
+            find_anchors(n, x, eff_delta, anchors);
         }
 
         auto limits = find_limits(anchors, spanweight, n, x, (freqweights ? weights : NULL), min_width); 
