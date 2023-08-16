@@ -71,7 +71,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>WeightedLowess</b></li><li class="navelem"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceWeightedLowess.html">WeightedLowess</a></li><li class="navelem"><a class="el" href="classWeightedLowess_1_1WeightedLowess.html">WeightedLowess</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -430,7 +430,9 @@ template&lt;typename Data_t  = double&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Set the number of points that can be used as "anchors". LOWESS smoothing is performed exactly for each anchor, while the fitted values for all intervening points are computed by linear interpolation. A higher number of anchor points improves accuracy at the cost of computational work. If the specified number of anchors is greater than the number of points, LOWESS smoothing is performed directly for each point. This setting is ignored if <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#aaa89b16768948436f15f3e4ada2b9098">set_delta()</a></code> is set to a non-negative value.</p>
+<p>Set the number of points that can be used as "anchors". LOWESS smoothing is performed exactly for each anchor, while the fitted values for all intervening points are computed by linear interpolation. A higher number of anchor points improves accuracy at the cost of computational work.</p>
+<p>Note that this number is only used as a guideline by our LOWESS implementation. The actual number of selected anchors depends on the distribution of x-values; in addition, the first and last points are always used as the anchors,. If the specified number of anchors is greater than the number of points, LOWESS smoothing is performed directly for each point.</p>
+<p>This setting is ignored if <code><a class="el" href="classWeightedLowess_1_1WeightedLowess.html#aaa89b16768948436f15f3e4ada2b9098">set_delta()</a></code> is set to a non-negative value.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">p</td><td>Number of anchors.</td></tr>
