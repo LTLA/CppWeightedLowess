@@ -1,0 +1,9 @@
+_downstream/
+build/
+docs/*.css
+docs/html/
+docs/latex/
+tests/R/WeightedLowess
+tests/R/dummy.R
+tests/R/foo.txt
+*.swp
