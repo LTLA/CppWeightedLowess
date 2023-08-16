@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(WeightedLowess
-    VERSION 1.0.0
+    VERSION 1.0.1
     DESCRIPTION "A C++ port of the limma::weightedLowess function"
     LANGUAGES CXX)
 
