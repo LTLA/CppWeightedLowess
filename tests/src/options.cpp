@@ -24,6 +24,10 @@ TEST(OptionsTest, PointsEffect) {
 
     auto res2 = wl.set_anchors(5).run(x.size(), x.data(), y.data());
     EXPECT_TRUE(sum_abs_diff(res.fitted, res2.fitted) > 0.01);
+
+    // Make sure this doesn't crash.
+    auto res3 = wl.set_anchors(0).run(x.size(), x.data(), y.data());
+    EXPECT_TRUE(sum_abs_diff(res.fitted, res3.fitted) > 0.01);
 }
 
 TEST(OptionsTest, WeightsEffect) {

@@ -237,10 +237,12 @@ private:
         }
 
         Data_t lowest_delta = diffs.back();
-        size_t p_m1 = points - 1;
-        for (size_t nskips = 0; nskips < p_m1 && nskips < n_m1; ++nskips) {
-            Data_t candidate_delta = diffs[diffs.size() - nskips - 1] / (points - nskips);
-            lowest_delta = std::min(candidate_delta, lowest_delta);
+        if (points > 1) {
+            size_t p_m1 = points - 1;
+            for (size_t nskips = 0; nskips < p_m1 && nskips < n_m1; ++nskips) {
+                Data_t candidate_delta = diffs[diffs.size() - nskips - 1] / (points - nskips);
+                lowest_delta = std::min(candidate_delta, lowest_delta);
+            }
         }
 
         return lowest_delta;
@@ -503,6 +505,10 @@ private:
                        Data_t* fitted, 
                        Data_t* robust_weights)
     const {
+        if (n == 0) {
+            return;
+        }
+
         std::vector<Data_t> workspace(n);
 
         /* Computing the span weight that each span must achieve. */
@@ -635,6 +641,10 @@ private:
 
 private:
     void sort_and_run(size_t n, Data_t* x, Data_t* y, Data_t* weights, Data_t* fitted, Data_t* robust_weights) const {
+        if (n == 0) {
+            return;
+        }
+
         std::vector<size_t> permutation(n);
         std::iota(permutation.begin(), permutation.end(), 0);
         std::sort(permutation.begin(), permutation.end(), [&](size_t left, size_t right) -> bool {

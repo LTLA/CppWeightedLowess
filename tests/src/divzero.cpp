@@ -45,3 +45,12 @@ TEST(DivisionByZeroTests, ZeroWeight2) {
         EXPECT_EQ(output.robust_weights[y.size()-i-1], 0);
     }
 }
+
+TEST(DivisionByZeroTests, SinglePoint) {
+    // Single point has a span of zero by definition.
+    std::vector<double> single{ 1234 };
+
+    WeightedLowess::WeightedLowess wl;
+    auto output = wl.run(single.size(), single.data(), single.data());
+    compare_almost_equal(output.fitted, single);
+}

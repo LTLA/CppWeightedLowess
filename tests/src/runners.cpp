@@ -63,3 +63,13 @@ TEST(RunnerTest, InPlace) {
     EXPECT_EQ(permute(res.fitted, perm), res2.fitted);
     EXPECT_EQ(x1copy, x1);
 }
+
+TEST(RunnerTest, Empty) {
+    // Check that these are robust to empty inputs.
+    WeightedLowess::WeightedLowess wl;
+    std::vector<double> x, y;
+    auto res = wl.run(x.size(), x.data(), y.data());
+    auto res1 = wl.run_in_place(x.size(), x.data(), y.data());
+    EXPECT_EQ(res.fitted, res1.fitted);
+}
+
