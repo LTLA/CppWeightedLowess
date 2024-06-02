@@ -7,7 +7,7 @@ sourceCpp("test.cpp")
 
 # Running it against the reference.
 set.seed(10)
-x <- runif(100)
+x <- sort(runif(100))
 y <- rnorm(100)
 
 library(limma)
@@ -28,7 +28,7 @@ test_that("default", {
     expect_equal(output$weights, values[[2]])
 
     # Ramping up the number of points to force delta calculations.
-    x2 <- runif(10000)
+    x2 <- sort(runif(10000))
     y2 <- runif(10000)
     output2 <- weightedLowess(x2, y2)
     expect_true(output2$delta > 0)
