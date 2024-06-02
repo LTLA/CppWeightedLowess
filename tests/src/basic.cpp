@@ -28,6 +28,21 @@ TEST(BasicTests, Exact) {
     compare_almost_equal(res.fitted, alt);
 }
 
+TEST(BasicTests, Unsorted) {
+    std::vector<double> unsorted(10);
+    unsorted[0] = 1;
+    WeightedLowess::Options opt;
+
+    std::string msg;
+    try {
+        WeightedLowess::compute(unsorted.size(), unsorted.data(), unsorted.data(), opt);
+    } catch (std::exception& e) {
+        msg = e.what();
+    }
+
+    EXPECT_TRUE(msg.find("sorted") != std::string::npos);
+}
+
 TEST(BasicTests, Interpolation) {
     auto simulated = simulate(1001);
     const auto& x = simulated.first;

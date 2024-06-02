@@ -152,6 +152,15 @@ TEST(WindowTest, FindLimitsMoreTies) {
         EXPECT_FLOAT_EQ(limiters[0].distance, 1.2);
     }
 
+    // Does the right thing with weights.
+    {
+        std::vector<double> weights(pts.size(), 10);
+        auto limiters = WeightedLowess::internal::find_limits({ 5 }, 60.0, pts.size(), pts.data(), weights.data(), 0.0);
+        EXPECT_EQ(limiters[0].left, 3);
+        EXPECT_EQ(limiters[0].right, 8); 
+        EXPECT_FLOAT_EQ(limiters[0].distance, 1.2);
+    }
+
     // Checking that it interacts properly with the tie handling at the window edges.
     {
         auto limiters = WeightedLowess::internal::find_limits({ 5 }, 7.0, pts.size(), pts.data(), static_cast<double*>(NULL), 0.0);
