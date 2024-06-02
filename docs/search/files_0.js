@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['weightedlowess_2ehpp_0',['WeightedLowess.hpp',['../WeightedLowess_8hpp.html',1,'']]]
+  ['compute_2ehpp_0',['compute.hpp',['../compute_8hpp.html',1,'']]]
 ];

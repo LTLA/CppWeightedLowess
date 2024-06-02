@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['weighted_20lowess_20for_20c_2b_2b_0',['Weighted LOWESS for C++',['../index.html',1,'']]],
-  ['weightedlowess_1',['WeightedLowess',['../namespaceWeightedLowess.html',1,'WeightedLowess'],['../classWeightedLowess_1_1WeightedLowess.html',1,'WeightedLowess::WeightedLowess&lt; Data_t &gt;']]],
-  ['weightedlowess_2ehpp_2',['WeightedLowess.hpp',['../WeightedLowess_8hpp.html',1,'']]]
+  ['options_0',['Options',['../structWeightedLowess_1_1Options.html',1,'WeightedLowess']]],
+  ['options_2ehpp_1',['Options.hpp',['../Options_8hpp.html',1,'']]]
 ];

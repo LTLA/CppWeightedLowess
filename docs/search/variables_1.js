@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['delta_0',['delta',['../structWeightedLowess_1_1WeightedLowess_1_1Defaults.html#afe63680639cfd436d2136b731f37b064',1,'WeightedLowess::WeightedLowess::Defaults']]]
+  ['delta_0',['delta',['../structWeightedLowess_1_1Options.html#a55bc0add48ea9e083cc527773a182192',1,'WeightedLowess::Options']]]
 ];

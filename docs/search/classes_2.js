@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['weightedlowess_0',['WeightedLowess',['../classWeightedLowess_1_1WeightedLowess.html',1,'WeightedLowess']]]
+  ['sortby_0',['SortBy',['../classWeightedLowess_1_1SortBy.html',1,'WeightedLowess']]]
 ];

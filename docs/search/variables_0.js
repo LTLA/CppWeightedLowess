@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['anchors_0',['anchors',['../structWeightedLowess_1_1WeightedLowess_1_1Defaults.html#aba2444c6de1cf8357bc874b3955258eb',1,'WeightedLowess::WeightedLowess::Defaults']]]
+  ['anchors_0',['anchors',['../structWeightedLowess_1_1Options.html#a9ef4e0ac507ee23820c0934029c25a1c',1,'WeightedLowess::Options']]]
 ];
