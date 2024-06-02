@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "WeightedLowess/WeightedLowess.hpp"
+#include "WeightedLowess/compute.hpp"
 #include "utils.h"
 
 TEST(DivisionByZeroTests, ZeroVariance) {
@@ -9,8 +9,8 @@ TEST(DivisionByZeroTests, ZeroVariance) {
     // in the local regression, which is not usually possible.
     std::vector<double> small{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
-    WeightedLowess::WeightedLowess wl;
-    auto output = wl.run(small.size(), small.data(), small.data());
+    WeightedLowess::Options opt;
+    auto output = WeightedLowess::compute(small.size(), small.data(), small.data(), opt);
     compare_almost_equal(output.fitted, small);
 }
 
@@ -22,8 +22,8 @@ TEST(DivisionByZeroTests, ZeroWeight) {
     std::vector<double> x{ 2, 3, 4, 5, 6, 7, 8, 9, 10, 10 };
     std::vector<double> y{ 2, 3, 4, 5, 6, 7, 8, 9, 100, -90 };
 
-    WeightedLowess::WeightedLowess wl;
-    auto output = wl.run(x.size(), x.data(), y.data());
+    WeightedLowess::Options opt;
+    auto output = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
 
     // The last two should be computed by just averaging the values at x = 10.
     for (size_t i = 0; i < 2; ++i) {
@@ -37,8 +37,8 @@ TEST(DivisionByZeroTests, ZeroWeight2) {
     std::vector<double> x{ 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 };
     std::vector<double> y{ 2, 3, 4, 5, 6, 7, 8, 9, 100, -100, 100, -50 };
 
-    WeightedLowess::WeightedLowess wl;
-    auto output = wl.run(x.size(), x.data(), y.data());
+    WeightedLowess::Options opt;
+    auto output = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
 
     for (size_t i = 0; i < 4; ++i) {
         EXPECT_EQ(output.fitted[y.size()-i-1], 50.0/4);
@@ -50,7 +50,7 @@ TEST(DivisionByZeroTests, SinglePoint) {
     // Single point has a span of zero by definition.
     std::vector<double> single{ 1234 };
 
-    WeightedLowess::WeightedLowess wl;
-    auto output = wl.run(single.size(), single.data(), single.data());
+    WeightedLowess::Options opt;
+    auto output = WeightedLowess::compute(single.size(), single.data(), single.data(), opt);
     compare_almost_equal(output.fitted, single);
 }

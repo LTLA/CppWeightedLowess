@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "WeightedLowess/WeightedLowess.hpp"
+#include "WeightedLowess/compute.hpp"
 #include "utils.h"
 
 TEST(BasicTests, Exact) {
@@ -29,7 +29,7 @@ TEST(BasicTests, Exact) {
 }
 
 TEST(BasicTests, Interpolation) {
-    auto simulated = simulate(1000);
+    auto simulated = simulate(1001);
     const auto& x = simulated.first;
 
     // y = 2x + 1
@@ -57,7 +57,7 @@ TEST(BasicTests, Interpolation) {
 }
 
 TEST(BasicTests, Weights) {
-    auto simulated = simulate(1000);
+    auto simulated = simulate(1002);
     const auto& x = simulated.first;
     const auto& y = simulated.second;
 
@@ -111,7 +111,7 @@ TEST(BasicTests, Weights) {
 }
 
 TEST(BasicTests, Robustness) {
-    auto simulated = simulate(1000);
+    auto simulated = simulate(1003);
     const auto& x = simulated.first;
     const auto& y = simulated.second;
 
@@ -141,4 +141,12 @@ TEST(BasicTests, Robustness) {
         obsfitted.erase(obsfitted.begin() + 10);
         compare_almost_equal(ref.fitted, obsfitted);
     }
+}
+
+TEST(BasicTests, Empty) {
+    WeightedLowess::Options opt;
+    std::vector<double> x, y;
+    auto res = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
+    EXPECT_EQ(res.fitted.size(), 0);
+    EXPECT_EQ(res.robust_weights.size(), 0);
 }

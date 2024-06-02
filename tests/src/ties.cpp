@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
-#include "WeightedLowess/WeightedLowess.hpp"
+#include "WeightedLowess/compute.hpp"
 #include "utils.h"
 
 TEST(TiesTest, DuplicatedTies) {
-    auto simulated = simulate(1000);
+    auto simulated = simulate(2000);
     const auto& x = simulated.first;
     const auto& y = simulated.second;
 
@@ -26,7 +26,7 @@ TEST(TiesTest, DuplicatedTies) {
 }
 
 TEST(TiesTest, StartTies) {
-    auto simulated = simulate(1000);
+    auto simulated = simulate(2001);
     const auto& x = simulated.first;
     const auto& y = simulated.second;
 
@@ -54,7 +54,7 @@ TEST(TiesTest, StartTies) {
 }
 
 TEST(TiesTest, EndTies) {
-    auto simulated = simulate(1000);
+    auto simulated = simulate(2002);
     const auto& x = simulated.first;
     const auto& y = simulated.second;
 
@@ -82,7 +82,7 @@ TEST(TiesTest, EndTies) {
 }
 
 TEST(TiesTest, TiedYValues) {
-    auto simulated = simulate(1000);
+    auto simulated = simulate(2003);
     const auto& x = simulated.first;
     std::vector<double> constant(x.size(), 1.2); // Behaves properly when all y-values are tied.
 
