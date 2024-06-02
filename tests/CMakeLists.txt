@@ -21,6 +21,7 @@ add_executable(
     src/options.cpp
     src/SortBy.cpp
     src/divzero.cpp
+    src/window.cpp
 )
 
 target_link_libraries(

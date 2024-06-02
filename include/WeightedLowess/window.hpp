@@ -125,12 +125,26 @@ std::vector<Window<Data_> > find_limits(
                         break;
                     }
                     next_ldist = curx - x[left - 1];
-                } else {
+
+                } else if (next_ldist > next_rdist) {
                     ++right;
                     curw += (weights == NULL ? 1 : weights[right]);
                     if (right == points_m1) {
                         break;
                     }
+                    next_rdist = x[right + 1] - curx;
+
+                } else {
+                    // In the very rare case that distances are equal, we do a
+                    // simultaneous jump to ensure that both points are
+                    // included.  Otherwise one of them is skipped if we break.
+                    --left;
+                    ++right;
+                    curw += (weights == NULL ? 2 : weights[left] + weights[right]);
+                    if (left == 0 || right == points_m1) {
+                        break;
+                    }
+                    next_ldist = curx - x[left - 1];
                     next_rdist = x[right + 1] - curx;
                 }
             }
