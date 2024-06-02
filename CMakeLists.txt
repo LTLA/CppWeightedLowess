@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 project(WeightedLowess
-    VERSION 1.0.1
+    VERSION 2.0.0
     DESCRIPTION "A C++ port of the limma::weightedLowess function"
     LANGUAGES CXX)
 
@@ -44,5 +44,10 @@ configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/ltla_WeightedLowessConfig.cmake"
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ltla_WeightedLowess)
 
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/ltla_WeightedLowessConfigVersion.cmake
+    COMPATIBILITY SameMajorVersion)
+
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ltla_WeightedLowessConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/ltla_WeightedLowessConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ltla_WeightedLowess)
