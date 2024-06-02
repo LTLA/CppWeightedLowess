@@ -3,7 +3,7 @@
 #include "utils.h"
 
 TEST(SortBy, Basic) {
-    auto sim = simulate(800);
+    auto sim = simulate(800, /* sorted = */ false);
     const auto& x1 = sim.first;
 
     auto ref = sim.first; 
@@ -27,9 +27,9 @@ TEST(SortBy, Basic) {
 }
 
 TEST(SortBy, AlreadySorted) {
-    auto sim = simulate(800);
-    std::sort(sim.first.begin(), sim.first.end());
+    auto sim = simulate(800, /* sorted = */ true);
     auto x1 = sim.first;
+    EXPECT_TRUE(std::is_sorted(x1.begin(), x1.end()));
 
     WeightedLowess::SortBy sorter(x1.size(), x1.data());
     std::vector<uint8_t> work;
