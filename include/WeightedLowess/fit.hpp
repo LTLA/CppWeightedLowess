@@ -8,6 +8,12 @@
 #include "window.hpp"
 #include "Options.hpp"
 
+#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
+#ifdef _OPENMP
+#include "omp.h"
+#endif
+#endif
+
 namespace WeightedLowess {
 
 namespace internal {
@@ -34,7 +40,7 @@ Data_ fit_point (
     const Data_* y,
     const Data_* weights, 
     const Data_* robust_weights, 
-    Data_* work)
+    std::vector<Data_>& work)
 {
     size_t left = limits.left, right = limits.right;
     Data_ dist = limits.distance;
@@ -139,7 +145,8 @@ void fit_trend(
         find_anchors(num_points, x, opt.delta, anchors);
     }
 
-    auto limits = find_limits(anchors, spanweight, num_points, x, freq_weights, opt.minimum_width); 
+    size_t actual_num_anchors = anchors.size(); // Note that opt.anchors may not equal actual_num_anchors, the former is more of a guideline. 
+    auto limits = find_limits(anchors, spanweight, num_points, x, freq_weights, opt.minimum_width, opt.num_threads); 
 
     /* Setting up the robustness weights, if robustification is requested. */ 
     std::fill(robust_weights, robust_weights + num_points, 1);
@@ -162,22 +169,65 @@ void fit_trend(
         min_mad = 0.00000000001 * range;
     }
 
+#if defined(WEIGHTEDLOWESS_CUSTOM_PARALLEL) || defined(_OPENMP)
+    size_t nthreads = opt.num_threads; // this better be positive.
+    std::vector<std::vector<Data_> > workspaces(nthreads);
+    for (auto& w : workspaces) {
+        w.resize(num_points);
+    }
+#else
     std::vector<Data_> workspace(num_points);
-    size_t actual_num_anchors = anchors.size();
+#endif
 
     for (int it = 0; it <= opt.iterations; ++it) { // Robustness iterations.
-        fitted[0] = fit_point(0, limits[0], x, y, opt.weights, robust_weights, workspace.data()); 
-        size_t last_anchor = 0;
+        // Computing the fitted values for anchor points. Some shenanigans are 
+        // required for parallelization with thread-specific workspaces.
+#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
+#ifdef _OPENMP
+        #pragma omp parallel num_threads(nthreads)
+        {
+        auto& workspace = workspaces[omp_get_thread_num()];
+        #pragma omp for
+#endif
+        for (size_t s = 0; s < actual_num_anchors; ++s) { 
+#else
+        WEIGHTEDLOWESS_CUSTOM_PARALLEL(actual_num_anchors, nthreads, [&](size_t t, size_t start, size_t length) {
+        auto& workspace = workspaces[t];
+        for (size_t s = start, end = start + length; s < end; ++s) {
+#endif
 
-        for (size_t s = 1; s < actual_num_anchors; ++s) { // fitted values for anchor points, interpolating the rest.
             auto curpt = anchors[s];
-            fitted[curpt] = fit_point(curpt, limits[s], x, y, opt.weights, robust_weights, workspace.data()); 
+            fitted[curpt] = fit_point(curpt, limits[s], x, y, opt.weights, robust_weights, workspace);
 
-            if (curpt - last_anchor > 1) {
-                /* Some protection is provided against infinite slopes. This shouldn't be
-                 * a problem for non-zero delta; the only concern is at the final point
-                 * where the covariate distance may be zero.
-                 */
+#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
+#ifdef _OPENMP
+        }
+#endif
+        }
+#else
+        }
+        });
+#endif
+
+        // Now computing the interpolation, under the assumption that the first
+        // anchor is the first point and the last anchor is the last point. We
+        // do this in a separate parallel session to ensure that all 'fitted'
+        // values are available for all anchors across all threads.
+#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
+#ifdef _OPENMP
+        #pragma omp parallel for num_threads(nthreads)
+#endif
+        for (size_t s = 1; s < actual_num_anchors; ++s) { 
+#else
+        WEIGHTEDLOWESS_CUSTOM_PARALLEL(actual_num_anchors - 1, nthreads, [&](size_t, size_t start, size_t length) {
+        auto start_p1 = start + 1;
+        for (size_t s = start_p1, end = start_p1 + length; s < end; ++s) {
+#endif
+
+            auto curpt = anchors[s];
+            auto last_anchor = anchors[s - 1];
+
+            if (curpt - last_anchor > 1) { // only interpolate if there are points between anchors.
                 Data_ current = x[curpt] - x[last_anchor];
                 if (current > 0) {
                     const Data_ slope = (fitted[curpt] - fitted[last_anchor])/current;
@@ -186,6 +236,11 @@ void fit_trend(
                         fitted[subpt] = slope * x[subpt] + intercept; 
                     }
                 } else {
+                    /* Some protection is provided against infinite slopes.
+                     * This shouldn't be a problem for non-zero delta; the only
+                     * concern is at the final point where the covariate
+                     * distance may be zero.
+                     */
                     const Data_ ave = (fitted[curpt] + fitted[last_anchor]) / 2;
                     for (size_t subpt = last_anchor + 1; subpt < curpt; ++subpt) {
                         fitted[subpt] = ave;
@@ -193,14 +248,37 @@ void fit_trend(
                 }
             }
 
-            last_anchor = curpt;
+#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
         }
+#else
+        }
+        });
+#endif
 
         if (it < opt.iterations) {
-            /* Computing the weighted MAD of the absolute values of the residuals. */
+#if defined(WEIGHTEDLOWESS_CUSTOM_PARALLEL) || defined(_OPENMP)
+            auto& workspace = workspaces.front();
+#endif
+
+            // Computing the weighted MAD of the absolute values of the residuals. 
+#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
+#ifdef _OPENMP
+            #pragma omp parallel for num_threads(nthreads)
+#endif
             for (size_t pt = 0; pt < num_points; ++pt) {
+#else
+            WEIGHTEDLOWESS_CUSTOM_PARALLEL(num_points, nthreads, [&](size_t, size_t start, size_t length) {
+            for (size_t pt = start, end = start + length; pt < end; ++pt) {
+#endif
+
                 workspace[pt] = std::abs(y[pt] - fitted[pt]);
+
+#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
             }
+#else
+            }
+            });
+#endif
 
             std::iota(residual_permutation.begin(), residual_permutation.end(), 0);
             std::sort(residual_permutation.begin(), residual_permutation.end(), 
@@ -226,6 +304,8 @@ void fit_trend(
                 }
             }
 
+            cmad = std::max(cmad, min_mad); // avoid difficulties from numerical precision when all residuals are theoretically zero.
+
             /* Both limma::weightedLowess and the original Fortran code have an early
              * termination condition that stops the robustness iterations when the MAD
              * is small. We do not implement this and just allow the specified number of
@@ -235,14 +315,29 @@ void fit_trend(
              * fail to robustify against the few outliers.
              */
 
-            cmad = std::max(cmad, min_mad); // avoid difficulties from numerical precision when all residuals are theoretically zero.
-            for (size_t i =0; i < num_points; ++i) {
+#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
+#ifdef _OPENMP
+            #pragma omp parallel for num_threads(nthreads)
+#endif
+            for (size_t i = 0; i < num_points; ++i) {
+#else
+            WEIGHTEDLOWESS_CUSTOM_PARALLEL(num_points, nthreads, [&](size_t, size_t start, size_t length) {
+            for (size_t i = start, end = start + length; i < end; ++i) {
+#endif
+
                 if (workspace[i] < cmad) {
                     robust_weights[i] = square(1 - square(workspace[i]/cmad));
                 } else { 
                     robust_weights[i] = 0;
                 }
+
+#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
             }
+#else
+            }
+            });
+#endif
+
         }
     }
 

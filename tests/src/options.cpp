@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "parallel.h"
 #include "WeightedLowess/compute.hpp"
 #include "utils.h"
 
@@ -142,4 +143,54 @@ TEST(OptionsTest, DeltaTest) {
     opt.anchors = 5;
     auto res0_2 = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
     EXPECT_EQ(res0.fitted, res0_2.fitted);
+}
+
+TEST(OptionsTest, Parallelized) {
+    auto simulated = simulate(905);
+    const auto& x = simulated.first;
+    const auto& y = simulated.second;
+
+    // Span parallelization under various circumstances:
+    {
+        WeightedLowess::Options opt;
+        auto res = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
+        opt.num_threads = 3;
+        auto pres = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
+
+        EXPECT_EQ(res.fitted, pres.fitted);
+        EXPECT_EQ(res.robust_weights, pres.robust_weights);
+    }
+
+    {
+        WeightedLowess::Options opt;
+        opt.anchors = 50;
+        auto res = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
+        opt.num_threads = 3;
+        auto pres = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
+
+        EXPECT_EQ(res.fitted, pres.fitted);
+        EXPECT_EQ(res.robust_weights, pres.robust_weights);
+    }
+
+    {
+        WeightedLowess::Options opt;
+        opt.span = 1;
+        auto res = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
+        opt.num_threads = 3;
+        auto pres = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
+
+        EXPECT_EQ(res.fitted, pres.fitted);
+        EXPECT_EQ(res.robust_weights, pres.robust_weights);
+    }
+
+    {
+        WeightedLowess::Options opt;
+        opt.iterations = 10;
+        auto res = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
+        opt.num_threads = 3;
+        auto pres = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
+
+        EXPECT_EQ(res.fitted, pres.fitted);
+        EXPECT_EQ(res.robust_weights, pres.robust_weights);
+    }
 }

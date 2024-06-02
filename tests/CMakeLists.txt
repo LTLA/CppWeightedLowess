@@ -13,6 +13,25 @@ option(INSTALL_GTEST "Enable installation of googletest." OFF)
 FetchContent_MakeAvailable(googletest)
 
 enable_testing()
+include(GoogleTest)
+
+macro(decorate_exe name) 
+    target_link_libraries(
+        ${name}
+        gtest_main
+        WeightedLowess
+    )
+
+    target_compile_options(${name} PRIVATE -Wall -Werror -Wpedantic -Wextra)
+
+    set(CODE_COVERAGE "Enable coverage testing" OFF)
+    if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(${name} PRIVATE -O0 -g --coverage)
+        target_link_options(${name} PRIVATE --coverage)
+    endif()
+
+    gtest_discover_tests(${name})
+endmacro()
 
 add_executable(
     libtest 
@@ -23,20 +42,23 @@ add_executable(
     src/divzero.cpp
     src/window.cpp
 )
+decorate_exe(libtest)
 
-target_link_libraries(
-    libtest
-    gtest_main
-    WeightedLowess
+add_executable(
+    partest 
+    src/options.cpp
+    src/window.cpp
 )
+decorate_exe(partest)
+target_compile_definitions(partest PRIVATE TEST_CUSTOM_PARALLEL=1)
 
-target_compile_options(libtest PRIVATE -Wall -Werror -Wpedantic -Wextra)
-
-set(CODE_COVERAGE "Enable coverage testing" OFF)
-if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(libtest PRIVATE -O0 -g --coverage)
-    target_link_options(libtest PRIVATE --coverage)
+find_package(OpenMP)
+if (OpenMP_FOUND) 
+    add_executable(
+        omptest
+        src/options.cpp
+        src/window.cpp
+    )
+    decorate_exe(omptest)
+    target_link_libraries(omptest OpenMP::OpenMP_CXX)
 endif()
-
-include(GoogleTest)
-gtest_discover_tests(libtest)

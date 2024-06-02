@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "parallel.h"
 #include "WeightedLowess/window.hpp"
 #include "utils.h"
 
@@ -193,4 +194,23 @@ TEST(WindowTest, MinimumWidth) {
     EXPECT_EQ(limiters[4].left, 4);
     EXPECT_EQ(limiters[4].right, 5); // ditto
     EXPECT_FLOAT_EQ(limiters[4].distance, 1);
+}
+
+TEST(WindowTest, Parallelized) {
+    auto sim = simulate(1000);
+    const auto& pts = sim.first;
+
+    std::vector<size_t> anchors(1000);
+    std::iota(anchors.begin(), anchors.end(), 0);
+
+    auto limiters = WeightedLowess::internal::find_limits(anchors, 0.5, pts.size(), pts.data(), static_cast<double*>(NULL), 0.0);
+    auto plimiters = WeightedLowess::internal::find_limits(anchors, 0.5, pts.size(), pts.data(), static_cast<double*>(NULL), 0.0, 3);
+
+    for (size_t i = 0; i < anchors.size(); ++i) {
+        const auto& val = limiters[i];
+        const auto& pval = plimiters[i];
+        EXPECT_EQ(val.left, pval.left);
+        EXPECT_EQ(val.right, pval.right);
+        EXPECT_EQ(val.distance, pval.distance);
+    }
 }

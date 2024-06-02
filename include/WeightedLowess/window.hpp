@@ -99,14 +99,24 @@ std::vector<Window<Data_> > find_limits(
     size_t num_points,
     const Data_* x, 
     const Data_* weights,
-    Data_ min_width)
+    Data_ min_width,
+    [[maybe_unused]] int nthreads = 1)
 {
     const size_t nanchors = anchors.size();
     std::vector<Window<Data_> > limits(nanchors);
     auto half_min_width = min_width / 2;
     auto points_m1 = num_points - 1;
 
+#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
+#ifdef _OPENMP
+    #pragma omp parallel for num_threads(nthreads)
+#endif
     for (size_t s = 0; s < nanchors; ++s) {
+#else
+    WEIGHTEDLOWESS_CUSTOM_PARALLEL(nanchors, nthreads, [&](size_t, size_t start, size_t length) {
+    for (size_t s = start, end = start + length; s < end; ++s) {
+#endif
+
         auto curpt = anchors[s], left = curpt, right = curpt;
         auto curx = x[curpt];
         Data_ curw = (weights == NULL ? 1 : weights[curpt]);
@@ -193,7 +203,13 @@ std::vector<Window<Data_> > find_limits(
         limits[s].left = left;
         limits[s].right = right;
         limits[s].distance = mdist;
+
+#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
     }
+#else
+    }
+    });
+#endif
 
     return limits;
 }
