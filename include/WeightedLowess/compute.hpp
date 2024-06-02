@@ -26,7 +26,7 @@ namespace WeightedLowess {
  * @param[out] fitted Pointer to an output array of length `n`, in which the fitted values of the smoother can be stored.
  * @param[out] robust_weights Pointer to an output array of length `n`, in which the robustness weights can be stored.
  * This may be `NULL` if the robustness weights are not needed.
- * @param Further options.
+ * @param opt Further options.
  */
 template<typename Data_>
 void compute(size_t num_points, const Data_* x, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
@@ -74,8 +74,6 @@ struct Results {
  * @param num_points Number of points.
  * @param[in] x Pointer to an array of `num_points` x-values.
  * @param[in] y Pointer to an array of `num_points` y-values.
- * @param[in] weights Pointer to an array of `n` positive weights.
- * Alternatively `NULL` if no weights are available.
  * @param opt Further options.
  *
  * @return A `Results` object containing the fitted values and robustness weights.
