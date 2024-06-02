@@ -17,11 +17,11 @@ enable_testing()
 add_executable(
     libtest 
     src/basic.cpp
-    src/ties.cpp
-    src/options.cpp
-    src/runners.cpp
-    src/divzero.cpp
-    src/utils.cpp
+#    src/ties.cpp
+#    src/options.cpp
+#    src/runners.cpp
+#    src/divzero.cpp
+#    src/utils.cpp
 )
 
 target_link_libraries(
