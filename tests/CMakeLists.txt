@@ -17,7 +17,7 @@ enable_testing()
 add_executable(
     libtest 
     src/basic.cpp
-#    src/ties.cpp
+    src/ties.cpp
 #    src/options.cpp
 #    src/runners.cpp
 #    src/divzero.cpp

@@ -29,24 +29,25 @@ public:
 
     template<typename Data_>
     void permute(std::initializer_list<Data_*> data, std::vector<uint8_t>& work) const {
-        used.clear();
-        used.resize(num_points);
+        size_t num_points = my_permutation.size();
+        work.clear();
+        work.resize(num_points);
 
         // Reordering values in place.
         for (size_t i = 0; i < num_points; ++i) {
-            if (used[i]) {
+            if (work[i]) {
                 continue;
             }
-            used[i] = 1;
+            work[i] = 1;
 
-            size_t current = i, replacement = permutation[i];
+            size_t current = i, replacement = my_permutation[i];
             while (replacement != i) {
                 for (auto d : data) {
                     std::swap(d[current], d[replacement]);
                 }
                 current = replacement;
-                used[replacement] = 1;
-                replacement = permutation[replacement]; 
+                work[replacement] = 1;
+                replacement = my_permutation[replacement]; 
             } 
         }
     }
@@ -59,22 +60,23 @@ public:
 
     template<typename Data_>
     void unpermute(std::initializer_list<Data_*> data, std::vector<uint8_t>& work) const {
-        used.clear();
-        used.resize(num_points);
+        size_t num_points = my_permutation.size();
+        work.clear();
+        work.resize(num_points);
 
         for (size_t i = 0; i < num_points; ++i) {
-            if (used[i]) {
+            if (work[i]) {
                 continue;
             }
-            used[i] = 1;
+            work[i] = 1;
 
-            size_t replacement = permutation[i];
+            size_t replacement = my_permutation[i];
             while (replacement != i) {
                 for (auto d : data) {
                     std::swap(d[i], d[replacement]);
                 }
-                used[replacement] = 1;
-                replacement = permutation[replacement]; 
+                work[replacement] = 1;
+                replacement = my_permutation[replacement]; 
             } 
         }
     }

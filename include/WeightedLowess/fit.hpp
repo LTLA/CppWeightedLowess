@@ -42,7 +42,7 @@ Data_ fit_point (
     if (dist <= 0) {
         Data_ ymean = 0, allweight = 0;
         for (size_t pt = left; pt <= right; ++pt) {
-            Data_ curweight = (weights != NULL ? robust_weights[pt] * weights[pt] : weights[pt]);
+            Data_ curweight = (weights != NULL ? robust_weights[pt] * weights[pt] : robust_weights[pt]);
             ymean += y[pt] * curweight;
             allweight += curweight;
         }
@@ -122,7 +122,7 @@ void fit_trend(
     Data_* freq_weights = (opt.frequency_weights ? opt.weights : NULL);
 
     /* Computing the span weight that each span must achieve. */
-    const Data_ totalweight = (freq_weights != NULL ? std::accumulate(frqe_weights, freq_weights + num_points, static_cast<Data_>(0)) : num_points);
+    const Data_ totalweight = (freq_weights != NULL ? std::accumulate(freq_weights, freq_weights + num_points, static_cast<Data_>(0)) : num_points);
     const Data_ spanweight = (opt.span_as_proportion ? opt.span * totalweight : opt.span);
 
     /* Finding the anchors. If we're using the weights as frequencies, we
@@ -139,7 +139,7 @@ void fit_trend(
         find_anchors(num_points, x, opt.delta, anchors);
     }
 
-    auto limits = find_limits(anchors, spanweight, num_points, x, freq_weights, opt.min_width); 
+    auto limits = find_limits(anchors, spanweight, num_points, x, freq_weights, opt.minimum_width); 
 
     /* Setting up the robustness weights, if robustification is requested. */ 
     std::fill(robust_weights, robust_weights + num_points, 1);

@@ -23,16 +23,14 @@ namespace WeightedLowess {
  * @param x Pointer to an array of `num_points` x-values.
  * This should be sorted in increasing order, see `SortBy` for details.
  * @param y Pointer to an array of `num_points` y-values.
- * @param[in] weights Pointer to an array of `n` positive weights.
- * Alternatively `NULL` if no weights are available.
  * @param[out] fitted Pointer to an output array of length `n`, in which the fitted values of the smoother can be stored.
  * @param[out] robust_weights Pointer to an output array of length `n`, in which the robustness weights can be stored.
  * This may be `NULL` if the robustness weights are not needed.
  * @param Further options.
  */
 template<typename Data_>
-void compute(size_t num_points, const Data_* x, const Data_* y, const Data_* weights, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
-    if (std::is_unsorted(x, x + num_points)) {
+void compute(size_t num_points, const Data_* x, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
+    if (!std::is_sorted(x, x + num_points)) {
         throw std::runtime_error("'x' should be sorted");
     }
 
@@ -41,7 +39,8 @@ void compute(size_t num_points, const Data_* x, const Data_* y, const Data_* wei
         rbuffer.resize(num_points);
         robust_weights = rbuffer.data();
     }
-    fit_trend(num_points, x, y, weights, fitted, robust_weights, opt);
+
+    internal::fit_trend(num_points, x, y, fitted, robust_weights, opt);
 }
 
 /** 
@@ -82,9 +81,9 @@ struct Results {
  * @return A `Results` object containing the fitted values and robustness weights.
  */
 template<typename Data_>
-Results<Data_> compute(size_t num_points, const Data_* x, const Data_* y, const Data_* weights, const Options<Data_>& opt) {
+Results<Data_> compute(size_t num_points, const Data_* x, const Data_* y, const Options<Data_>& opt) {
     Results<Data_> output(num_points);
-    compute(num_points, x, y, weights, output.fitted.data(), output.robust_weights.data(), opt);
+    compute(num_points, x, y, output.fitted.data(), output.robust_weights.data(), opt);
     return output;
 }
 
