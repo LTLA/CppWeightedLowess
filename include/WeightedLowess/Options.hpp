@@ -19,7 +19,9 @@ namespace WeightedLowess {
 
 /**
  * @brief Options for `compute()`.
+ * @tparam Data_ Floating-point type for the data.
  */
+template<typename Data_ = double>
 struct Options {
     /**
      * Span of the smoothing window around each point.
@@ -29,7 +31,7 @@ struct Options {
      * If `weights` are provided to `compute()` and `Options::frequency_weights = true`, the span is instead defined from the proportion of the total weight across all points.
      * This interprets the weights on each observation as relative frequencies.
      */
-    double span = 0.3;
+    Data_ span = 0.3;
 
     /**
      * Whether the span should be interpreted as a proportion of the total number of points.
@@ -42,7 +44,7 @@ struct Options {
      * Minimum width of the window centered around each point.
      * This is useful for forcing the use of a larger window in highly dense regions of the covariate range.
      */
-    double min_width = 0;
+    Data_ minimum_width = 0;
 
     /**
      * The number of points that can be used as "anchors".
@@ -71,16 +73,17 @@ struct Options {
      * If set to a negative value, an appropriate delta is determined from the number of points specified in `set_points()`.
      * Otherwise, the chosen `delta` should have similar magnitude to the range of the x-values.
      */
-    double delta = -1;
+    Data_ delta = -1;
 
-    /** 
-     * Specify that the input data are already sorted on the x-values.
-     * This will instruct `compute()` to skip the sorting step.
+    /**
+     * Pointer to an array of length equal to the number of points used in `compute()`.
+     * Each element should be a positive weight for the corresponding point in `x` and `y`.
+     * Alternatively, this may be `NULL` in which case all points are equally weighted.
      */
-    bool sorted = false;
+    Data_* weights = NULL;
 
     /** 
-     * Whether the weights (if any are provided to `compute()`) should be interpreted as frequency weights.
+     * Whether the weights (if provided in `Options::weights`) should be interpreted as frequency weights.
      * This means that they will be involved in both the span calculations for the smoothing window around each point, as well as in the LOWESS calculations themselves.
      * If `false`, the weights will only be used for the latter.
      */

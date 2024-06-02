@@ -111,17 +111,18 @@ void fit_trend(
     size_t num_points,
     const Data_* x,
     const Data_* y,
-    const Data_* weights,
     Data_* fitted, 
     Data_* robust_weights,
-    const Options& opt)
+    const Options<Data_>& opt)
 {
     if (num_points == 0) {
         return;
     }
 
+    Data_* freq_weights = (opt.frequency_weights ? opt.weights : NULL);
+
     /* Computing the span weight that each span must achieve. */
-    const Data_ totalweight = (weights != NULL ? std::accumulate(weights, weights + num_points, static_cast<Data_>(0)) : num_points);
+    const Data_ totalweight = (freq_weights != NULL ? std::accumulate(frqe_weights, freq_weights + num_points, static_cast<Data_>(0)) : num_points);
     const Data_ spanweight = (opt.span_as_proportion ? opt.span * totalweight : opt.span);
 
     /* Finding the anchors. If we're using the weights as frequencies, we
@@ -138,7 +139,7 @@ void fit_trend(
         find_anchors(num_points, x, opt.delta, anchors);
     }
 
-    auto limits = find_limits(anchors, spanweight, num_points, x, (opt.frequency_weights ? weights : NULL), opt.min_width); 
+    auto limits = find_limits(anchors, spanweight, num_points, x, freq_weights, opt.min_width); 
 
     /* Setting up the robustness weights, if robustification is requested. */ 
     std::fill(robust_weights, robust_weights + num_points, 1);
@@ -165,12 +166,12 @@ void fit_trend(
     size_t actual_num_anchors = anchors.size();
 
     for (int it = 0; it <= opt.iterations; ++it) { // Robustness iterations.
-        fitted[0] = lowess_fit(0, limits[0], x, y, weights, robust_weights, workspace.data()); 
+        fitted[0] = fit_point(0, limits[0], x, y, opt.weights, robust_weights, workspace.data()); 
         size_t last_anchor = 0;
 
         for (size_t s = 1; s < actual_num_anchors; ++s) { // fitted values for anchor points, interpolating the rest.
             auto curpt = anchors[s];
-            fitted[curpt] = lowess_fit(curpt, limits[s], x, y, weights, robust_weights, workspace.data()); 
+            fitted[curpt] = fit_point(curpt, limits[s], x, y, opt.weights, robust_weights, workspace.data()); 
 
             if (curpt - last_anchor > 1) {
                 /* Some protection is provided against infinite slopes. This shouldn't be
@@ -214,11 +215,7 @@ void fit_trend(
 
             for (size_t i = 0; i < num_points; ++i) {
                 auto pt = residual_permutation[i];
-                if (weights != NULL) {
-                    curweight += weights[pt];
-                } else {
-                    ++curweight;
-                }
+                curweight += (freq_weights != NULL ? freq_weights[pt] : 1);
 
                 if (curweight == halfweight) { // exact match, need to take the median.
                     cmad = 3 * (workspace[pt] + workspace[residual_permutation[i+1]]);
