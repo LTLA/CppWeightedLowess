@@ -19,9 +19,9 @@ add_executable(
     src/basic.cpp
     src/ties.cpp
     src/options.cpp
-    src/runners.cpp
+    src/SortBy.cpp
     src/divzero.cpp
-    src/utils.cpp
+    src/window.cpp
 )
 
 target_link_libraries(
