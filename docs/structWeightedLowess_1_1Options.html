@@ -105,6 +105,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a3c3cae26a248351a3fd78bbfd8f15b3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a414dbeb65809f19b12ce7877c2c048be" id="r_a414dbeb65809f19b12ce7877c2c048be"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeightedLowess_1_1Options.html#a414dbeb65809f19b12ce7877c2c048be">frequency_weights</a> = true</td></tr>
 <tr class="separator:a414dbeb65809f19b12ce7877c2c048be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe399f94ea4c77261a2583bfe1aa4c2f" id="r_afe399f94ea4c77261a2583bfe1aa4c2f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeightedLowess_1_1Options.html#afe399f94ea4c77261a2583bfe1aa4c2f">num_threads</a> = 1</td></tr>
+<tr class="separator:afe399f94ea4c77261a2583bfe1aa4c2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename Data_ = double&gt;<br />
@@ -200,6 +202,29 @@ template&lt;typename Data_  = double&gt; </div>
       </table>
 </div><div class="memdoc">
 <p>Minimum width of the window centered around each point. This is useful for forcing the use of a larger window in highly dense regions of the covariate range. </p>
+
+</div>
+</div>
+<a id="afe399f94ea4c77261a2583bfe1aa4c2f" name="afe399f94ea4c77261a2583bfe1aa4c2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe399f94ea4c77261a2583bfe1aa4c2f">&#9670;&#160;</a></span>num_threads</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_  = double&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structWeightedLowess_1_1Options.html">WeightedLowess::Options</a>&lt; Data_ &gt;::num_threads = 1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Number of threads to use for various steps. This should be a positive integer.</p>
+<p>By default, <code><a class="el" href="namespaceWeightedLowess.html#aba6c593f671626b4ed0787264868ee36">compute()</a></code> uses OpenMP for parallelization. Applications can override this by setting the <code>WEIGHTEDLOWESS_CUSTOM_PARALLEL</code> function-like macro, e.g., in environments where OpenMP is not available. This macro should accept three arguments:</p><ul>
+<li><code>num_jobs</code>, a <code>size_t</code> specifying the number of tasks to perform.</li>
+<li><code>num_threads</code>, an <code>int</code> specifying the number of threads to use.</li>
+<li><code>fun</code>, a function that accepts three <code>size_t</code> values.</li>
+</ul>
+<p>The macro should partition the tasks into blocks, assign each block to a thread, and call <code>fun()</code> in each thread with the thread number (an ID in <code>[0, num_threads)</code>), start position and length of its block. </p>
 
 </div>
 </div>

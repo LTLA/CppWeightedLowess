@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['weighted_20lowess_20for_20c_0',['Weighted LOWESS for C++',['../index.html',1,'']]],
-  ['weightedlowess_1',['WeightedLowess',['../namespaceWeightedLowess.html',1,'']]],
-  ['weightedlowess_2ehpp_2',['WeightedLowess.hpp',['../WeightedLowess_8hpp.html',1,'']]],
-  ['weights_3',['weights',['../structWeightedLowess_1_1Options.html#a3c3cae26a248351a3fd78bbfd8f15b3d',1,'WeightedLowess::Options']]]
+  ['unpermute_0',['unpermute',['../classWeightedLowess_1_1SortBy.html#a748b171feffa7d35a62fd7c6407dc3ab',1,'WeightedLowess::SortBy::unpermute(Data_ *data, std::vector&lt; uint8_t &gt; &amp;work) const'],['../classWeightedLowess_1_1SortBy.html#a17ec599cf7a86c2f3808db0953ba8d20',1,'WeightedLowess::SortBy::unpermute(std::initializer_list&lt; Data_ * &gt; data, std::vector&lt; uint8_t &gt; &amp;work) const']]]
 ];
