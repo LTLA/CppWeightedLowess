@@ -41,6 +41,7 @@ add_executable(
     src/SortBy.cpp
     src/divzero.cpp
     src/window.cpp
+    src/robust.cpp
 )
 decorate_exe(libtest)
 
@@ -48,6 +49,7 @@ add_executable(
     partest 
     src/options.cpp
     src/window.cpp
+    src/robust.cpp
 )
 decorate_exe(partest)
 target_compile_definitions(partest PRIVATE TEST_CUSTOM_PARALLEL=1)
@@ -58,6 +60,7 @@ if (OpenMP_FOUND)
         omptest
         src/options.cpp
         src/window.cpp
+        src/robust.cpp
     )
     decorate_exe(omptest)
     target_link_libraries(omptest OpenMP::OpenMP_CXX)
