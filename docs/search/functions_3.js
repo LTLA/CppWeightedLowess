@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sortby_0',['SortBy',['../classWeightedLowess_1_1SortBy.html#a33001f8b6442aa313a8f866c3f800196',1,'WeightedLowess::SortBy']]]
+  ['results_0',['Results',['../structWeightedLowess_1_1Results.html#a7c8ea180fb0a1a496215ae71baa03e8b',1,'WeightedLowess::Results']]]
 ];
