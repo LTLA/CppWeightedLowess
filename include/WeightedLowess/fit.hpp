@@ -207,35 +207,15 @@ void interpolate_between_anchors(const std::vector<size_t>& anchors, const Data_
  * (at least, in the integer case; extended by analogy to all non-negative values).
  */
 template<typename Data_>
-void fit_trend(
-    size_t num_points,
-    const Data_* x,
-    const Data_* y,
-    Data_* fitted, 
-    Data_* robust_weights,
-    const Options<Data_>& opt)
-{
+void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_>& windows, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
     if (num_points == 0) {
         return;
     }
 
-    // Finding the anchors.
-    std::vector<size_t> anchors;
-    if (opt.delta == 0 || (opt.delta < 0 && opt.anchors >= num_points)) {
-        anchors.resize(num_points);
-        std::iota(anchors.begin(), anchors.end(), 0);
-    } else if (opt.delta < 0) {
-        Data_ eff_delta = derive_delta(opt.anchors, num_points, x);
-        find_anchors(num_points, x, eff_delta, anchors);
-    } else {
-        find_anchors(num_points, x, opt.delta, anchors);
-    }
-
-    /* Computing the span weight that each window must achieve. */
-    Data_* freq_weights = (opt.frequency_weights ? opt.weights : NULL);
-    const Data_ totalweight = (freq_weights != NULL ? std::accumulate(freq_weights, freq_weights + num_points, static_cast<Data_>(0)) : num_points);
-    const Data_ spanweight = (opt.span_as_proportion ? opt.span * totalweight : opt.span);
-    auto limits = find_limits(anchors, spanweight, num_points, x, freq_weights, opt.minimum_width, opt.num_threads); 
+    const auto& anchors = windows.anchors;
+    const Data_* freq_weights = windows.freq_weights;
+    const Data_ totalweight = windows.total_weight;
+    const auto& limits = windows.limits;
 
     /* Setting up the robustness weights, if robustification is requested. */ 
     std::fill(robust_weights, robust_weights + num_points, 1);

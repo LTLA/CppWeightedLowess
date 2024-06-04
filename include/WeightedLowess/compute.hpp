@@ -14,6 +14,33 @@
 namespace WeightedLowess {
 
 /**
+ * Run the LOWESS smoother with precomputed windows. 
+ * This avoids redundant window calculations when re-using the same x-coordinates across multiple y-coordinate vectors.
+ *
+ * @tparam Data_ Floating-point type for the data.
+ *
+ * @param num_points Number of points.
+ * @param x Pointer to an array of `num_points` x-values.
+ * @param windows Precomputed windows, created by calling `define_windows()` with `num_points`, `x` and `opt`.
+ * @param y Pointer to an array of `num_points` y-values. 
+ * @param[out] fitted Pointer to an output array of length `n`, in which the fitted values of the smoother can be stored.
+ * @param[out] robust_weights Pointer to an output array of length `n`, in which the robustness weights can be stored.
+ * This may be `NULL` if the robustness weights are not needed.
+ * @param opt Further options.
+ * This should be the same object that is used in `define_windows()`.
+ * Note that only a subset of options are actually used in this overload, namely `Options::weights` and `Options::iterations`.
+ */
+template<typename Data_>
+void compute(size_t num_points, const Data_* x, const PrecomputedWindows<Data_>& windows, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
+    std::vector<Data_> rbuffer;
+    if (robust_weights == NULL) {
+        rbuffer.resize(num_points);
+        robust_weights = rbuffer.data();
+    }
+    internal::fit_trend(num_points, x, windows, y, fitted, robust_weights, opt);
+}
+
+/**
  * LOWESS is a simple, efficient, general-purpose non-parametric smoothing algorithm. 
  * It perform weighted linear regressions on subsets of neighboring points, yielding a smooth curve fit to the data.
  *
@@ -30,17 +57,8 @@ namespace WeightedLowess {
  */
 template<typename Data_>
 void compute(size_t num_points, const Data_* x, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
-    if (!std::is_sorted(x, x + num_points)) {
-        throw std::runtime_error("'x' should be sorted");
-    }
-
-    std::vector<Data_> rbuffer;
-    if (robust_weights == NULL) {
-        rbuffer.resize(num_points);
-        robust_weights = rbuffer.data();
-    }
-
-    internal::fit_trend(num_points, x, y, fitted, robust_weights, opt);
+    auto win = define_windows(num_points, x, opt);
+    compute(num_points, x, win, y, fitted, robust_weights, opt);
 }
 
 /** 

@@ -72,7 +72,15 @@ If users already have an appropriate buffer for the fitted values and residuals,
 
 ```cpp
 std::vector<double> fitted(num_points), resids(num_points);
-WeightedLowess::compute(num_points, x, y, fitted.data(), resids.data());
+WeightedLowess::compute(num_points, x, y, fitted.data(), resids.data(), opt);
+```
+
+We can also pre-compute the window locations from `x` to re-use them with different `y`, e.g., for smoothing different dimensions with a common covariate.
+
+```cpp
+auto xwindows = WeightedLowess::define_windows(num_points, x, opt);
+WeightedLowess::compute(num_points, x, xwindows, y, fitted.data(), resids.data(), opt);
+WeightedLowess::compute(num_points, x, xwindows, y2, fitted2.data(), resids2.data(), opt); // etc.
 ```
 
 See the [reference documentation](https://ltla.github.io/CppWeightedLowess) for more details.

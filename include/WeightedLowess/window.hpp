@@ -3,9 +3,20 @@
 
 #include <vector>
 #include <algorithm>
+#include <numeric>
+
+#include "Options.hpp"
+
+/**
+ * @file window.hpp
+ * @brief Compute the smoothing window for each point.
+ */
 
 namespace WeightedLowess {
 
+/**
+ * @cond
+ */
 namespace internal {
 
 /* 
@@ -95,7 +106,7 @@ struct Window {
 template<typename Data_>
 std::vector<Window<Data_> > find_limits(
     const std::vector<size_t>& anchors, 
-    Data_ spanweight,
+    Data_ span_weight,
     size_t num_points,
     const Data_* x, 
     const Data_* weights,
@@ -127,7 +138,7 @@ std::vector<Window<Data_> > find_limits(
             auto next_ldist = curx - x[left - 1];
             auto next_rdist = x[right + 1] - curx;
 
-            while (curw < spanweight) {
+            while (curw < span_weight) {
                 if (next_ldist < next_rdist) {
                     --left;
                     curw += (weights == NULL ? 1 : weights[left]);
@@ -161,12 +172,12 @@ std::vector<Window<Data_> > find_limits(
         }
 
         // If we still need it, we expand in only one direction.
-        while (left > 0 && curw < spanweight) {
+        while (left > 0 && curw < span_weight) {
             --left;
             curw += (weights == NULL ? 1 : weights[left]);
         }
  
-        while (right < points_m1 && curw < spanweight) {
+        while (right < points_m1 && curw < span_weight) {
             ++right;
             curw += (weights == NULL ? 1 : weights[right]);
         }
@@ -214,6 +225,80 @@ std::vector<Window<Data_> > find_limits(
     return limits;
 }
 
+}
+/**
+ * @endcond
+ */
+
+/**
+ * @brief Precomputed windows for LOWESS smoothing.
+ *
+ * @tparam Data_ Floating-point type for the data.
+ *
+ * Instances of this class are typically created by `define_windows()` prior to `compute()`.
+ */
+template<typename Data_>
+struct PrecomputedWindows {
+    /**
+     * @cond
+     */
+    std::vector<size_t> anchors;
+    const Data_* freq_weights = NULL;
+    Data_ total_weight = 0;
+    std::vector<internal::Window<Data_> > limits;
+    /**
+     * @endcond
+     */
+};
+
+/**
+ * Precompute the window locations prior to fitting of different `y` via the corresponding `compute()` overload.
+ * This avoids wasting time in unnecessarily recomputing the same windows for each `compute()` call.
+ *
+ * @tparam Data_ Floating-point type for the data.
+ * 
+ * @param num_points Number of points.
+ * @param x Pointer to an array of `num_points` x-values.
+ * This should be sorted in increasing order - consider using `SortBy` to permute arrays in-place.
+ * @param opt Further options.
+ * Only a subset of options are actually used here, namely
+ * `Options::delta`,
+ * `Options::anchors`,
+ * `Options::weights`,
+ * `Options::frequency_weights`,
+ * `Options::span`,
+ * `Options::span_as_proportion`,
+ * and `Options::minimum_width`.
+ */
+template<typename Data_>
+PrecomputedWindows<Data_> define_windows(size_t num_points, const Data_* x, const Options<Data_>& opt) {
+    PrecomputedWindows<Data_> output;
+
+    if (num_points) {
+        if (!std::is_sorted(x, x + num_points)) {
+            throw std::runtime_error("'x' should be sorted");
+        }
+
+        // Finding the anchors.
+        auto& anchors = output.anchors;
+        if (opt.delta == 0 || (opt.delta < 0 && opt.anchors >= num_points)) {
+            anchors.resize(num_points);
+            std::iota(anchors.begin(), anchors.end(), 0);
+        } else if (opt.delta < 0) {
+            Data_ eff_delta = internal::derive_delta(opt.anchors, num_points, x);
+            internal::find_anchors(num_points, x, eff_delta, anchors);
+        } else {
+            internal::find_anchors(num_points, x, opt.delta, anchors);
+        }
+
+        /* Computing the span weight that each window must achieve. */
+        output.freq_weights = (opt.frequency_weights ? opt.weights : NULL);
+        output.total_weight = (output.freq_weights != NULL ? std::accumulate(output.freq_weights, output.freq_weights + num_points, static_cast<Data_>(0)) : num_points);
+        Data_ span_weight = (opt.span_as_proportion ? opt.span * output.total_weight : opt.span);
+        output.limits = internal::find_limits(anchors, span_weight, num_points, x, output.freq_weights, opt.minimum_width, opt.num_threads); 
+    }
+
+    return output;
 }
 
 }
