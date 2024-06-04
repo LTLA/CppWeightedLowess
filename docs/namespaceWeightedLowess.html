@@ -163,7 +163,7 @@ template&lt;typename Data_ &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num_points</td><td>Number of points. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values. This should be sorted in increasing order - consider using <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> to permute <code>x</code> in-place. (Note that the same permutation should be applied to <code>y</code> and weights in <code><a class="el" href="structWeightedLowess_1_1Options.html#a3c3cae26a248351a3fd78bbfd8f15b3d">Options::weights</a></code>.) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>Pointer to an array of <code>num_points</code> y-values. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">opt</td><td>Further options.</td></tr>
   </table>
@@ -234,7 +234,7 @@ template&lt;typename Data_ &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num_points</td><td>Number of points. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values. This should be sorted in increasing order, see <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> for details. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values. This should be sorted in increasing order - consider using <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> to permute <code>x</code> in-place. (Note that the same permutation should be applied to <code>y</code> and weights in <code><a class="el" href="structWeightedLowess_1_1Options.html#a3c3cae26a248351a3fd78bbfd8f15b3d">Options::weights</a></code>.) </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">y</td><td>Pointer to an array of <code>num_points</code> y-values. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">fitted</td><td>Pointer to an output array of length <code>n</code>, in which the fitted values of the smoother can be stored. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">robust_weights</td><td>Pointer to an output array of length <code>n</code>, in which the robustness weights can be stored. This may be <code>NULL</code> if the robustness weights are not needed. </td></tr>
@@ -312,7 +312,7 @@ template&lt;typename Data_ &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num_points</td><td>Number of points. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values, sorted in increasing order. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">windows</td><td>Precomputed windows, created by calling <code><a class="el" href="namespaceWeightedLowess.html#a4dd0465feea6da633892bf916ecd933f">define_windows()</a></code> with <code>num_points</code>, <code>x</code> and <code>opt</code>. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">y</td><td>Pointer to an array of <code>num_points</code> y-values. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">fitted</td><td>Pointer to an output array of length <code>n</code>, in which the fitted values of the smoother can be stored. </td></tr>
@@ -366,12 +366,9 @@ template&lt;typename Data_ &gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">num_points</td><td>Number of points. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values. This should be sorted in increasing order, see <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> for details. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">y</td><td>Pointer to an array of <code>num_points</code> y-values. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">fitted</td><td>Pointer to an output array of length <code>n</code>, in which the fitted values of the smoother can be stored. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">robust_weights</td><td>Pointer to an output array of length <code>n</code>, in which the robustness weights can be stored. This may be <code>NULL</code> if the robustness weights are not needed. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">opt</td><td>Further options. Only a subset of options are actually used here, namely <code><a class="el" href="structWeightedLowess_1_1Options.html#a55bc0add48ea9e083cc527773a182192">Options::delta</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a9ef4e0ac507ee23820c0934029c25a1c">Options::anchors</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a3c3cae26a248351a3fd78bbfd8f15b3d">Options::weights</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a414dbeb65809f19b12ce7877c2c048be">Options::frequency_weights</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a820614e4b0971b12560f420025876549">Options::span</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#ab6408e30d42c2d6f328b1bc002c8e2d9">Options::span_as_proportion</a></code>, and <code><a class="el" href="structWeightedLowess_1_1Options.html#a896253316d390568bbadd1ce40fe4ee9">Options::minimum_width</a></code>. </td></tr>
+    <tr><td class="paramname">num_points</td><td>Number of points. </td></tr>
+    <tr><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values. This should be sorted in increasing order - consider using <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> to permute arrays in-place. </td></tr>
+    <tr><td class="paramname">opt</td><td>Further options. Only a subset of options are actually used here, namely <code><a class="el" href="structWeightedLowess_1_1Options.html#a55bc0add48ea9e083cc527773a182192">Options::delta</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a9ef4e0ac507ee23820c0934029c25a1c">Options::anchors</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a3c3cae26a248351a3fd78bbfd8f15b3d">Options::weights</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a414dbeb65809f19b12ce7877c2c048be">Options::frequency_weights</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a820614e4b0971b12560f420025876549">Options::span</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#ab6408e30d42c2d6f328b1bc002c8e2d9">Options::span_as_proportion</a></code>, and <code><a class="el" href="structWeightedLowess_1_1Options.html#a896253316d390568bbadd1ce40fe4ee9">Options::minimum_width</a></code>. </td></tr>
   </table>
   </dd>
 </dl>
