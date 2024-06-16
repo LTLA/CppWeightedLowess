@@ -20,11 +20,13 @@ namespace WeightedLowess {
  * @tparam Data_ Floating-point type for the data.
  *
  * @param num_points Number of points.
- * @param x Pointer to an array of `num_points` x-values, sorted in increasing order.
+ * @param[in] x Pointer to an array of `num_points` x-values, sorted in increasing order.
+ * (Consider using `SortBy` to permute `x` in-place.
+ * Note that the same permutation should be applied to `y`, if present, and weights in `Options::weights`.)
  * @param windows Precomputed windows, created by calling `define_windows()` with `num_points`, `x` and `opt`.
- * @param y Pointer to an array of `num_points` y-values. 
- * @param[out] fitted Pointer to an output array of length `n`, in which the fitted values of the smoother can be stored.
- * @param[out] robust_weights Pointer to an output array of length `n`, in which the robustness weights can be stored.
+ * @param[in] y Pointer to an array of `num_points` y-values. 
+ * @param[out] fitted Pointer to an output array of length `num_points`, in which the fitted values of the smoother can be stored.
+ * @param[out] robust_weights Pointer to an output array of length `num_points`, in which the robustness weights can be stored.
  * This may be `NULL` if the robustness weights are not needed.
  * @param opt Further options.
  * This should be the same object that is used in `define_windows()`.
@@ -47,12 +49,12 @@ void compute(size_t num_points, const Data_* x, const PrecomputedWindows<Data_>&
  * @tparam Data_ Floating-point type for the data.
  *
  * @param num_points Number of points.
- * @param x Pointer to an array of `num_points` x-values.
- * This should be sorted in increasing order - consider using `SortBy` to permute `x` in-place.
- * (Note that the same permutation should be applied to `y` and weights in `Options::weights`.)
- * @param y Pointer to an array of `num_points` y-values.
- * @param[out] fitted Pointer to an output array of length `n`, in which the fitted values of the smoother can be stored.
- * @param[out] robust_weights Pointer to an output array of length `n`, in which the robustness weights can be stored.
+ * @param[in] x Pointer to an array of `num_points` x-values, sorted in increasing order.
+ * (Consider using `SortBy` to permute `x` in-place.
+ * Note that the same permutation should be applied to `y` and, if present, weights in `Options::weights`.)
+ * @param[in] y Pointer to an array of `num_points` y-values.
+ * @param[out] fitted Pointer to an output array of length `num_points`, in which the fitted values of the smoother can be stored.
+ * @param[out] robust_weights Pointer to an output array of length `num_points`, in which the robustness weights can be stored.
  * This may be `NULL` if the robustness weights are not needed.
  * @param opt Further options.
  */
@@ -91,9 +93,9 @@ struct Results {
  * @tparam Data_ Floating-point type for the data.
  *
  * @param num_points Number of points.
- * @param[in] x Pointer to an array of `num_points` x-values. 
- * This should be sorted in increasing order - consider using `SortBy` to permute `x` in-place.
- * (Note that the same permutation should be applied to `y` and weights in `Options::weights`.)
+ * @param[in] x Pointer to an array of `num_points` x-values, sorted in increasing order.
+ * (Consider using `SortBy` to permute `x` in-place.
+ * Note that the same permutation should be applied to `y` and, if present, weights in `Options::weights`.)
  * @param[in] y Pointer to an array of `num_points` y-values.
  * @param opt Further options.
  *

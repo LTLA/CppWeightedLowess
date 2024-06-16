@@ -258,8 +258,8 @@ struct PrecomputedWindows {
  * @tparam Data_ Floating-point type for the data.
  * 
  * @param num_points Number of points.
- * @param x Pointer to an array of `num_points` x-values.
- * This should be sorted in increasing order - consider using `SortBy` to permute arrays in-place.
+ * @param[in] x Pointer to an array of `num_points` x-values, sorted in increasing order.
+ * (Consider using `SortBy` to permute the array in-place before calling this function.)
  * @param opt Further options.
  * Only a subset of options are actually used here, namely
  * `Options::delta`,
