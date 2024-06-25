@@ -68,11 +68,11 @@ opt.anchors = 100;
 auto results2 = WeightedLowess::compute(num_points, x, y, opt);
 ```
 
-If users already have an appropriate buffer for the fitted values and residuals, they can be filled directly with the results:
+If users already have an appropriate buffer for the fitted values and robustness weights, they can be filled directly with the results:
 
 ```cpp
-std::vector<double> fitted(num_points), resids(num_points);
-WeightedLowess::compute(num_points, x, y, fitted.data(), resids.data(), opt);
+std::vector<double> fitted(num_points), rweights(num_points);
+WeightedLowess::compute(num_points, x, y, fitted.data(), rweights.data(), opt);
 ```
 
 We can also pre-compute the window locations from `x` to re-use them with different `y`, e.g., for smoothing different dimensions with a common covariate.
@@ -81,6 +81,24 @@ We can also pre-compute the window locations from `x` to re-use them with differ
 auto xwindows = WeightedLowess::define_windows(num_points, x, opt);
 WeightedLowess::compute(num_points, x, xwindows, y, fitted.data(), resids.data(), opt);
 WeightedLowess::compute(num_points, x, xwindows, y2, fitted2.data(), resids2.data(), opt); // etc.
+```
+
+The `compute()` function assumes that the input x-coordinates are already sorted.
+If this is not the case, we can use the `SortBy` class to sort the input and unsort the output:
+
+```cpp
+// Permuting the x/y pairs so that x is sorted:
+WeightedLowess::SortBy sorter(num_points, x);
+std::vector<uint8_t> workspace;
+sorter.permute(x, workspace);
+sorter.permute(y, workspace);
+
+auto res_unsrt = WeightedLowess::compute(num_points, x, y, opt);
+
+// Unpermuting the fitted values and robustness weights to match
+// the original ordering of x/y pairs.
+sorter.unpermute(res_unsrt.fitted.data(), workspace);
+sorter.unpermute(res_unsrt.robust_weights.data(), workspace);
 ```
 
 See the [reference documentation](https://ltla.github.io/CppWeightedLowess) for more details.

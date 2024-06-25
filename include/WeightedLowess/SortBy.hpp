@@ -34,11 +34,28 @@ public:
      * @param[in] x Pointer to an array of x-values for the dataset.
      */
     template<typename Data_>
-    SortBy(size_t num_points, const Data_* x) : my_permutation(num_points) {
+    SortBy(size_t num_points, const Data_* x) {
+        set(num_points, x);
+    }
+
+    /**
+     * Default constructor.
+     * The object should not be used until `set()` is called.
+     */
+    SortBy() = default;
+
+    /**
+     * @tparam Data_ Floating-point type of the data.
+     * @param num_points Number of points.
+     * @param[in] x Pointer to an array of x-values for the dataset.
+     */
+    template<typename Data_>
+    void set(size_t num_points, const Data_* x) {
         if (num_points) {
             my_sorted = std::is_sorted(x, x + num_points);
             if (!my_sorted) {
-                std::iota(my_permutation.begin(), my_permutation.end(), 0);
+                my_permutation.resize(num_points);
+                std::iota(my_permutation.begin(), my_permutation.end(), static_cast<size_t>(0));
                 std::sort(my_permutation.begin(), my_permutation.end(), [&](size_t left, size_t right) -> bool { return x[left] < x[right]; });
             }
         }
