@@ -92,6 +92,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a33001f8b6442aa313a8f866c3f800196" id="r_a33001f8b6442aa313a8f866c3f800196"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
 <tr class="memitem:a33001f8b6442aa313a8f866c3f800196"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1SortBy.html#a33001f8b6442aa313a8f866c3f800196">SortBy</a> (size_t num_points, const Data_ *x)</td></tr>
 <tr class="separator:a33001f8b6442aa313a8f866c3f800196"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab86761ca01148dd783d9352271aa4d89" id="r_ab86761ca01148dd783d9352271aa4d89"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1SortBy.html#ab86761ca01148dd783d9352271aa4d89">SortBy</a> ()=default</td></tr>
+<tr class="separator:ab86761ca01148dd783d9352271aa4d89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff87b9087d04044a778f9a623f296d93" id="r_aff87b9087d04044a778f9a623f296d93"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
+<tr class="memitem:aff87b9087d04044a778f9a623f296d93"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1SortBy.html#aff87b9087d04044a778f9a623f296d93">set</a> (size_t num_points, const Data_ *x)</td></tr>
+<tr class="separator:aff87b9087d04044a778f9a623f296d93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3dec4edd35a1a60dc50d32cc5f41304c" id="r_a3dec4edd35a1a60dc50d32cc5f41304c"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
 <tr class="memitem:a3dec4edd35a1a60dc50d32cc5f41304c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1SortBy.html#a3dec4edd35a1a60dc50d32cc5f41304c">permute</a> (Data_ *data, std::vector&lt; uint8_t &gt; &amp;work) const</td></tr>
 <tr class="separator:a3dec4edd35a1a60dc50d32cc5f41304c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -110,7 +115,7 @@ Public Member Functions</h2></td></tr>
 <p>This is typically used to ensure that x-values are sorted prior to calling <code><a class="el" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">compute()</a></code>. The idea is to create a permutation vector from the x-values to sort them in ascending order; use <code><a class="el" href="classWeightedLowess_1_1SortBy.html#a3dec4edd35a1a60dc50d32cc5f41304c">permute()</a></code> to apply that permutation to the various arrays of x-values, y-values and weights (if applicable); calculate the fitted values from the permuted arrays with <code><a class="el" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">compute()</a></code>, now that the x-values are sorted; and then use <code><a class="el" href="classWeightedLowess_1_1SortBy.html#a748b171feffa7d35a62fd7c6407dc3ab">unpermute()</a></code> on the results of the fit, to obtain fitted values for the points in their original (pre-sort) order. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a33001f8b6442aa313a8f866c3f800196" name="a33001f8b6442aa313a8f866c3f800196"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33001f8b6442aa313a8f866c3f800196">&#9670;&#160;</a></span>SortBy()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a33001f8b6442aa313a8f866c3f800196">&#9670;&#160;</a></span>SortBy() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -157,6 +162,32 @@ template&lt;typename Data_ &gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ab86761ca01148dd783d9352271aa4d89" name="ab86761ca01148dd783d9352271aa4d89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab86761ca01148dd783d9352271aa4d89">&#9670;&#160;</a></span>SortBy() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">WeightedLowess::SortBy::SortBy </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Default constructor. The object should not be used until <code><a class="el" href="classWeightedLowess_1_1SortBy.html#aff87b9087d04044a778f9a623f296d93">set()</a></code> is called. </p>
 
 </div>
 </div>
@@ -245,6 +276,57 @@ template&lt;typename Data_ &gt; </div>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">data</td><td>One or more pointers to arrays of length <code>num_points</code> to be permuted in-place, in the same manner that <code>x</code> (from the constructor) would be permuted for sorting. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">work</td><td>Workspace. This can be empty and will be recycled across <code><a class="el" href="classWeightedLowess_1_1SortBy.html#a3dec4edd35a1a60dc50d32cc5f41304c">permute()</a></code> and <code><a class="el" href="classWeightedLowess_1_1SortBy.html#a748b171feffa7d35a62fd7c6407dc3ab">unpermute()</a></code> calls. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aff87b9087d04044a778f9a623f296d93" name="aff87b9087d04044a778f9a623f296d93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff87b9087d04044a778f9a623f296d93">&#9670;&#160;</a></span>set()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_ &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WeightedLowess::SortBy::set </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_points</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Data_ *&#160;</td>
+          <td class="paramname"><em>x</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Data_</td><td>Floating-point type of the data. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">num_points</td><td>Number of points. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>Pointer to an array of x-values for the dataset. </td></tr>
   </table>
   </dd>
 </dl>
