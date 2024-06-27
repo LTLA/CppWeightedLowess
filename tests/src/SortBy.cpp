@@ -24,6 +24,12 @@ TEST(SortBy, Basic) {
     sorter.unpermute({ test.data(), y1.data() }, work);
     EXPECT_EQ(test, sim.first);
     EXPECT_EQ(y1, sim.second);
+
+    sorter.permute(std::array<double*, 2>{ test.data(), y1.data() }, work);
+    EXPECT_EQ(test, ref);
+    sorter.unpermute(std::array<double*, 2>{ test.data(), y1.data() }, work);
+    EXPECT_EQ(test, sim.first);
+    EXPECT_EQ(y1, sim.second);
 }
 
 TEST(SortBy, AlreadySorted) {

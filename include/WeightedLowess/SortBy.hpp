@@ -5,6 +5,7 @@
 #include <numeric>
 #include <vector>
 #include <cstdint>
+#include <type_traits>
 
 /**
  * @file SortBy.hpp
@@ -29,12 +30,12 @@ private:
 
 public:
     /**
-     * @tparam Data_ Floating-point type of the data.
+     * @tparam Sortable_ Sortable type.
      * @param num_points Number of points.
-     * @param[in] x Pointer to an array of x-values for the dataset.
+     * @param[in] x Pointer to an array of sortable values, typically x-values for the dataset.
      */
-    template<typename Data_>
-    SortBy(size_t num_points, const Data_* x) {
+    template<typename Sortable_>
+    SortBy(size_t num_points, const Sortable_* x) {
         set(num_points, x);
     }
 
@@ -45,12 +46,12 @@ public:
     SortBy() = default;
 
     /**
-     * @tparam Data_ Floating-point type of the data.
+     * @tparam Sortable_ Sortable type.
      * @param num_points Number of points.
-     * @param[in] x Pointer to an array of x-values for the dataset.
+     * @param[in] x Pointer to an array of sortable values, typically x-values for the dataset.
      */
-    template<typename Data_>
-    void set(size_t num_points, const Data_* x) {
+    template<typename Sortable_>
+    void set(size_t num_points, const Sortable_* x) {
         if (num_points) {
             my_sorted = std::is_sorted(x, x + num_points);
             if (!my_sorted) {
@@ -61,26 +62,9 @@ public:
         }
     }
 
-public:
-    /**
-     * @param[in,out] data Pointer to an array of length `num_points` to be permuted in-place,
-     * in the same manner that `x` (from the constructor) would be permuted for sorting.
-     * @param work Workspace.
-     * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
-     */
-    template<typename Data_>
-    void permute(Data_* data, std::vector<uint8_t>& work) const {
-        permute({ data }, work);
-    }
-
-    /**
-     * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place,
-     * in the same manner that `x` (from the constructor) would be permuted for sorting.
-     * @param work Workspace.
-     * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
-     */
-    template<typename Data_>
-    void permute(std::initializer_list<Data_*> data, std::vector<uint8_t>& work) const {
+private:
+    template<typename AllData_>
+    void permute_raw(AllData_& data, std::vector<uint8_t>& work) const {
         if (my_sorted) {
             return;
         }
@@ -98,8 +82,12 @@ public:
 
             size_t current = i, replacement = my_permutation[i];
             while (replacement != i) {
-                for (auto d : data) {
-                    std::swap(d[current], d[replacement]);
+                if constexpr(std::is_pointer<AllData_>::value) {
+                    std::swap(data[current], data[replacement]);
+                } else {
+                    for (auto d : data) {
+                        std::swap(d[current], d[replacement]);
+                    }
                 }
                 current = replacement;
                 work[replacement] = 1;
@@ -110,22 +98,44 @@ public:
 
 public:
     /**
-     * @param[in,out] data Pointer to an array of length `num_points` to be permuted in-place to reverse the effect of `permute()`.
+     * @tparam Data_ Any data type.
+     * @param[in,out] data Pointer to an array of length `num_points` to be permuted in-place,
+     * in the same manner that `x` (from the constructor) would be permuted for sorting.
      * @param work Workspace.
      * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
      */
     template<typename Data_>
-    void unpermute(Data_* data, std::vector<uint8_t>& work) const {
-        unpermute({ data }, work);
+    void permute(Data_* data, std::vector<uint8_t>& work) const {
+        permute_raw(data, work);
     }
 
     /**
-     * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place to reverse the effect of `permute()`.
+     * @tparam Data_ Any data type.
+     * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place,
+     * in the same manner that `x` (from the constructor) would be permuted for sorting.
      * @param work Workspace.
      * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
      */
     template<typename Data_>
-    void unpermute(std::initializer_list<Data_*> data, std::vector<uint8_t>& work) const {
+    void permute(std::initializer_list<Data_> data, std::vector<uint8_t>& work) const {
+        permute_raw(data, work);
+    }
+
+    /**
+     * @tparam DataPointers_ Iterable container of pointers.
+     * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place,
+     * in the same manner that `x` (from the constructor) would be permuted for sorting.
+     * @param work Workspace.
+     * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
+     */
+    template<typename DataPointers_>
+    void permute(DataPointers_ data, std::vector<uint8_t>& work) const {
+        permute_raw(data, work);
+    }
+
+private:
+    template<typename AllData_>
+    void unpermute_raw(AllData_& data, std::vector<uint8_t>& work) const {
         if (my_sorted) {
             return;
         }
@@ -142,13 +152,51 @@ public:
 
             size_t replacement = my_permutation[i];
             while (replacement != i) {
-                for (auto d : data) {
-                    std::swap(d[i], d[replacement]);
+                if constexpr(std::is_pointer<AllData_>::value) {
+                    std::swap(data[i], data[replacement]);
+                } else {
+                    for (auto d : data) {
+                        std::swap(d[i], d[replacement]);
+                    }
                 }
                 work[replacement] = 1;
                 replacement = my_permutation[replacement]; 
             } 
         }
+    }
+
+public:
+    /**
+     * @tparam Data_ Any data type.
+     * @param[in,out] data Pointer to an array of length `num_points` to be permuted in-place to reverse the effect of `permute()`.
+     * @param work Workspace.
+     * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
+     */
+    template<typename Data_>
+    void unpermute(Data_* data, std::vector<uint8_t>& work) const {
+        unpermute_raw(data, work);
+    }
+
+    /**
+     * @tparam Data_ Any data type.
+     * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place to reverse the effect of `permute()`.
+     * @param work Workspace.
+     * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
+     */
+    template<typename Data_>
+    void unpermute(std::initializer_list<Data_*> data, std::vector<uint8_t>& work) const {
+        unpermute_raw(data, work);
+    }
+
+    /**
+     * @tparam DataPointers_ Iterable container of pointers.
+     * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place to reverse the effect of `permute()`.
+     * @param work Workspace.
+     * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
+     */
+    template<typename DataPointers_>
+    void unpermute(DataPointers_ data, std::vector<uint8_t>& work) const {
+        unpermute_raw(data, work);
     }
 };
 
