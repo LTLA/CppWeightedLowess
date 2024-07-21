@@ -201,7 +201,7 @@ template&lt;typename Data_  = double&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Minimum width of the window centered around each point. This is useful for forcing the use of a larger window in highly dense regions of the covariate range. </p>
+<p>Minimum width of the window centered around each point. This is useful for forcing the creation of a larger window in highly dense regions of the covariate range. Otherwise, overly small windows can lead to overfitting and a "bumpy" trend. </p>
 
 </div>
 </div>
@@ -241,8 +241,9 @@ template&lt;typename Data_  = double&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Span of the smoothing window around each point. This is parametrized as a proportion of the total number of points and should be between 0 and 1. Each window is defined as the smallest interval centered on the current point that covers the specified proportion.</p>
-<p>If <code>weights</code> are provided to <code><a class="el" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">compute()</a></code> and <code><a class="el" href="structWeightedLowess_1_1Options.html#a414dbeb65809f19b12ce7877c2c048be">Options::frequency_weights</a> = true</code>, the span is instead defined from the proportion of the total weight across all points. This interprets the weights on each observation as relative frequencies. </p>
+<p>Span of the smoothing window around each point. By default, this is interpreted as a proportion of the total number of points used in <code><a class="el" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">compute()</a></code> and should be between 0 and 1. Each window is defined as the smallest interval centered on the current point that covers the specified proportion.</p>
+<p>If <code>weights</code> are provided to <code><a class="el" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">compute()</a></code> and <code><a class="el" href="structWeightedLowess_1_1Options.html#a414dbeb65809f19b12ce7877c2c048be">Options::frequency_weights</a> = true</code>, the span is instead defined from the proportion of the total weight across all points. This interprets the weights on each observation as relative frequencies.</p>
+<p>See also <code><a class="el" href="structWeightedLowess_1_1Options.html#ab6408e30d42c2d6f328b1bc002c8e2d9">Options::span_as_proportion</a></code>, which changes the interpretation of this option. </p>
 
 </div>
 </div>
