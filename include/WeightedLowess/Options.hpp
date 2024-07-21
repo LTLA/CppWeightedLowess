@@ -25,11 +25,13 @@ template<typename Data_ = double>
 struct Options {
     /**
      * Span of the smoothing window around each point.
-     * This is parametrized as a proportion of the total number of points and should be between 0 and 1.
+     * By default, this is interpreted as a proportion of the total number of points used in `compute()` and should be between 0 and 1.
      * Each window is defined as the smallest interval centered on the current point that covers the specified proportion.
      *
      * If `weights` are provided to `compute()` and `Options::frequency_weights = true`, the span is instead defined from the proportion of the total weight across all points.
      * This interprets the weights on each observation as relative frequencies.
+     *
+     * See also `Options::span_as_proportion`, which changes the interpretation of this option.
      */
     Data_ span = 0.3;
 
@@ -42,7 +44,8 @@ struct Options {
 
     /**
      * Minimum width of the window centered around each point.
-     * This is useful for forcing the use of a larger window in highly dense regions of the covariate range.
+     * This is useful for forcing the creation of a larger window in highly dense regions of the covariate range.
+     * Otherwise, overly small windows can lead to overfitting and a "bumpy" trend.
      */
     Data_ minimum_width = 0;
 

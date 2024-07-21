@@ -80,7 +80,8 @@ We can also pre-compute the window locations from `x` to re-use them with differ
 ```cpp
 auto xwindows = WeightedLowess::define_windows(num_points, x, opt);
 WeightedLowess::compute(num_points, x, xwindows, y, fitted.data(), resids.data(), opt);
-WeightedLowess::compute(num_points, x, xwindows, y2, fitted2.data(), resids2.data(), opt); // etc.
+WeightedLowess::compute(num_points, x, xwindows, y2, fitted2.data(), resids2.data(), opt);
+// etc.
 ```
 
 The `compute()` function assumes that the input x-coordinates are already sorted.
