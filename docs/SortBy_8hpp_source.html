@@ -193,7 +193,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a19fcf75ba3a6117474439dcbbd2d9b33">  162</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a19fcf75ba3a6117474439dcbbd2d9b33">permute</a>(std::initializer_list&lt;Data_&gt; data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        work.resize(num_points);</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(data, work);</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(data, work.data());</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    }</div>
 </div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
@@ -202,7 +202,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a8f4e951ac12f1293037f1ba363f070a6">  177</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a8f4e951ac12f1293037f1ba363f070a6">permute</a>(DataPointers_ data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        work.resize(num_points);</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(data, work);</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(data, work.data());</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    }</div>
 </div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
