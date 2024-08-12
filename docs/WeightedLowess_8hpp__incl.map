@@ -1,35 +1,25 @@
 <map id="WeightedLowess/WeightedLowess.hpp" name="WeightedLowess/WeightedLowess.hpp">
-<area shape="rect" id="Node000001" title="LOWESS implementation with various weighting schemes." alt="" coords="68,5,317,31"/>
-<area shape="rect" id="Node000002" href="$compute_8hpp.html" title="Compute the LOWESS trend fit." alt="" coords="54,79,150,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,34,131,72,127,67,176,29"/>
-<area shape="rect" id="Node000005" href="$Options_8hpp.html" title="Options for compute()." alt="" coords="148,153,238,178"/>
-<area shape="poly" id="edge21_Node000001_Node000005" title=" " alt="" coords="195,31,195,137,190,137,190,31"/>
-<area shape="rect" id="Node000011" href="$SortBy_8hpp.html" title="Utility for sorting x&#45;coordinates." alt="" coords="281,226,366,252"/>
-<area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="202,30,311,212,306,215,197,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,300,63,326"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="92,107,74,128,58,154,45,187,38,222,35,284,30,284,33,222,40,186,53,151,70,125,88,103"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="68,153,123,178"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="104,105,101,137,95,137,98,105"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="119,103,167,141,164,145,116,107"/>
-<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="155,181,96,204,70,216,55,228,41,256,36,285,31,284,36,254,51,225,68,212,93,199,153,176"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="93,300,167,326"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="192,179,183,213,168,253,149,288,144,286,164,251,178,211,187,178"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="388,300,448,326"/>
-<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="239,169,310,186,347,202,380,224,402,253,414,284,409,286,397,256,376,228,344,206,308,191,238,174"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="441,226,499,252"/>
-<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="239,176,427,224,425,229,238,181"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="191,300,258,326"/>
-<area shape="poly" id="edge9_Node000005_Node000009" title=" " alt="" coords="200,178,214,226,224,285,219,285,209,227,195,180"/>
-<area shape="rect" id="Node000010" href="$window_8hpp.html" title="Compute the smoothing window for each point." alt="" coords="65,226,155,252"/>
-<area shape="poly" id="edge10_Node000005_Node000010" title=" " alt="" coords="173,181,129,217,126,213,170,177"/>
-<area shape="poly" id="edge11_Node000010_Node000003" title=" " alt="" coords="99,254,60,291,56,287,95,251"/>
-<area shape="poly" id="edge14_Node000010_Node000005" title=" " alt="" coords="129,224,173,187,177,191,133,228"/>
-<area shape="poly" id="edge12_Node000010_Node000006" title=" " alt="" coords="116,252,125,284,120,286,111,253"/>
-<area shape="poly" id="edge13_Node000010_Node000009" title=" " alt="" coords="131,250,194,289,191,294,128,255"/>
-<area shape="poly" id="edge18_Node000011_Node000003" title=" " alt="" coords="281,254,81,303,79,303,77,298,80,297,280,248"/>
-<area shape="poly" id="edge16_Node000011_Node000006" title=" " alt="" coords="291,255,178,297,176,292,290,250"/>
-<area shape="poly" id="edge19_Node000011_Node000007" title=" " alt="" coords="341,250,392,288,388,293,338,255"/>
-<area shape="poly" id="edge17_Node000011_Node000009" title=" " alt="" coords="308,255,255,293,252,289,305,250"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="283,300,364,326"/>
-<area shape="poly" id="edge20_Node000011_Node000012" title=" " alt="" coords="326,252,326,284,321,284,321,252"/>
+<area shape="rect" id="Node000001" title="LOWESS implementation with various weighting schemes." alt="" coords="23,5,273,31"/>
+<area shape="rect" id="Node000002" href="$compute_8hpp.html" title="Compute the LOWESS trend fit." alt="" coords="100,79,196,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,31,151,63,145,63,145,31"/>
+<area shape="rect" id="Node000005" href="$Options_8hpp.html" title="Options for compute()." alt="" coords="5,153,96,178"/>
+<area shape="poly" id="edge12_Node000001_Node000005" title=" " alt="" coords="135,33,112,54,90,81,73,110,61,139,57,137,69,108,86,77,108,51,131,29"/>
+<area shape="rect" id="Node000006" href="$SortBy_8hpp.html" title="Utility for sorting x&#45;coordinates." alt="" coords="391,79,475,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="197,29,376,74,375,79,196,34"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="199,153,257,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="163,103,205,140,202,144,160,107"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="120,153,176,178"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="151,105,151,137,145,137,145,105"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="133,107,80,146,77,141,130,103"/>
+<area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="399,108,272,152,270,147,397,103"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="505,153,580,178"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="453,103,513,142,510,146,450,107"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="604,153,671,178"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="469,103,590,145,588,150,467,108"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="695,153,755,178"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="476,100,680,149,679,155,475,105"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="281,153,362,178"/>
+<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="416,107,354,146,352,142,413,103"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="386,153,481,178"/>
+<area shape="poly" id="edge11_Node000006_Node000011" title=" " alt="" coords="436,105,436,137,431,137,431,105"/>
 </map>

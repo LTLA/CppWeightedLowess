@@ -108,13 +108,13 @@ $(function() {
 <div class="line">results.fitted;</div>
 <div class="ttc" id="aWeightedLowess_8hpp_html"><div class="ttname"><a href="WeightedLowess_8hpp.html">WeightedLowess.hpp</a></div><div class="ttdoc">LOWESS implementation with various weighting schemes.</div></div>
 <div class="ttc" id="anamespaceWeightedLowess_html_a2729a4bbbea5cdd5599086df491f9426"><div class="ttname"><a href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">WeightedLowess::compute</a></div><div class="ttdeci">void compute(size_t num_points, const Data_ *x, const PrecomputedWindows&lt; Data_ &gt; &amp;windows, const Data_ *y, Data_ *fitted, Data_ *robust_weights, const Options&lt; Data_ &gt; &amp;opt)</div><div class="ttdef"><b>Definition</b> compute.hpp:36</div></div>
-<div class="ttc" id="astructWeightedLowess_1_1Options_html"><div class="ttname"><a href="structWeightedLowess_1_1Options.html">WeightedLowess::Options</a></div><div class="ttdoc">Options for compute().</div><div class="ttdef"><b>Definition</b> Options.hpp:25</div></div>
+<div class="ttc" id="astructWeightedLowess_1_1Options_html"><div class="ttname"><a href="structWeightedLowess_1_1Options.html">WeightedLowess::Options</a></div><div class="ttdoc">Options for compute().</div><div class="ttdef"><b>Definition</b> Options.hpp:17</div></div>
 </div><!-- fragment --><p>We can set options via the <code><a class="el" href="structWeightedLowess_1_1Options.html" title="Options for compute().">WeightedLowess::Options</a></code> object:</p>
 <div class="fragment"><div class="line">opt.<a class="code hl_variable" href="structWeightedLowess_1_1Options.html#a820614e4b0971b12560f420025876549">span</a> = 0.5;</div>
 <div class="line">opt.<a class="code hl_variable" href="structWeightedLowess_1_1Options.html#a9ef4e0ac507ee23820c0934029c25a1c">anchors</a> = 100;</div>
 <div class="line"><span class="keyword">auto</span> results2 = <a class="code hl_function" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">WeightedLowess::compute</a>(num_points, x, y, opt);</div>
-<div class="ttc" id="astructWeightedLowess_1_1Options_html_a820614e4b0971b12560f420025876549"><div class="ttname"><a href="structWeightedLowess_1_1Options.html#a820614e4b0971b12560f420025876549">WeightedLowess::Options::span</a></div><div class="ttdeci">Data_ span</div><div class="ttdef"><b>Definition</b> Options.hpp:36</div></div>
-<div class="ttc" id="astructWeightedLowess_1_1Options_html_a9ef4e0ac507ee23820c0934029c25a1c"><div class="ttname"><a href="structWeightedLowess_1_1Options.html#a9ef4e0ac507ee23820c0934029c25a1c">WeightedLowess::Options::anchors</a></div><div class="ttdeci">size_t anchors</div><div class="ttdef"><b>Definition</b> Options.hpp:63</div></div>
+<div class="ttc" id="astructWeightedLowess_1_1Options_html_a820614e4b0971b12560f420025876549"><div class="ttname"><a href="structWeightedLowess_1_1Options.html#a820614e4b0971b12560f420025876549">WeightedLowess::Options::span</a></div><div class="ttdeci">Data_ span</div><div class="ttdef"><b>Definition</b> Options.hpp:28</div></div>
+<div class="ttc" id="astructWeightedLowess_1_1Options_html_a9ef4e0ac507ee23820c0934029c25a1c"><div class="ttname"><a href="structWeightedLowess_1_1Options.html#a9ef4e0ac507ee23820c0934029c25a1c">WeightedLowess::Options::anchors</a></div><div class="ttdeci">size_t anchors</div><div class="ttdef"><b>Definition</b> Options.hpp:55</div></div>
 </div><!-- fragment --><p>If users already have an appropriate buffer for the fitted values and robustness weights, they can be filled directly with the results:</p>
 <div class="fragment"><div class="line">std::vector&lt;double&gt; fitted(num_points), rweights(num_points);</div>
 <div class="line"><a class="code hl_function" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">WeightedLowess::compute</a>(num_points, x, y, fitted.data(), rweights.data(), opt);</div>
@@ -123,7 +123,7 @@ $(function() {
 <div class="line"><a class="code hl_function" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">WeightedLowess::compute</a>(num_points, x, xwindows, y, fitted.data(), resids.data(), opt);</div>
 <div class="line"><a class="code hl_function" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">WeightedLowess::compute</a>(num_points, x, xwindows, y2, fitted2.data(), resids2.data(), opt);</div>
 <div class="line"><span class="comment">// etc.</span></div>
-<div class="ttc" id="anamespaceWeightedLowess_html_a4dd0465feea6da633892bf916ecd933f"><div class="ttname"><a href="namespaceWeightedLowess.html#a4dd0465feea6da633892bf916ecd933f">WeightedLowess::define_windows</a></div><div class="ttdeci">PrecomputedWindows&lt; Data_ &gt; define_windows(size_t num_points, const Data_ *x, const Options&lt; Data_ &gt; &amp;opt)</div><div class="ttdef"><b>Definition</b> window.hpp:274</div></div>
+<div class="ttc" id="anamespaceWeightedLowess_html_a4dd0465feea6da633892bf916ecd933f"><div class="ttname"><a href="namespaceWeightedLowess.html#a4dd0465feea6da633892bf916ecd933f">WeightedLowess::define_windows</a></div><div class="ttdeci">PrecomputedWindows&lt; Data_ &gt; define_windows(size_t num_points, const Data_ *x, const Options&lt; Data_ &gt; &amp;opt)</div><div class="ttdef"><b>Definition</b> window.hpp:275</div></div>
 </div><!-- fragment --><p>The <code>compute()</code> function assumes that the input x-coordinates are already sorted. If this is not the case, we can use the <code>SortBy</code> class to sort the input and unsort the output:</p>
 <div class="fragment"><div class="line"><span class="comment">// Permuting the x/y pairs so that x is sorted:</span></div>
 <div class="line"><a class="code hl_class" href="classWeightedLowess_1_1SortBy.html">WeightedLowess::SortBy</a> sorter(num_points, x);</div>
@@ -137,7 +137,7 @@ $(function() {
 <div class="line"><span class="comment">// the original ordering of x/y pairs.</span></div>
 <div class="line">sorter.unpermute(res_unsrt.fitted.data(), workspace);</div>
 <div class="line">sorter.unpermute(res_unsrt.robust_weights.data(), workspace);</div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html">WeightedLowess::SortBy</a></div><div class="ttdoc">Utility class for sorting on a covariate.</div><div class="ttdef"><b>Definition</b> SortBy.hpp:26</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html">WeightedLowess::SortBy</a></div><div class="ttdoc">Utility class for sorting on a covariate.</div><div class="ttdef"><b>Definition</b> SortBy.hpp:27</div></div>
 </div><!-- fragment --><p>See the <a href="https://ltla.github.io/CppWeightedLowess">reference documentation</a> for more details.</p>
 <h1>Building projects</h1>
 <h2>CMake with <code>FetchContent</code></h2>

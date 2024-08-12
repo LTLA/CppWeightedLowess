@@ -1,19 +1,13 @@
 <map id="WeightedLowess/window.hpp" name="WeightedLowess/window.hpp">
-<area shape="rect" id="Node000001" title="Compute the smoothing window for each point." alt="" coords="113,5,307,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,153,63,178"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,33,137,81,61,145,57,141,134,77,193,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="86,153,161,178"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="197,33,176,54,155,80,141,110,132,138,127,137,136,108,150,78,172,50,194,29"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="350,153,417,178"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="226,29,359,141,356,145,222,33"/>
-<area shape="rect" id="Node000005" href="$Options_8hpp.html" title="Options for compute()." alt="" coords="165,79,255,105"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="206,31,204,64,199,63,200,31"/>
-<area shape="poly" id="edge10_Node000005_Node000001" title=" " alt="" coords="214,78,216,46,221,46,220,79"/>
-<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="181,108,78,149,76,144,179,103"/>
-<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="197,107,151,145,148,141,194,103"/>
-<area shape="poly" id="edge9_Node000005_Node000004" title=" " alt="" coords="240,103,341,144,339,149,238,108"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="265,153,326,178"/>
-<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="226,103,271,141,268,145,223,107"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="184,153,241,178"/>
-<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="213,105,214,137,209,137,208,105"/>
+<area shape="rect" id="Node000001" title="Compute the smoothing window for each point." alt="" coords="121,5,315,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,63,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,34,78,76,76,71,186,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="86,79,161,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="204,34,153,72,150,67,200,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="184,79,252,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="221,31,221,63,215,63,215,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="275,79,353,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="236,29,288,68,284,72,233,34"/>
+<area shape="rect" id="Node000006" href="$Options_8hpp.html" title="Options for compute()." alt="" coords="377,79,467,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="253,29,374,71,372,76,252,34"/>
 </map>

@@ -91,222 +91,223 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceWeightedLowess.html">WeightedLowess</a> {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="foldopen" id="foldopen00026" data-start="{" data-end="};">
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html">   26</a></span><span class="keyword">class </span><a class="code hl_class" href="classWeightedLowess_1_1SortBy.html">SortBy</a> {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    std::vector&lt;size_t&gt; my_permutation;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">bool</span> my_sorted = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Sortable_&gt;</div>
-<div class="foldopen" id="foldopen00038" data-start="{" data-end="}">
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#aba746dc49e02889ac37cc5e64d452877">   38</a></span>    <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#aba746dc49e02889ac37cc5e64d452877">SortBy</a>(<span class="keywordtype">size_t</span> num_points, <span class="keyword">const</span> Sortable_* x) {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ade41beaa0df73b0ffd9dffc4a5cf5e9b">set</a>(num_points, x);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    }</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;initializer_list&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceWeightedLowess.html">WeightedLowess</a> {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="foldopen" id="foldopen00027" data-start="{" data-end="};">
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html">   27</a></span><span class="keyword">class </span><a class="code hl_class" href="classWeightedLowess_1_1SortBy.html">SortBy</a> {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    std::vector&lt;size_t&gt; my_permutation;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keywordtype">bool</span> my_sorted = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Sortable_&gt;</div>
+<div class="foldopen" id="foldopen00039" data-start="{" data-end="}">
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#aba746dc49e02889ac37cc5e64d452877">   39</a></span>    <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#aba746dc49e02889ac37cc5e64d452877">SortBy</a>(<span class="keywordtype">size_t</span> num_points, <span class="keyword">const</span> Sortable_* x) {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ade41beaa0df73b0ffd9dffc4a5cf5e9b">set</a>(num_points, x);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    }</div>
 </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#ab86761ca01148dd783d9352271aa4d89">   46</a></span>    <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ab86761ca01148dd783d9352271aa4d89">SortBy</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Sortable_&gt;</div>
-<div class="foldopen" id="foldopen00054" data-start="{" data-end="}">
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#ade41beaa0df73b0ffd9dffc4a5cf5e9b">   54</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ade41beaa0df73b0ffd9dffc4a5cf5e9b">set</a>(<span class="keywordtype">size_t</span> num_points, <span class="keyword">const</span> Sortable_* x) {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keywordflow">if</span> (num_points) {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            my_sorted = std::is_sorted(x, x + num_points);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            <span class="keywordflow">if</span> (!my_sorted) {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                my_permutation.resize(num_points);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                std::iota(my_permutation.begin(), my_permutation.end(), <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(0));</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                std::sort(my_permutation.begin(), my_permutation.end(), [&amp;](<span class="keywordtype">size_t</span> left, <span class="keywordtype">size_t</span> right) -&gt; <span class="keywordtype">bool</span> { return x[left] &lt; x[right]; });</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            }</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        }</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    }</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#ab86761ca01148dd783d9352271aa4d89">   47</a></span>    <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ab86761ca01148dd783d9352271aa4d89">SortBy</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Sortable_&gt;</div>
+<div class="foldopen" id="foldopen00055" data-start="{" data-end="}">
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#ade41beaa0df73b0ffd9dffc4a5cf5e9b">   55</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ade41beaa0df73b0ffd9dffc4a5cf5e9b">set</a>(<span class="keywordtype">size_t</span> num_points, <span class="keyword">const</span> Sortable_* x) {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordflow">if</span> (num_points) {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            my_sorted = std::is_sorted(x, x + num_points);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <span class="keywordflow">if</span> (!my_sorted) {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                my_permutation.resize(num_points);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                std::iota(my_permutation.begin(), my_permutation.end(), <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(0));</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                std::sort(my_permutation.begin(), my_permutation.end(), [&amp;](<span class="keywordtype">size_t</span> left, <span class="keywordtype">size_t</span> right) -&gt; <span class="keywordtype">bool</span> { return x[left] &lt; x[right]; });</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            }</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        }</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    }</div>
 </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> AllData_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">void</span> permute_raw(AllData_&amp; data, Used_* work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keywordflow">if</span> (my_sorted) {</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        }</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        std::fill_n(work, num_points, 0);</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="comment">// Reordering values in place.</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; num_points; ++i) {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            <span class="keywordflow">if</span> (work[i]) {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            }</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            work[i] = 1;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            <span class="keywordtype">size_t</span> current = i, replacement = my_permutation[i];</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            <span class="keywordflow">while</span> (replacement != i) {</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_pointer&lt;AllData_&gt;::value) {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                    std::swap(data[current], data[replacement]);</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> d : data) {</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                        std::swap(d[current], d[replacement]);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                    }</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                }</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                current = replacement;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                work[replacement] = 1;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                replacement = my_permutation[replacement]; </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            } </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        }</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    }</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00108" data-start="{" data-end="}">
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">  108</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(Data_* data, Used_* work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        permute_raw(data, work);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    }</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> AllData_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">void</span> permute_raw(AllData_&amp; data, Used_* work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keywordflow">if</span> (my_sorted) {</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        }</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        std::fill_n(work, num_points, 0);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="comment">// Reordering values in place.</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; num_points; ++i) {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            <span class="keywordflow">if</span> (work[i]) {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            }</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            work[i] = 1;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            <span class="keywordtype">size_t</span> current = i, replacement = my_permutation[i];</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            <span class="keywordflow">while</span> (replacement != i) {</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_pointer&lt;AllData_&gt;::value) {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                    std::swap(data[current], data[replacement]);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> d : data) {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                        std::swap(d[current], d[replacement]);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                    }</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                current = replacement;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                work[replacement] = 1;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                replacement = my_permutation[replacement]; </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            } </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        }</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    }</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00109" data-start="{" data-end="}">
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">  109</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(Data_* data, Used_* work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        permute_raw(data, work);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    }</div>
 </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00121" data-start="{" data-end="}">
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a38b636960bd52fb45be7b476974baeab">  121</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a38b636960bd52fb45be7b476974baeab">permute</a>(std::initializer_list&lt;Data_&gt; data, Used_* work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        permute_raw(data, work);</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    }</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00122" data-start="{" data-end="}">
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a38b636960bd52fb45be7b476974baeab">  122</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a38b636960bd52fb45be7b476974baeab">permute</a>(std::initializer_list&lt;Data_&gt; data, Used_* work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        permute_raw(data, work);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    }</div>
 </div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> DataPo<span class="keywordtype">int</span>ers_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00134" data-start="{" data-end="}">
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#ac36619bc878340236831305133040486">  134</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac36619bc878340236831305133040486">permute</a>(DataPointers_ data, Used_* work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        permute_raw(data, work);</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    }</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> DataPo<span class="keywordtype">int</span>ers_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00135" data-start="{" data-end="}">
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#ac36619bc878340236831305133040486">  135</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac36619bc878340236831305133040486">permute</a>(DataPointers_ data, Used_* work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        permute_raw(data, work);</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    }</div>
 </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00147" data-start="{" data-end="}">
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a5238cd266b2380334778c2f09beb2d1f">  147</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a5238cd266b2380334778c2f09beb2d1f">permute</a>(Data_* data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        work.resize(num_points);</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(data, work.data());</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    }</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00148" data-start="{" data-end="}">
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a5238cd266b2380334778c2f09beb2d1f">  148</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a5238cd266b2380334778c2f09beb2d1f">permute</a>(Data_* data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        work.resize(num_points);</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(data, work.data());</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    }</div>
 </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00162" data-start="{" data-end="}">
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a19fcf75ba3a6117474439dcbbd2d9b33">  162</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a19fcf75ba3a6117474439dcbbd2d9b33">permute</a>(std::initializer_list&lt;Data_&gt; data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        work.resize(num_points);</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(data, work.data());</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    }</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00163" data-start="{" data-end="}">
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a19fcf75ba3a6117474439dcbbd2d9b33">  163</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a19fcf75ba3a6117474439dcbbd2d9b33">permute</a>(std::initializer_list&lt;Data_&gt; data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        work.resize(num_points);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(data, work.data());</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    }</div>
 </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> DataPo<span class="keywordtype">int</span>ers_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00177" data-start="{" data-end="}">
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a8f4e951ac12f1293037f1ba363f070a6">  177</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a8f4e951ac12f1293037f1ba363f070a6">permute</a>(DataPointers_ data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        work.resize(num_points);</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(data, work.data());</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    }</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> DataPo<span class="keywordtype">int</span>ers_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00178" data-start="{" data-end="}">
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a8f4e951ac12f1293037f1ba363f070a6">  178</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a8f4e951ac12f1293037f1ba363f070a6">permute</a>(DataPointers_ data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        work.resize(num_points);</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">permute</a>(data, work.data());</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    }</div>
 </div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> AllData_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keywordtype">void</span> unpermute_raw(AllData_&amp; data, Used_* work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        <span class="keywordflow">if</span> (my_sorted) {</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        }</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        std::fill_n(work, num_points, 0);</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; num_points; ++i) {</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            <span class="keywordflow">if</span> (work[i]) {</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            }</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>            work[i] = 1;</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            <span class="keywordtype">size_t</span> replacement = my_permutation[i];</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="keywordflow">while</span> (replacement != i) {</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_pointer&lt;AllData_&gt;::value) {</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>                    std::swap(data[i], data[replacement]);</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> d : data) {</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                        std::swap(d[i], d[replacement]);</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                    }</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                }</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                work[replacement] = 1;</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                replacement = my_permutation[replacement]; </div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>            } </div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        }</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    }</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00223" data-start="{" data-end="}">
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">  223</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">unpermute</a>(Data_* data, Used_* work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        unpermute_raw(data, work);</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    }</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> AllData_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="keywordtype">void</span> unpermute_raw(AllData_&amp; data, Used_* work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        <span class="keywordflow">if</span> (my_sorted) {</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        }</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        std::fill_n(work, num_points, 0);</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; num_points; ++i) {</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>            <span class="keywordflow">if</span> (work[i]) {</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>            }</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            work[i] = 1;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="keywordtype">size_t</span> replacement = my_permutation[i];</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            <span class="keywordflow">while</span> (replacement != i) {</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_pointer&lt;AllData_&gt;::value) {</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                    std::swap(data[i], data[replacement]);</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> d : data) {</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                        std::swap(d[i], d[replacement]);</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                    }</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                }</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                work[replacement] = 1;</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                replacement = my_permutation[replacement]; </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            } </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        }</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    }</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> </div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00224" data-start="{" data-end="}">
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">  224</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">unpermute</a>(Data_* data, Used_* work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        unpermute_raw(data, work);</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    }</div>
 </div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00235" data-start="{" data-end="}">
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a4d316ac11c79c3a80672067756362384">  235</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a4d316ac11c79c3a80672067756362384">unpermute</a>(std::initializer_list&lt;Data_*&gt; data, Used_* work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        unpermute_raw(data, work);</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    }</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00236" data-start="{" data-end="}">
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a4d316ac11c79c3a80672067756362384">  236</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a4d316ac11c79c3a80672067756362384">unpermute</a>(std::initializer_list&lt;Data_*&gt; data, Used_* work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        unpermute_raw(data, work);</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    }</div>
 </div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> DataPo<span class="keywordtype">int</span>ers_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00247" data-start="{" data-end="}">
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a15a41028fc0a28a7f6c97878b790d6b6">  247</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a15a41028fc0a28a7f6c97878b790d6b6">unpermute</a>(DataPointers_ data, Used_* work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        unpermute_raw(data, work);</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    }</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> DataPo<span class="keywordtype">int</span>ers_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00248" data-start="{" data-end="}">
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a15a41028fc0a28a7f6c97878b790d6b6">  248</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a15a41028fc0a28a7f6c97878b790d6b6">unpermute</a>(DataPointers_ data, Used_* work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        unpermute_raw(data, work);</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    }</div>
 </div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00259" data-start="{" data-end="}">
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a0127fde2589669bff5f2b796c67e61dc">  259</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a0127fde2589669bff5f2b796c67e61dc">unpermute</a>(Data_* data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        work.resize(num_points);</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">unpermute</a>(data, work.data());</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    }</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00260" data-start="{" data-end="}">
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a0127fde2589669bff5f2b796c67e61dc">  260</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a0127fde2589669bff5f2b796c67e61dc">unpermute</a>(Data_* data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        work.resize(num_points);</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">unpermute</a>(data, work.data());</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    }</div>
 </div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00273" data-start="{" data-end="}">
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a129e7a5205ba62ffd301499333ea1c6d">  273</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a129e7a5205ba62ffd301499333ea1c6d">unpermute</a>(std::initializer_list&lt;Data_*&gt; data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        work.resize(num_points);</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">unpermute</a>(data, work.data());</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    }</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00274" data-start="{" data-end="}">
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#a129e7a5205ba62ffd301499333ea1c6d">  274</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a129e7a5205ba62ffd301499333ea1c6d">unpermute</a>(std::initializer_list&lt;Data_*&gt; data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        work.resize(num_points);</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">unpermute</a>(data, work.data());</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    }</div>
 </div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> DataPo<span class="keywordtype">int</span>ers_, <span class="keyword">typename</span> Used_&gt;</div>
-<div class="foldopen" id="foldopen00287" data-start="{" data-end="}">
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#ad25d03e0aa1de5d19594c6d3ac52f215">  287</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ad25d03e0aa1de5d19594c6d3ac52f215">unpermute</a>(DataPointers_ data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        work.resize(num_points);</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">unpermute</a>(data, work.data());</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    }</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> DataPo<span class="keywordtype">int</span>ers_, <span class="keyword">typename</span> Used_&gt;</div>
+<div class="foldopen" id="foldopen00288" data-start="{" data-end="}">
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno"><a class="line" href="classWeightedLowess_1_1SortBy.html#ad25d03e0aa1de5d19594c6d3ac52f215">  288</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#ad25d03e0aa1de5d19594c6d3ac52f215">unpermute</a>(DataPointers_ data, std::vector&lt;Used_&gt;&amp; work)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        <span class="keywordtype">size_t</span> num_points = my_permutation.size();</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        work.resize(num_points);</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        <a class="code hl_function" href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">unpermute</a>(data, work.data());</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    }</div>
 </div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>};</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>};</div>
 </div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span> </div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>}</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html">WeightedLowess::SortBy</a></div><div class="ttdoc">Utility class for sorting on a covariate.</div><div class="ttdef"><b>Definition</b> SortBy.hpp:26</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a0127fde2589669bff5f2b796c67e61dc"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a0127fde2589669bff5f2b796c67e61dc">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(Data_ *data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:259</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a0e21a76c6f8a1a6f43129efd3a4fcc1d"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(Data_ *data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:223</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a129e7a5205ba62ffd301499333ea1c6d"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a129e7a5205ba62ffd301499333ea1c6d">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(std::initializer_list&lt; Data_ * &gt; data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:273</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a15a41028fc0a28a7f6c97878b790d6b6"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a15a41028fc0a28a7f6c97878b790d6b6">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(DataPointers_ data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:247</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a19fcf75ba3a6117474439dcbbd2d9b33"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a19fcf75ba3a6117474439dcbbd2d9b33">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(std::initializer_list&lt; Data_ &gt; data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:162</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a38b636960bd52fb45be7b476974baeab"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a38b636960bd52fb45be7b476974baeab">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(std::initializer_list&lt; Data_ &gt; data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:121</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a4d316ac11c79c3a80672067756362384"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a4d316ac11c79c3a80672067756362384">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(std::initializer_list&lt; Data_ * &gt; data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:235</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a5238cd266b2380334778c2f09beb2d1f"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a5238cd266b2380334778c2f09beb2d1f">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(Data_ *data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:147</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a8f4e951ac12f1293037f1ba363f070a6"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a8f4e951ac12f1293037f1ba363f070a6">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(DataPointers_ data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:177</div></div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>}</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span> </div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html">WeightedLowess::SortBy</a></div><div class="ttdoc">Utility class for sorting on a covariate.</div><div class="ttdef"><b>Definition</b> SortBy.hpp:27</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a0127fde2589669bff5f2b796c67e61dc"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a0127fde2589669bff5f2b796c67e61dc">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(Data_ *data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:260</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a0e21a76c6f8a1a6f43129efd3a4fcc1d"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a0e21a76c6f8a1a6f43129efd3a4fcc1d">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(Data_ *data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:224</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a129e7a5205ba62ffd301499333ea1c6d"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a129e7a5205ba62ffd301499333ea1c6d">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(std::initializer_list&lt; Data_ * &gt; data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:274</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a15a41028fc0a28a7f6c97878b790d6b6"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a15a41028fc0a28a7f6c97878b790d6b6">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(DataPointers_ data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:248</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a19fcf75ba3a6117474439dcbbd2d9b33"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a19fcf75ba3a6117474439dcbbd2d9b33">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(std::initializer_list&lt; Data_ &gt; data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:163</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a38b636960bd52fb45be7b476974baeab"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a38b636960bd52fb45be7b476974baeab">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(std::initializer_list&lt; Data_ &gt; data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:122</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a4d316ac11c79c3a80672067756362384"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a4d316ac11c79c3a80672067756362384">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(std::initializer_list&lt; Data_ * &gt; data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:236</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a5238cd266b2380334778c2f09beb2d1f"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a5238cd266b2380334778c2f09beb2d1f">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(Data_ *data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:148</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_a8f4e951ac12f1293037f1ba363f070a6"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#a8f4e951ac12f1293037f1ba363f070a6">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(DataPointers_ data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:178</div></div>
 <div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_ab86761ca01148dd783d9352271aa4d89"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#ab86761ca01148dd783d9352271aa4d89">WeightedLowess::SortBy::SortBy</a></div><div class="ttdeci">SortBy()=default</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_aba746dc49e02889ac37cc5e64d452877"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#aba746dc49e02889ac37cc5e64d452877">WeightedLowess::SortBy::SortBy</a></div><div class="ttdeci">SortBy(size_t num_points, const Sortable_ *x)</div><div class="ttdef"><b>Definition</b> SortBy.hpp:38</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_ac36619bc878340236831305133040486"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#ac36619bc878340236831305133040486">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(DataPointers_ data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:134</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_ac3af7bb0c3a06421b855a59c7213ff48"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(Data_ *data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:108</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_ad25d03e0aa1de5d19594c6d3ac52f215"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#ad25d03e0aa1de5d19594c6d3ac52f215">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(DataPointers_ data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:287</div></div>
-<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_ade41beaa0df73b0ffd9dffc4a5cf5e9b"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#ade41beaa0df73b0ffd9dffc4a5cf5e9b">WeightedLowess::SortBy::set</a></div><div class="ttdeci">void set(size_t num_points, const Sortable_ *x)</div><div class="ttdef"><b>Definition</b> SortBy.hpp:54</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_aba746dc49e02889ac37cc5e64d452877"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#aba746dc49e02889ac37cc5e64d452877">WeightedLowess::SortBy::SortBy</a></div><div class="ttdeci">SortBy(size_t num_points, const Sortable_ *x)</div><div class="ttdef"><b>Definition</b> SortBy.hpp:39</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_ac36619bc878340236831305133040486"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#ac36619bc878340236831305133040486">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(DataPointers_ data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:135</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_ac3af7bb0c3a06421b855a59c7213ff48"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#ac3af7bb0c3a06421b855a59c7213ff48">WeightedLowess::SortBy::permute</a></div><div class="ttdeci">void permute(Data_ *data, Used_ *work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:109</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_ad25d03e0aa1de5d19594c6d3ac52f215"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#ad25d03e0aa1de5d19594c6d3ac52f215">WeightedLowess::SortBy::unpermute</a></div><div class="ttdeci">void unpermute(DataPointers_ data, std::vector&lt; Used_ &gt; &amp;work) const</div><div class="ttdef"><b>Definition</b> SortBy.hpp:288</div></div>
+<div class="ttc" id="aclassWeightedLowess_1_1SortBy_html_ade41beaa0df73b0ffd9dffc4a5cf5e9b"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html#ade41beaa0df73b0ffd9dffc4a5cf5e9b">WeightedLowess::SortBy::set</a></div><div class="ttdeci">void set(size_t num_points, const Sortable_ *x)</div><div class="ttdef"><b>Definition</b> SortBy.hpp:55</div></div>
 <div class="ttc" id="anamespaceWeightedLowess_html"><div class="ttname"><a href="namespaceWeightedLowess.html">WeightedLowess</a></div><div class="ttdoc">Namespace for LOWESS functions.</div><div class="ttdef"><b>Definition</b> compute.hpp:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
