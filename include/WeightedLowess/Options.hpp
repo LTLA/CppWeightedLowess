@@ -1,14 +1,6 @@
 #ifndef WEIGHTEDLOWESS_OPTIONS_HPP
 #define WEIGHTEDLOWESS_OPTIONS_HPP
 
-#include <algorithm>
-#include <vector>
-#include <cstdint>
-#include <cmath>
-#include <numeric>
-
-#include "window.hpp"
-
 /**
  * @file Options.hpp
  *

@@ -6,6 +6,7 @@
 #include <vector>
 #include <cstdint>
 #include <type_traits>
+#include <initializer_list>
 
 /**
  * @file SortBy.hpp

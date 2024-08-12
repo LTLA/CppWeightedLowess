@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 #include "window.hpp"
 #include "Options.hpp"
@@ -218,7 +219,7 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
     const auto& limits = windows.limits;
 
     /* Setting up the robustness weights, if robustification is requested. */ 
-    std::fill(robust_weights, robust_weights + num_points, 1);
+    std::fill_n(robust_weights, num_points, 1);
     Data_ min_mad = 0; 
     std::vector<size_t> residual_permutation;
     if (opt.iterations) {
@@ -232,7 +233,7 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
          */
         Data_ range = (*std::max_element(y, y + num_points) - *std::min_element(y, y + num_points));
         if (range == 0) {
-            std::copy(y, y + num_points, fitted);
+            std::copy_n(y, num_points, fitted);
             return;
         }
         min_mad = 0.00000000001 * range;
