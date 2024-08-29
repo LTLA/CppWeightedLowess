@@ -14,6 +14,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Get latest CMake
+      uses: lukka/get-cmake@latest
+
+    - name: Prebuild stuff
+      run: cmake -S . -B build -DWEIGHTEDLOWESS_TESTS=OFF
+
     - name: Set directories
       run: |
         echo "R_PKG_DIR=${R_HOME}/site-library" >> $GITHUB_ENV

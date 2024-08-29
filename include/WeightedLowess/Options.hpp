@@ -87,16 +87,7 @@ struct Options {
     /**
      * Number of threads to use for various steps.
      * This should be a positive integer.
-     *
-     * By default, `compute()` uses OpenMP for parallelization.
-     * Applications can override this by setting the `WEIGHTEDLOWESS_CUSTOM_PARALLEL` function-like macro, e.g., in environments where OpenMP is not available.
-     * This macro should accept three arguments:
-     * - `num_jobs`, a `size_t` specifying the number of tasks to perform.
-     * - `num_threads`, an `int` specifying the number of threads to use.
-     * - `fun`, a function that accepts three `size_t` values.
-     * .
-     * The macro should partition the tasks into blocks, assign each block to a thread,
-     * and call `fun()` in each thread with the thread number (an ID in `[0, num_threads)`), start position and length of its block.
+     * The parallelization scheme is determined by the #WEIGHTEDLOWESS_CUSTOM_PARALLEL macro, which defaults to `subpar::parallelize()` if not defined by the user.
      */
     int num_threads = 1;
 };

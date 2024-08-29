@@ -103,14 +103,10 @@ TEST(RobustTest, PopulateWeights) {
     std::vector<double> abs_dev { 1, 5, 10, 0, 3 };
     std::vector<double> robust(abs_dev.size());
 
-    WeightedLowess::internal::populate_robust_weights(abs_dev, 5.0, robust.data(), 1);
+    WeightedLowess::internal::populate_robust_weights(abs_dev, 5.0, robust.data());
     EXPECT_TRUE(robust[0] > 0 && robust[0] < 1);
     EXPECT_EQ(robust[1], 0);
     EXPECT_EQ(robust[2], 0);
     EXPECT_FLOAT_EQ(robust[3], 1);
     EXPECT_TRUE(robust[4] > 0 && robust[4] < 1);
-
-    std::vector<double> probust(abs_dev.size());
-    WeightedLowess::internal::populate_robust_weights(abs_dev, 5.0, probust.data(), 2);
-    EXPECT_EQ(robust, probust);
 }

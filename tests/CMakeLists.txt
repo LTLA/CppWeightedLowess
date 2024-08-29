@@ -50,21 +50,11 @@ add_executable(
 )
 decorate_exe(libtest)
 
-add_executable(
-    partest 
-    src/options.cpp
-    src/window.cpp
-    src/robust.cpp
-)
-decorate_exe(partest)
-target_compile_definitions(partest PRIVATE TEST_CUSTOM_PARALLEL=1)
-
 find_package(OpenMP)
 if (OpenMP_FOUND) 
+    # To test the SIMD macros.
     add_executable(
         omptest
-        src/options.cpp
-        src/window.cpp
         src/robust.cpp
     )
     decorate_exe(omptest)

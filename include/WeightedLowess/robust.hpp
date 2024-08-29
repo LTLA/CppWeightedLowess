@@ -21,24 +21,12 @@ Data_ compute_mad(
     std::vector<size_t>& permutation, 
     [[maybe_unused]] int nthreads) 
 {
-#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
 #ifdef _OPENMP
-    #pragma omp parallel for num_threads(nthreads)
+    #pragma omp simd
 #endif
-    for (size_t pt = 0; pt < num_points; ++pt) {
-#else
-    WEIGHTEDLOWESS_CUSTOM_PARALLEL(num_points, nthreads, [&](size_t, size_t start, size_t length) {
-    for (size_t pt = start, end = start + length; pt < end; ++pt) {
-#endif
-
-        abs_dev[pt] = std::abs(y[pt] - fitted[pt]);
-
-#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
+    for (size_t i = 0; i < num_points; ++i) {
+        abs_dev[i] = std::abs(y[i] - fitted[i]);
     }
-#else
-    }
-    });
-#endif
 
     std::iota(permutation.begin(), permutation.end(), 0);
     std::sort(permutation.begin(), permutation.end(), [&](size_t left, size_t right) -> bool { return abs_dev[left] < abs_dev[right]; });
@@ -66,31 +54,17 @@ Data_ square (Data_ x) {
 }
 
 template<typename Data_>
-void populate_robust_weights(const std::vector<Data_>& abs_dev, Data_ threshold, Data_* robust_weights, [[maybe_unused]] int nthreads) {
+void populate_robust_weights(const std::vector<Data_>& abs_dev, Data_ threshold, Data_* robust_weights) {
     size_t num_points = abs_dev.size();
 
-#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
 #ifdef _OPENMP
-    #pragma omp parallel for num_threads(nthreads)
+    #pragma omp simd
 #endif
     for (size_t i = 0; i < num_points; ++i) {
-#else
-    WEIGHTEDLOWESS_CUSTOM_PARALLEL(num_points, nthreads, [&](size_t, size_t start, size_t length) {
-    for (size_t i = start, end = start + length; i < end; ++i) {
-#endif
-
-        if (abs_dev[i] < threshold) {
-            robust_weights[i] = square(1 - square(abs_dev[i]/threshold));
-        } else { 
-            robust_weights[i] = 0;
-        }
-
-#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
+        auto ad = abs_dev[i];
+        // Effectively a branchless if/else, which should help auto-vectorization.
+        robust_weights[i] = (ad < threshold) * square(1 - square(ad/threshold));
     }
-#else
-    }
-    });
-#endif
 }
 
 }

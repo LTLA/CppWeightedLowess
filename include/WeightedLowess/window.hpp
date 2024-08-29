@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 #include "Options.hpp"
+#include "parallelize.hpp"
 
 /**
  * @file window.hpp
@@ -119,109 +120,96 @@ std::vector<Window<Data_> > find_limits(
     auto half_min_width = min_width / 2;
     auto points_m1 = num_points - 1;
 
-#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
-#ifdef _OPENMP
-    #pragma omp parallel for num_threads(nthreads)
-#endif
-    for (size_t s = 0; s < nanchors; ++s) {
-#else
-    WEIGHTEDLOWESS_CUSTOM_PARALLEL(nanchors, nthreads, [&](size_t, size_t start, size_t length) {
-    for (size_t s = start, end = start + length; s < end; ++s) {
-#endif
+    WEIGHTEDLOWESS_CUSTOM_PARALLEL(nthreads, nanchors, [&](size_t, size_t start, size_t length) {
+        for (size_t s = start, end = start + length; s < end; ++s) {
+            auto curpt = anchors[s], left = curpt, right = curpt;
+            auto curx = x[curpt];
+            Data_ curw = (weights == NULL ? 1 : weights[curpt]);
 
-        auto curpt = anchors[s], left = curpt, right = curpt;
-        auto curx = x[curpt];
-        Data_ curw = (weights == NULL ? 1 : weights[curpt]);
+            // First expanding in both directions, choosing the one that
+            // minimizes the increase in the window size.
+            if (curpt > 0 && curpt < points_m1) {
+                auto next_ldist = curx - x[left - 1];
+                auto next_rdist = x[right + 1] - curx;
 
-        // First expanding in both directions, choosing the one that
-        // minimizes the increase in the window size.
-        if (curpt > 0 && curpt < points_m1) {
-            auto next_ldist = curx - x[left - 1];
-            auto next_rdist = x[right + 1] - curx;
+                while (curw < span_weight) {
+                    if (next_ldist < next_rdist) {
+                        --left;
+                        curw += (weights == NULL ? 1 : weights[left]);
+                        if (left == 0) {
+                            break;
+                        }
+                        next_ldist = curx - x[left - 1];
 
-            while (curw < span_weight) {
-                if (next_ldist < next_rdist) {
-                    --left;
-                    curw += (weights == NULL ? 1 : weights[left]);
-                    if (left == 0) {
-                        break;
+                    } else if (next_ldist > next_rdist) {
+                        ++right;
+                        curw += (weights == NULL ? 1 : weights[right]);
+                        if (right == points_m1) {
+                            break;
+                        }
+                        next_rdist = x[right + 1] - curx;
+
+                    } else {
+                        // In the very rare case that distances are equal, we do a
+                        // simultaneous jump to ensure that both points are
+                        // included.  Otherwise one of them is skipped if we break.
+                        --left;
+                        ++right;
+                        curw += (weights == NULL ? 2 : weights[left] + weights[right]);
+                        if (left == 0 || right == points_m1) {
+                            break;
+                        }
+                        next_ldist = curx - x[left - 1];
+                        next_rdist = x[right + 1] - curx;
                     }
-                    next_ldist = curx - x[left - 1];
-
-                } else if (next_ldist > next_rdist) {
-                    ++right;
-                    curw += (weights == NULL ? 1 : weights[right]);
-                    if (right == points_m1) {
-                        break;
-                    }
-                    next_rdist = x[right + 1] - curx;
-
-                } else {
-                    // In the very rare case that distances are equal, we do a
-                    // simultaneous jump to ensure that both points are
-                    // included.  Otherwise one of them is skipped if we break.
-                    --left;
-                    ++right;
-                    curw += (weights == NULL ? 2 : weights[left] + weights[right]);
-                    if (left == 0 || right == points_m1) {
-                        break;
-                    }
-                    next_ldist = curx - x[left - 1];
-                    next_rdist = x[right + 1] - curx;
                 }
             }
-        }
 
-        // If we still need it, we expand in only one direction.
-        while (left > 0 && curw < span_weight) {
-            --left;
-            curw += (weights == NULL ? 1 : weights[left]);
-        }
- 
-        while (right < points_m1 && curw < span_weight) {
-            ++right;
-            curw += (weights == NULL ? 1 : weights[right]);
-        }
+            // If we still need it, we expand in only one direction.
+            while (left > 0 && curw < span_weight) {
+                --left;
+                curw += (weights == NULL ? 1 : weights[left]);
+            }
+     
+            while (right < points_m1 && curw < span_weight) {
+                ++right;
+                curw += (weights == NULL ? 1 : weights[right]);
+            }
 
-        /* Once we've found the span, we stretch it out to include all ties. */
-        while (left > 0 && x[left] == x[left - 1]) {
-            --left; 
-        }
+            /* Once we've found the span, we stretch it out to include all ties. */
+            while (left > 0 && x[left] == x[left - 1]) {
+                --left; 
+            }
 
-        while (right < points_m1 && x[right] == x[right + 1]) { 
-            ++right; 
-        }
+            while (right < points_m1 && x[right] == x[right + 1]) { 
+                ++right; 
+            }
 
-        /* Forcibly extending the span if it fails the min width.  We use
-         * the existing 'left' and 'right' to truncate the search space.
-         */
-        auto mdist = std::max(curx - x[left], x[right] - curx);
-        if (mdist < half_min_width) {
-            left = std::lower_bound(x, x + left, curx - half_min_width) - x; 
-
-            /* 'right' still refers to a point inside the window, and we
-             * already know that the window is too small, so we shift it
-             * forward by one to start searching outside. However,
-             * upper_bound gives us the first element that is _outside_ the
-             * window, so we need to subtract one to get to the last
-             * element _inside_ the window.
+            /* Forcibly extending the span if it fails the min width.  We use
+             * the existing 'left' and 'right' to truncate the search space.
              */
-            right = std::upper_bound(x + right + 1, x + num_points, curx + half_min_width) - x;
-            --right;
+            auto mdist = std::max(curx - x[left], x[right] - curx);
+            if (mdist < half_min_width) {
+                left = std::lower_bound(x, x + left, curx - half_min_width) - x; 
 
-            mdist = std::max(curx - x[left], x[right] - curx);
+                /* 'right' still refers to a point inside the window, and we
+                 * already know that the window is too small, so we shift it
+                 * forward by one to start searching outside. However,
+                 * upper_bound gives us the first element that is _outside_ the
+                 * window, so we need to subtract one to get to the last
+                 * element _inside_ the window.
+                 */
+                right = std::upper_bound(x + right + 1, x + num_points, curx + half_min_width) - x;
+                --right;
+
+                mdist = std::max(curx - x[left], x[right] - curx);
+            }
+
+            limits[s].left = left;
+            limits[s].right = right;
+            limits[s].distance = mdist;
         }
-
-        limits[s].left = left;
-        limits[s].right = right;
-        limits[s].distance = mdist;
-
-#ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
-    }
-#else
-    }
     });
-#endif
 
     return limits;
 }

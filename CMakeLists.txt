@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 project(WeightedLowess
-    VERSION 2.1.0
+    VERSION 2.1.1
     DESCRIPTION "A C++ port of the limma::weightedLowess function"
     LANGUAGES CXX)
 
@@ -15,6 +15,17 @@ target_include_directories(WeightedLowess INTERFACE
 
 target_compile_features(WeightedLowess INTERFACE cxx_std_17)
 
+# Dependencies
+option(WEIGHTEDLOWESS_FETCH_EXTERN "Automatically fetch WeightedLowess's external dependencies." ON)
+if(WEIGHTEDLOWESS_FETCH_EXTERN)
+    add_subdirectory(extern)
+else()
+    find_package(ltla_subpar 0.2.1 CONFIG REQUIRED)
+endif()
+
+target_link_libraries(WeightedLowess INTERFACE ltla::subpar)
+
+# Testing.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     option(WEIGHTEDLOWESS_TESTS "Build WeightedLowess's test suite." ON)
 else()

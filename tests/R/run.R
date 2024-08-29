@@ -3,6 +3,9 @@ library(Rcpp)
 if (!file.exists("WeightedLowess")) {
     file.symlink("../../include/WeightedLowess", "WeightedLowess")
 }
+if (!file.exists("subpar")) {
+    file.symlink("../../build/_deps/subpar-src/include/subpar", "subpar")
+}
 sourceCpp("test.cpp")
 
 # Running it against the reference.
