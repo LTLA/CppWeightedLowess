@@ -149,10 +149,15 @@ find_package(ltla_WeightedLowess CONFIG REQUIRED)
 target_link_libraries(mylib INTERFACE ltla::WeightedLowess)
 ```
 
+By default, this will use `FetchContent` to fetch all external dependencies.
+If you want to install them manually, use `-DWEIGHTEDLOWESS_FETCH_EXTERN=OFF`.
+See [`extern/CMakeLists.txt`](extern/CMakeLists.txt) to find compatible versions of each dependency.
+
 ### Manual
 
 If you're not using CMake, the simple approach is to just copy the files in the [`include/`](include) subdirectory - 
 either directly or with Git submodules - and include their path during compilation with, e.g., GCC's `-I`.
+This requires the external dependencies listed in [`extern/CMakeLists.txt`](extern/CMakeLists.txt), which also need to be made available during compilation.
 
 ## References 
 
