@@ -55,6 +55,7 @@ if (OpenMP_FOUND)
     # To test the SIMD macros.
     add_executable(
         omptest
+        src/basic.cpp
         src/robust.cpp
     )
     decorate_exe(omptest)

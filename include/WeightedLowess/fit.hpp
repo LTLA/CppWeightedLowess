@@ -169,6 +169,9 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
                     if (current > 0) {
                         const Data_ slope = (fitted[curpt] - fitted[last_anchor])/current;
                         const Data_ intercept = fitted[curpt] - slope * x[curpt];
+#ifdef _OPENMP
+                        #pragma omp simd
+#endif
                         for (size_t subpt = last_anchor + 1; subpt < curpt; ++subpt) { 
                             fitted[subpt] = slope * x[subpt] + intercept; 
                         }
@@ -179,9 +182,7 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
                          * distance may be zero.
                          */
                         const Data_ ave = (fitted[curpt] + fitted[last_anchor]) / 2;
-                        for (size_t subpt = last_anchor + 1; subpt < curpt; ++subpt) {
-                            fitted[subpt] = ave;
-                        }
+                        std::fill(fitted + last_anchor + 1, fitted + curpt, ave);
                     }
                 }
             }
