@@ -165,8 +165,9 @@ $(function() {
 </div><!-- fragment --><p>Then you can use <code>find_package()</code> as usual:</p>
 <div class="fragment"><div class="line">find_package(ltla_WeightedLowess CONFIG REQUIRED)</div>
 <div class="line">target_link_libraries(mylib INTERFACE ltla::WeightedLowess)</div>
-</div><!-- fragment --><h2>Manual</h2>
-<p>If you're not using CMake, the simple approach is to just copy the files in the [<code>include/</code>](include) subdirectory - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's <code>-I</code>.</p>
+</div><!-- fragment --><p>By default, this will use <code>FetchContent</code> to fetch all external dependencies. If you want to install them manually, use <code>-DWEIGHTEDLOWESS_FETCH_EXTERN=OFF</code>. See <a href="extern/CMakeLists.txt"><code>extern/CMakeLists.txt</code></a> to find compatible versions of each dependency.</p>
+<h2>Manual</h2>
+<p>If you're not using CMake, the simple approach is to just copy the files in the [<code>include/</code>](include) subdirectory - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's <code>-I</code>. This requires the external dependencies listed in <a href="extern/CMakeLists.txt"><code>extern/CMakeLists.txt</code></a>, which also need to be made available during compilation.</p>
 <h1>References</h1>
 <p>Cleveland, W.S. (1979). Robust locally weighted regression and smoothing scatterplots. <em>Journal of the American Statistical Association</em> 74(368), 829-836.</p>
 <p>Cleveland, W.S. (1981). LOWESS: A program for smoothing scatterplots by robust locally weighted regression. <em>The American Statistician</em> 35(1), 54. </p>
