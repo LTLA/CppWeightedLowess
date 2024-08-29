@@ -49,6 +49,30 @@ Data_ compute_mad(
 }
 
 template<typename Data_>
+Data_ compute_robust_range(size_t num_points, const Data_* y, const Data_* robust_weights) {
+    Data_ first = 0;
+    size_t i = 0;
+    for (; i < num_points; ++i) {
+        if (robust_weights[i]) {
+            first = y[i];
+            ++i;
+            break;
+        }
+    }
+
+    Data_ min = first, max = first;
+    for (; i < num_points; ++i) {
+        if (robust_weights[i]) {
+            auto val = y[i];
+            min = std::min(val, min);
+            max = std::max(val, max);
+        }
+    }
+
+    return max - min;
+}
+
+template<typename Data_>
 Data_ square (Data_ x) {
     return x * x;
 }

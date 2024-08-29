@@ -99,6 +99,22 @@ TEST(RobustTest, ParallelMad) {
     }
 }
 
+TEST(RobustTest, ComputeRobustStats) {
+    {
+        std::vector<double> weights { 0, 1, 0, 0, 1 };
+        std::vector<double> y { -10, 2, 10, 11, 5 };
+        auto out = WeightedLowess::internal::compute_robust_range(5, y.data(), weights.data());
+        EXPECT_EQ(out, 3);
+    }
+
+    {
+        std::vector<double> weights { 1, 0, 1, 1, 0 };
+        std::vector<double> y { -10, 2, 10, 11, 5 };
+        auto out = WeightedLowess::internal::compute_robust_range(5, y.data(), weights.data());
+        EXPECT_EQ(out, 21);
+    }
+}
+
 TEST(RobustTest, PopulateWeights) {
     std::vector<double> abs_dev { 1, 5, 10, 0, 3 };
     std::vector<double> robust(abs_dev.size());

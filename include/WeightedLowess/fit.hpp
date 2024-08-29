@@ -114,25 +114,27 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
     const Data_ totalweight = windows.total_weight;
     const auto& limits = windows.limits;
 
-    /* Setting up the robustness weights, if robustification is requested. */ 
+    // Setting up the robustness weights, if robustification is requested.
     std::fill_n(robust_weights, num_points, 1);
-    Data_ min_mad = 0; 
+    Data_ min_threshold = 0; 
     std::vector<size_t> residual_permutation;
+    constexpr Data_ threshold_multiplier = 1e-8;
+
     if (opt.iterations) {
         residual_permutation.resize(num_points);
 
-        /* We use the range to guarantee that we match the scale. Otherwise
-         * if we used the MAD of 'y', it could be conceivable that we would
-         * end up with a min_mad of zero again, e.g., if the majority of
-         * points have the same value. In contrast, if the range is zero,
-         * we just quit early.
+        /* If the range of 'y' is zero, we just quit early. Otherwise, we use
+         * the range to set a lower bound on the robustness threshold to avoid
+         * problems with divide-by-zero. We don't use the MAD of 'y' as it
+         * could be conceivable that we would end up with a threshold of zero
+         * again, e.g., if the majority of points have the same value.
          */
         Data_ range = (*std::max_element(y, y + num_points) - *std::min_element(y, y + num_points));
         if (range == 0) {
             std::copy_n(y, num_points, fitted);
             return;
         }
-        min_mad = 0.00000000001 * range;
+        min_threshold = range * threshold_multiplier;
     }
 
     size_t nthreads = opt.num_threads; // this better be positive.
@@ -151,8 +153,7 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
             }
         });
 
-        /* 
-         * Perform interpolation between anchor points. This assumes that the first
+        /* Perform interpolation between anchor points. This assumes that the first
          * anchor is the first point and the last anchor is the last point (see
          * find_anchors() for an example). Note that we do this in a separate parallel
          * session from the anchor fitting ensure that all 'fitted' values are
@@ -189,20 +190,34 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
         });
 
         if (it < opt.iterations) {
-            auto& abs_dev = workspaces.front(); // just using the first workspace as a spare buffer, not using any values therein.
-            auto cmad = compute_mad(num_points, y, fitted, freq_weights, totalweight, abs_dev, residual_permutation, nthreads);
-            cmad *= 6;
-            cmad = std::max(cmad, min_mad); // avoid difficulties from numerical precision when all residuals are theoretically zero.
-            populate_robust_weights(abs_dev, cmad, robust_weights);
-
             /* Both limma::weightedLowess and the original Fortran code have an early
              * termination condition that stops the robustness iterations when the MAD
-             * is small. We do not implement this and just allow the specified number of
+             * is "small". We do not implement this and just allow the specified number of
              * iterations to run, as the termination can fail in pathological examples
              * where a minority of points are affected by an outlier. In such cases,
              * the MAD may indeed be very small as most residuals are fine, and we would
              * fail to robustify against the few outliers.
+             *
+             * That said, we do quit if the range of the existing (non-outlier) points 
+             * is exactly zero, because that implies that we should have a perfect fit
+             * among all the remaining points. We also use this range to refine the minimum
+             * threshold. This ensures that a massive outlier at the start does not 
+             * continue to inflate the 'min_threshold', even after it has been rendered 
+             * irrelevant by the robustness weighting.
              */
+            if (it > 0) {
+                auto range = compute_robust_range(num_points, y, robust_weights);
+                if (range == 0) {
+                    break;
+                }
+                min_threshold = range * threshold_multiplier;
+            }
+
+            auto& abs_dev = workspaces.front(); // just using the first workspace as a spare buffer, not using any values therein.
+            auto cmad = compute_mad(num_points, y, fitted, freq_weights, totalweight, abs_dev, residual_permutation, nthreads);
+            cmad *= 6;
+            cmad = std::max(cmad, min_threshold); // avoid difficulties from numerical precision when all residuals are theoretically zero.
+            populate_robust_weights(abs_dev, cmad, robust_weights);
         }
     }
 

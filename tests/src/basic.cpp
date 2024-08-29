@@ -158,6 +158,41 @@ TEST(BasicTests, Robustness) {
     }
 }
 
+TEST(BasicTests, QuitEarly) {
+    auto simulated = simulate(1004);
+    const auto& x = simulated.first;
+    std::vector<double> y(x.size(), 101);
+
+    // Quits early before any iterations.
+    {
+        WeightedLowess::Options opt;
+        auto wres = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
+        EXPECT_EQ(wres.robust_weights, std::vector<double>(x.size(), 1));
+        EXPECT_EQ(wres.fitted, std::vector<double>(x.size(), 101));
+    }
+
+    // Also quits early after one iteration. To simplify the test, we balance
+    // the outliers so that the fitted values are preserved correctly.
+    // (Otherwise, the shift in the fitted values would cause neighbor points
+    // to be considered outliers and get robustness weights of zero.)
+    {
+        auto xcopy = x;
+        auto ycopy = y;
+        xcopy[0] = xcopy[1];
+        ycopy[0] = 0;
+        ycopy[1] = 202;
+
+        WeightedLowess::Options opt;
+        auto wres = WeightedLowess::compute(xcopy.size(), xcopy.data(), ycopy.data(), opt);
+        compare_almost_equal(wres.fitted, std::vector<double>(xcopy.size(), 101));
+
+        std::vector<double> expected_weights(xcopy.size(), 1);
+        expected_weights[0] = 0;
+        expected_weights[1] = 0;
+        compare_almost_equal(wres.robust_weights, expected_weights);
+    }
+}
+
 TEST(BasicTests, Empty) {
     WeightedLowess::Options opt;
     std::vector<double> x, y;
