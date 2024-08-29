@@ -218,13 +218,7 @@ template&lt;typename Data_  = double&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Number of threads to use for various steps. This should be a positive integer.</p>
-<p>By default, <code><a class="el" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">compute()</a></code> uses OpenMP for parallelization. Applications can override this by setting the <code>WEIGHTEDLOWESS_CUSTOM_PARALLEL</code> function-like macro, e.g., in environments where OpenMP is not available. This macro should accept three arguments:</p><ul>
-<li><code>num_jobs</code>, a <code>size_t</code> specifying the number of tasks to perform.</li>
-<li><code>num_threads</code>, an <code>int</code> specifying the number of threads to use.</li>
-<li><code>fun</code>, a function that accepts three <code>size_t</code> values.</li>
-</ul>
-<p>The macro should partition the tasks into blocks, assign each block to a thread, and call <code>fun()</code> in each thread with the thread number (an ID in <code>[0, num_threads)</code>), start position and length of its block. </p>
+<p>Number of threads to use for various steps. This should be a positive integer. The parallelization scheme is determined by the <a class="el" href="parallelize_8hpp.html#a4bb8bb34da2aac710571b0b537d29a27">WEIGHTEDLOWESS_CUSTOM_PARALLEL</a> macro, which defaults to <code><a class="elRef" href="https://ltla.github.io/subpar/namespacesubpar.html#a63f23d31089b98cd332e8a7508e35c15">subpar::parallelize()</a></code> if not defined by the user. </p>
 
 </div>
 </div>

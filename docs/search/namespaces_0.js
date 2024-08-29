@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['weightedlowess_0',['WeightedLowess',['../namespaceWeightedLowess.html',1,'']]]
+  ['subpar_0',['subpar',['https://ltla.github.io/subpar/namespacesubpar.html',1,'']]]
 ];
