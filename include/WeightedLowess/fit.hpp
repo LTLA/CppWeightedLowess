@@ -189,27 +189,32 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
             }
         });
 
+        /* Both limma::weightedLowess and the original Fortran code have an
+         * early termination condition that stops the robustness iterations
+         * when the MAD is "small" (relative to the sum of the absolute
+         * deviations). We do not implement this and just allow the specified
+         * number of iterations to run, as the termination can fail in
+         * pathological examples where a minority of points are affected by a
+         * neighboring outlier. In such cases, the MAD may indeed be very small
+         * as most residuals are fine, and we would terminate early and fail to
+         * robustify against the few outliers.
+         */
         if (it < opt.iterations) {
-            /* Both limma::weightedLowess and the original Fortran code have an early
-             * termination condition that stops the robustness iterations when the MAD
-             * is "small". We do not implement this and just allow the specified number of
-             * iterations to run, as the termination can fail in pathological examples
-             * where a minority of points are affected by an outlier. In such cases,
-             * the MAD may indeed be very small as most residuals are fine, and we would
-             * fail to robustify against the few outliers.
-             *
-             * That said, we do quit if the range of the existing (non-outlier) points 
-             * is exactly zero, because that implies that we should have a perfect fit
-             * among all the remaining points. We also use this range to refine the minimum
-             * threshold. This ensures that a massive outlier at the start does not 
-             * continue to inflate the 'min_threshold', even after it has been rendered 
-             * irrelevant by the robustness weighting.
-             */
             if (it > 0) {
+                /* That said, we do quit if the range of the non-outlier points
+                 * is exactly zero, because that implies that we should already
+                 * have a perfect fit among all of these points.
+                 */
                 auto range = compute_robust_range(num_points, y, robust_weights);
                 if (range == 0) {
                     break;
                 }
+
+                /* We redefine the minimum threshold from the non-outlier
+                 * points. This ensures that a massive outlier at the start
+                 * does not continue to inflate the 'min_threshold', even after
+                 * it has been rendered irrelevant by the robustness weighting.
+                 */
                 min_threshold = range * threshold_multiplier;
             }
 
