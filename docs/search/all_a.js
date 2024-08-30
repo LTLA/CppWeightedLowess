@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['results_0',['results',['../structWeightedLowess_1_1Results.html',1,'WeightedLowess::Results&lt; Data_ &gt;'],['../structWeightedLowess_1_1Results.html#a7c8ea180fb0a1a496215ae71baa03e8b',1,'WeightedLowess::Results::Results(size_t n)']]],
-  ['robust_5fweights_1',['robust_weights',['../structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9',1,'WeightedLowess::Results']]]
+  ['range_2ehpp_0',['range.hpp',['https://ltla.github.io/subpar/range_8hpp.html',1,'']]],
+  ['results_1',['results',['../structWeightedLowess_1_1Results.html',1,'WeightedLowess::Results&lt; Data_ &gt;'],['../structWeightedLowess_1_1Results.html#a7c8ea180fb0a1a496215ae71baa03e8b',1,'WeightedLowess::Results::Results(size_t n)']]],
+  ['robust_5fweights_2',['robust_weights',['../structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9',1,'WeightedLowess::Results']]]
 ];
