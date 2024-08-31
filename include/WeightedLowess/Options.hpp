@@ -87,7 +87,7 @@ struct Options {
     /**
      * Number of threads to use for various steps.
      * This should be a positive integer.
-     * The parallelization scheme is determined by the #WEIGHTEDLOWESS_CUSTOM_PARALLEL macro, which defaults to `subpar::parallelize()` if not defined by the user.
+     * The parallelization scheme is determined by the #WEIGHTEDLOWESS_CUSTOM_PARALLEL macro. 
      */
     int num_threads = 1;
 };

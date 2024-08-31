@@ -20,7 +20,7 @@ option(WEIGHTEDLOWESS_FETCH_EXTERN "Automatically fetch WeightedLowess's externa
 if(WEIGHTEDLOWESS_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
-    find_package(ltla_subpar 0.2.1 CONFIG REQUIRED)
+    find_package(ltla_subpar 0.3.1 CONFIG REQUIRED)
 endif()
 
 target_link_libraries(WeightedLowess INTERFACE ltla::subpar)

@@ -120,7 +120,7 @@ std::vector<Window<Data_> > find_limits(
     auto half_min_width = min_width / 2;
     auto points_m1 = num_points - 1;
 
-    WEIGHTEDLOWESS_CUSTOM_PARALLEL(nthreads, nanchors, [&](size_t, size_t start, size_t length) {
+    parallelize(nthreads, nanchors, [&](size_t, size_t start, size_t length) {
         for (size_t s = start, end = start + length; s < end; ++s) {
             auto curpt = anchors[s], left = curpt, right = curpt;
             auto curx = x[curpt];

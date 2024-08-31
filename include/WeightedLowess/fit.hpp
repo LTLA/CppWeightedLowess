@@ -137,15 +137,15 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
         min_threshold = range * threshold_multiplier;
     }
 
-    size_t nthreads = opt.num_threads; // this better be positive.
+    size_t num_anchors = anchors.size();
+    int nthreads = subpar::sanitize_num_workers(opt.num_threads, num_anchors);
     std::vector<std::vector<Data_> > workspaces(nthreads);
     for (auto& w : workspaces) {
         w.resize(num_points);
     }
 
-    size_t num_anchors = anchors.size();
     for (int it = 0; it <= opt.iterations; ++it) { // Robustness iterations.
-        WEIGHTEDLOWESS_CUSTOM_PARALLEL(nthreads, num_anchors, [&](int t, size_t start, size_t length) {
+        parallelize(nthreads, num_anchors, [&](int t, size_t start, size_t length) {
             auto& workspace = workspaces[t];
             for (size_t s = start, end = start + length; s < end; ++s) {
                 auto curpt = anchors[s];
@@ -159,7 +159,7 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
          * session from the anchor fitting ensure that all 'fitted' values are
          * available for all anchors across all threads.
          */
-        WEIGHTEDLOWESS_CUSTOM_PARALLEL(nthreads, num_anchors - 1, [&](size_t, size_t start, size_t length) {
+        parallelize(nthreads, num_anchors - 1, [&](size_t, size_t start, size_t length) {
             auto start_p1 = start + 1;
             for (size_t s = start_p1, end = start_p1 + length; s < end; ++s) {
                 auto curpt = anchors[s];
