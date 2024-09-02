@@ -170,9 +170,6 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
                     if (current > 0) {
                         const Data_ slope = (fitted[curpt] - fitted[last_anchor])/current;
                         const Data_ intercept = fitted[curpt] - slope * x[curpt];
-#ifdef _OPENMP
-                        #pragma omp simd
-#endif
                         for (size_t subpt = last_anchor + 1; subpt < curpt; ++subpt) { 
                             fitted[subpt] = slope * x[subpt] + intercept; 
                         }

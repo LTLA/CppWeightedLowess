@@ -21,9 +21,6 @@ Data_ compute_mad(
     std::vector<size_t>& permutation, 
     [[maybe_unused]] int nthreads) 
 {
-#ifdef _OPENMP
-    #pragma omp simd
-#endif
     for (size_t i = 0; i < num_points; ++i) {
         abs_dev[i] = std::abs(y[i] - fitted[i]);
     }
@@ -81,12 +78,10 @@ template<typename Data_>
 void populate_robust_weights(const std::vector<Data_>& abs_dev, Data_ threshold, Data_* robust_weights) {
     size_t num_points = abs_dev.size();
 
-#ifdef _OPENMP
-    #pragma omp simd
-#endif
     for (size_t i = 0; i < num_points; ++i) {
         auto ad = abs_dev[i];
         // Effectively a branchless if/else, which should help auto-vectorization.
+        // This assumes that threshold > 0, which should be true from fit_trend().
         robust_weights[i] = (ad < threshold) * square(1 - square(ad/threshold));
     }
 }
