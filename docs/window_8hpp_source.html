@@ -197,7 +197,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">auto</span> half_min_width = min_width / 2;</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">auto</span> points_m1 = num_points - 1;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <a class="code hl_function" href="namespaceWeightedLowess.html#ab7a8a00714734c71d1d7eb54f9e110e7">parallelize</a>(nthreads, nanchors, [&amp;](<span class="keywordtype">size_t</span>, <span class="keywordtype">size_t</span> start, <span class="keywordtype">size_t</span> length) {</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <a class="code hl_function" href="namespaceWeightedLowess.html#ab7a8a00714734c71d1d7eb54f9e110e7">parallelize</a>(nthreads, nanchors, [&amp;](<span class="keywordtype">int</span>, <span class="keywordtype">size_t</span> start, <span class="keywordtype">size_t</span> length) {</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> s = start, end = start + length; s &lt; end; ++s) {</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <span class="keyword">auto</span> curpt = anchors[s], left = curpt, right = curpt;</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            <span class="keyword">auto</span> curx = x[curpt];</div>
