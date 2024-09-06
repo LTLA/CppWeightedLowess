@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include "subpar/subpar.hpp"
+
 #include "window.hpp"
 #include "Options.hpp"
 #include "robust.hpp"
@@ -159,7 +161,7 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
          * session from the anchor fitting ensure that all 'fitted' values are
          * available for all anchors across all threads.
          */
-        parallelize(nthreads, num_anchors - 1, [&](size_t, size_t start, size_t length) {
+        parallelize(nthreads, num_anchors - 1, [&](int, size_t start, size_t length) {
             auto start_p1 = start + 1;
             for (size_t s = start_p1, end = start_p1 + length; s < end; ++s) {
                 auto curpt = anchors[s];
