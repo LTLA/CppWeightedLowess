@@ -14,8 +14,33 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
+include(GoogleTest)
+
+option(CODE_COVERAGE "Enable coverage testing" OFF)
+set(DO_CODE_COVERAGE OFF)
+if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(DO_CODE_COVERAGE ON)
+endif()
+
+macro(decorate_test target)
+    target_link_libraries(
+        ${target}
+        gtest_main
+        WeightedLowess
+    )
+
+    target_compile_options(${target} PRIVATE -Wall -Werror -Wpedantic -Wextra)
+
+    if(DO_CODE_COVERAGE)
+        target_compile_options(${target} PRIVATE -O0 -g --coverage)
+        target_link_options(${target} PRIVATE --coverage)
+    endif()
+
+    gtest_discover_tests(${target})
+endmacro()
+
 add_executable(
-    libtest 
+    libtest
     src/basic.cpp
     src/ties.cpp
     src/options.cpp
@@ -24,20 +49,16 @@ add_executable(
     src/window.cpp
     src/robust.cpp
 )
+decorate_test(libtest)
 
-target_link_libraries(
-    libtest
-    gtest_main
-    WeightedLowess
+add_executable(
+    cuspartest
+    src/basic.cpp
+    src/ties.cpp
+    src/options.cpp
+    src/divzero.cpp
+    src/window.cpp
+    src/robust.cpp
 )
-
-target_compile_options(libtest PRIVATE -Wall -Werror -Wpedantic -Wextra)
-
-option(CODE_COVERAGE "Enable coverage testing" OFF)
-if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(libtest PRIVATE -O0 -g --coverage)
-    target_link_options(libtest PRIVATE --coverage)
-endif()
-
-include(GoogleTest)
-gtest_discover_tests(libtest)
+decorate_test(cuspartest)
+target_compile_definitions(cuspartest PRIVATE SUBPAR_CUSTOM_PARALLELIZE_RANGE=::subpar::test_parallelize_range)

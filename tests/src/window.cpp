@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include "parallel.h"
 #include "WeightedLowess/window.hpp"
 #include "utils.h"
 
