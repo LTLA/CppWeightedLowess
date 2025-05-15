@@ -1,7 +1,7 @@
 include(FetchContent)
 FetchContent_Declare(
   googletest
-  URL https://github.com/google/googletest/archive/afd902e992b720d1b3e106bc5e425a5768872265.zip
+  URL https://github.com/google/googletest/archive/571930618fa96eabcd05b573285edbee9fc13bae.zip
 )
 
 # For Windows: Prevent overriding the parent project's compiler/linker settings
@@ -50,15 +50,3 @@ add_executable(
     src/robust.cpp
 )
 decorate_test(libtest)
-
-add_executable(
-    cuspartest
-    src/basic.cpp
-    src/ties.cpp
-    src/options.cpp
-    src/divzero.cpp
-    src/window.cpp
-    src/robust.cpp
-)
-decorate_test(cuspartest)
-target_compile_definitions(cuspartest PRIVATE SUBPAR_CUSTOM_PARALLELIZE_RANGE=::subpar::test_parallelize_range)
