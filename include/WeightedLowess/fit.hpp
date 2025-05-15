@@ -140,15 +140,13 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
     }
 
     size_t num_anchors = anchors.size();
-    int nthreads = subpar::sanitize_num_workers(opt.num_threads, num_anchors);
+    const int nthreads = opt.num_threads;
     std::vector<std::vector<Data_> > workspaces(nthreads);
-    for (auto& w : workspaces) {
-        w.resize(num_points);
-    }
 
     for (int it = 0; it <= opt.iterations; ++it) { // Robustness iterations.
         parallelize(nthreads, num_anchors, [&](int t, size_t start, size_t length) {
             auto& workspace = workspaces[t];
+            workspace.resize(num_points); // resizing inside the thread to encourage allocations to a thread-specific heap to avoid false sharing.
             for (size_t s = start, end = start + length; s < end; ++s) {
                 auto curpt = anchors[s];
                 fitted[curpt] = fit_point(curpt, limits[s], x, y, opt.weights, robust_weights, workspace);
@@ -218,7 +216,7 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
             }
 
             auto& abs_dev = workspaces.front(); // just using the first workspace as a spare buffer, not using any values therein.
-            auto cmad = compute_mad(num_points, y, fitted, freq_weights, totalweight, abs_dev, residual_permutation, nthreads);
+            auto cmad = compute_mad(num_points, y, fitted, freq_weights, totalweight, abs_dev, residual_permutation);
             cmad *= 6;
             cmad = std::max(cmad, min_threshold); // avoid difficulties from numerical precision when all residuals are theoretically zero.
             populate_robust_weights(abs_dev, cmad, robust_weights);

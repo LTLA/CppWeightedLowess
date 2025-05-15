@@ -10,11 +10,10 @@ TEST(RobustTest, BasicMad) {
         y[i] = i + resids[i];
     }
 
-    std::vector<double> abs_dev(resids.size());
-    std::vector<size_t> perm(resids.size());
-
+    std::vector<double> abs_dev;
+    std::vector<size_t> perm;
     { 
-        auto cmad = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), static_cast<double*>(NULL), static_cast<double>(resids.size()), abs_dev, perm, 1);
+        auto cmad = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), static_cast<double*>(NULL), static_cast<double>(resids.size()), abs_dev, perm);
         EXPECT_FLOAT_EQ(cmad, 1);
         for (size_t i = 0; i < resids.size(); ++i) {
             EXPECT_FLOAT_EQ(abs_dev[i], std::abs(resids[i]));
@@ -25,11 +24,8 @@ TEST(RobustTest, BasicMad) {
     resids.push_back(0.1);
     fitted.push_back(10);
     y.push_back(resids.back() + 10);
-    abs_dev.resize(resids.size());
-    perm.resize(resids.size());
-
     { 
-        auto cmad = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), static_cast<double*>(NULL), static_cast<double>(resids.size()), abs_dev, perm, 1);
+        auto cmad = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), static_cast<double*>(NULL), static_cast<double>(resids.size()), abs_dev, perm);
         EXPECT_FLOAT_EQ(cmad, 0.75);
         for (size_t i = 0; i < resids.size(); ++i) {
             EXPECT_FLOAT_EQ(abs_dev[i], std::abs(resids[i]));
@@ -45,60 +41,24 @@ TEST(RobustTest, WeightedMad) {
         y[i] = i + resids[i];
     }
 
-    std::vector<double> abs_dev(resids.size());
-    std::vector<size_t> perm(resids.size());
-
+    std::vector<double> abs_dev;
+    std::vector<size_t> perm;
     {
         std::vector<double> weights { 1, 5, 1, 1, 1 };
         auto total = std::accumulate(weights.begin(), weights.end(), 0.0);
-        auto cmad = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), weights.data(), total, abs_dev, perm, 1);
+        auto cmad = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), weights.data(), total, abs_dev, perm);
         EXPECT_FLOAT_EQ(cmad, 0.2);
     }
 
     {
         std::vector<double> weights { 2, 1, 1, 1, 1 };
         auto total = std::accumulate(weights.begin(), weights.end(), 0.0);
-        auto cmad = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), weights.data(), total, abs_dev, perm, 1);
+        auto cmad = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), weights.data(), total, abs_dev, perm);
         EXPECT_FLOAT_EQ(cmad, 0.75);
     }
 }
 
-TEST(RobustTest, ParallelMad) {
-    auto sim = simulate(700);
-    const auto& y = sim.second;
-
-    std::vector<double> fitted(y);
-    for (size_t i = 0; i < y.size(); ++i) {
-        fitted[i] += static_cast<double>(i % 10) / 10;
-    }
-
-    std::vector<double> abs_dev(y.size());
-    std::vector<size_t> perm(y.size());
-    double total = y.size();
-
-    // Without weights.
-    {
-        auto ref = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), static_cast<double*>(NULL), total, abs_dev, perm, 1);
-        auto par = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), static_cast<double*>(NULL), total, abs_dev, perm, 3);
-        EXPECT_EQ(ref, par);
-    }
-
-    // Without weights.
-    {
-        std::mt19937_64 rng(701);
-        std::uniform_real_distribution udist;
-        std::vector<double> weights(y.size());
-        for (auto& w : weights) {
-            w = udist(rng) + 0.1;
-        }
-
-        auto ref = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), weights.data(), total, abs_dev, perm, 1);
-        auto par = WeightedLowess::internal::compute_mad(y.size(), y.data(), fitted.data(), weights.data(), total, abs_dev, perm, 3);
-        EXPECT_EQ(ref, par);
-    }
-}
-
-TEST(RobustTest, ComputeRobustStats) {
+TEST(RobustTest, ZeroWeights) {
     {
         std::vector<double> weights { 0, 1, 0, 0, 1 };
         std::vector<double> y { -10, 2, 10, 11, 5 };

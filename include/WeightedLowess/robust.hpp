@@ -18,14 +18,15 @@ Data_ compute_mad(
     const Data_* freq_weights, 
     Data_ total_weight, 
     std::vector<Data_>& abs_dev, 
-    std::vector<size_t>& permutation, 
-    [[maybe_unused]] int nthreads) 
+    std::vector<size_t>& permutation)
 {
+    abs_dev.resize(num_points);
     for (size_t i = 0; i < num_points; ++i) {
         abs_dev[i] = std::abs(y[i] - fitted[i]);
     }
 
-    std::iota(permutation.begin(), permutation.end(), 0);
+    permutation.resize(num_points);
+    std::iota(permutation.begin(), permutation.end(), static_cast<size_t>(0));
     std::sort(permutation.begin(), permutation.end(), [&](size_t left, size_t right) -> bool { return abs_dev[left] < abs_dev[right]; });
 
     Data_ curweight = 0;
