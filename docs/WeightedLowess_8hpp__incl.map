@@ -1,15 +1,15 @@
 <map id="WeightedLowess/WeightedLowess.hpp" name="WeightedLowess/WeightedLowess.hpp">
-<area shape="rect" id="Node000001" title="LOWESS implementation with various weighting schemes." alt="" coords="23,5,273,31"/>
+<area shape="rect" id="Node000001" title="LOWESS implementation with various weighting schemes." alt="" coords="23,5,272,31"/>
 <area shape="rect" id="Node000002" href="$compute_8hpp.html" title="Compute the LOWESS trend fit." alt="" coords="100,79,196,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,31,151,63,145,63,145,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,31,150,63,145,63,145,31"/>
 <area shape="rect" id="Node000005" href="$Options_8hpp.html" title="Options for compute()." alt="" coords="5,153,96,178"/>
 <area shape="poly" id="edge12_Node000001_Node000005" title=" " alt="" coords="135,33,112,54,90,81,73,110,61,139,57,137,69,108,86,77,108,51,131,29"/>
 <area shape="rect" id="Node000006" href="$SortBy_8hpp.html" title="Utility for sorting x&#45;coordinates." alt="" coords="391,79,475,105"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="197,29,376,74,375,79,196,34"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="199,153,257,178"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="199,153,256,178"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="163,103,205,140,202,144,160,107"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="120,153,176,178"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="151,105,151,137,145,137,145,105"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="150,105,150,137,145,137,145,105"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="133,107,80,146,77,141,130,103"/>
 <area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="399,108,272,152,270,147,397,103"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="505,153,580,178"/>
@@ -18,8 +18,8 @@
 <area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="469,103,590,145,588,150,467,108"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="695,153,755,178"/>
 <area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="476,100,680,149,679,155,475,105"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="281,153,362,178"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="280,153,362,178"/>
 <area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="416,107,354,146,352,142,413,103"/>
 <area shape="rect" id="Node000011" title=" " alt="" coords="386,153,481,178"/>
-<area shape="poly" id="edge11_Node000006_Node000011" title=" " alt="" coords="436,105,436,137,431,137,431,105"/>
+<area shape="poly" id="edge11_Node000006_Node000011" title=" " alt="" coords="436,105,436,137,430,137,430,105"/>
 </map>
