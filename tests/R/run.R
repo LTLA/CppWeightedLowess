@@ -6,6 +6,9 @@ if (!file.exists("WeightedLowess")) {
 if (!file.exists("subpar")) {
     file.symlink("../../build/_deps/subpar-src/include/subpar", "subpar")
 }
+if (!file.exists("sanisizer")) {
+    file.symlink("../../build/_deps/sanisizer-src/include/sanisizer", "sanisizer")
+}
 sourceCpp("test.cpp")
 
 # Running it against the reference.

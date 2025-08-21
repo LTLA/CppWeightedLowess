@@ -4,6 +4,8 @@ docs/*.css
 docs/html/
 docs/latex/
 tests/R/WeightedLowess
+tests/R/subpar
+tests/R/sanisizer
 tests/R/dummy.R
 tests/R/foo.txt
 *.swp
