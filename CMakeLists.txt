@@ -20,7 +20,7 @@ option(WEIGHTEDLOWESS_FETCH_EXTERN "Automatically fetch WeightedLowess's externa
 if(WEIGHTEDLOWESS_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
-    find_package(ltla_subpar 0.3.1 CONFIG REQUIRED)
+    find_package(ltla_subpar 0.4.0 CONFIG REQUIRED)
     find_package(ltla_sanisizer 0.1.2 CONFIG REQUIRED)
 endif()
 
