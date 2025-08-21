@@ -72,10 +72,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>size_t</type>
+      <type>std::size_t</type>
       <name>anchors</name>
       <anchorfile>structWeightedLowess_1_1Options.html</anchorfile>
-      <anchor>a9ef4e0ac507ee23820c0934029c25a1c</anchor>
+      <anchor>a5e34709595bc216d41f01fc60ca2b7fb</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -127,8 +127,8 @@
       <type></type>
       <name>Results</name>
       <anchorfile>structWeightedLowess_1_1Results.html</anchorfile>
-      <anchor>a7c8ea180fb0a1a496215ae71baa03e8b</anchor>
-      <arglist>(size_t n)</arglist>
+      <anchor>a0a21c73e34d0500837fcbda534407fb9</anchor>
+      <arglist>(std::size_t n)</arglist>
     </member>
     <member kind="variable">
       <type>std::vector&lt; Data_ &gt;</type>
@@ -152,8 +152,8 @@
       <type></type>
       <name>SortBy</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>aba746dc49e02889ac37cc5e64d452877</anchor>
-      <arglist>(size_t num_points, const Sortable_ *x)</arglist>
+      <anchor>aea5069601b1463a43524e0035255349f</anchor>
+      <arglist>(const std::size_t num_points, const Sortable_ *x)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -166,8 +166,8 @@
       <type>void</type>
       <name>set</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>ade41beaa0df73b0ffd9dffc4a5cf5e9b</anchor>
-      <arglist>(size_t num_points, const Sortable_ *x)</arglist>
+      <anchor>abd8112d8539bfaee9fe03646cbeaf465</anchor>
+      <arglist>(const std::size_t num_points, const Sortable_ *x)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -265,36 +265,36 @@
       <type>void</type>
       <name>compute</name>
       <anchorfile>namespaceWeightedLowess.html</anchorfile>
-      <anchor>a2729a4bbbea5cdd5599086df491f9426</anchor>
-      <arglist>(size_t num_points, const Data_ *x, const PrecomputedWindows&lt; Data_ &gt; &amp;windows, const Data_ *y, Data_ *fitted, Data_ *robust_weights, const Options&lt; Data_ &gt; &amp;opt)</arglist>
+      <anchor>ad11983a78a81e353c458a203d4f581c9</anchor>
+      <arglist>(const std::size_t num_points, const Data_ *x, const PrecomputedWindows&lt; Data_ &gt; &amp;windows, const Data_ *y, Data_ *fitted, Data_ *robust_weights, const Options&lt; Data_ &gt; &amp;opt)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>compute</name>
       <anchorfile>namespaceWeightedLowess.html</anchorfile>
-      <anchor>aba6c593f671626b4ed0787264868ee36</anchor>
-      <arglist>(size_t num_points, const Data_ *x, const Data_ *y, Data_ *fitted, Data_ *robust_weights, const Options&lt; Data_ &gt; &amp;opt)</arglist>
+      <anchor>a4aaf79d3cc00d2e77b6c3ac887c98a22</anchor>
+      <arglist>(const std::size_t num_points, const Data_ *x, const Data_ *y, Data_ *fitted, Data_ *robust_weights, const Options&lt; Data_ &gt; &amp;opt)</arglist>
     </member>
     <member kind="function">
       <type>Results&lt; Data_ &gt;</type>
       <name>compute</name>
       <anchorfile>namespaceWeightedLowess.html</anchorfile>
-      <anchor>a884a25e63dce496fa9e40af652021e31</anchor>
-      <arglist>(size_t num_points, const Data_ *x, const Data_ *y, const Options&lt; Data_ &gt; &amp;opt)</arglist>
+      <anchor>ae05ea1089c2a797e1c5cf2e7115c928d</anchor>
+      <arglist>(const std::size_t num_points, const Data_ *x, const Data_ *y, const Options&lt; Data_ &gt; &amp;opt)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>parallelize</name>
       <anchorfile>namespaceWeightedLowess.html</anchorfile>
-      <anchor>ab7a8a00714734c71d1d7eb54f9e110e7</anchor>
-      <arglist>(int num_workers, Task_ num_tasks, Run_ run_task_range)</arglist>
+      <anchor>adfb0d596184fac8c548a45cb6fb8fbb1</anchor>
+      <arglist>(const int num_workers, const Task_ num_tasks, Run_ run_task_range)</arglist>
     </member>
     <member kind="function">
       <type>PrecomputedWindows&lt; Data_ &gt;</type>
       <name>define_windows</name>
       <anchorfile>namespaceWeightedLowess.html</anchorfile>
-      <anchor>a4dd0465feea6da633892bf916ecd933f</anchor>
-      <arglist>(size_t num_points, const Data_ *x, const Options&lt; Data_ &gt; &amp;opt)</arglist>
+      <anchor>a30dc5c465fd1c49a9b8a0d8e1a51e1ee</anchor>
+      <arglist>(const std::size_t num_points, const Data_ *x, const Options&lt; Data_ &gt; &amp;opt)</arglist>
     </member>
   </compound>
   <compound kind="page">

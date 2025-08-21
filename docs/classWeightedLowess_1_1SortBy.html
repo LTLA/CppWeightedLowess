@@ -104,14 +104,14 @@ $(function(){ initResizable(false); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aba746dc49e02889ac37cc5e64d452877" id="r_aba746dc49e02889ac37cc5e64d452877"><td class="memTemplParams" colspan="2">template&lt;typename Sortable_ &gt; </td></tr>
-<tr class="memitem:aba746dc49e02889ac37cc5e64d452877"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aba746dc49e02889ac37cc5e64d452877">SortBy</a> (size_t num_points, const Sortable_ *x)</td></tr>
-<tr class="separator:aba746dc49e02889ac37cc5e64d452877"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea5069601b1463a43524e0035255349f" id="r_aea5069601b1463a43524e0035255349f"><td class="memTemplParams" colspan="2">template&lt;typename Sortable_ &gt; </td></tr>
+<tr class="memitem:aea5069601b1463a43524e0035255349f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aea5069601b1463a43524e0035255349f">SortBy</a> (const std::size_t num_points, const Sortable_ *x)</td></tr>
+<tr class="separator:aea5069601b1463a43524e0035255349f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab86761ca01148dd783d9352271aa4d89" id="r_ab86761ca01148dd783d9352271aa4d89"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab86761ca01148dd783d9352271aa4d89">SortBy</a> ()=default</td></tr>
 <tr class="separator:ab86761ca01148dd783d9352271aa4d89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade41beaa0df73b0ffd9dffc4a5cf5e9b" id="r_ade41beaa0df73b0ffd9dffc4a5cf5e9b"><td class="memTemplParams" colspan="2">template&lt;typename Sortable_ &gt; </td></tr>
-<tr class="memitem:ade41beaa0df73b0ffd9dffc4a5cf5e9b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ade41beaa0df73b0ffd9dffc4a5cf5e9b">set</a> (size_t num_points, const Sortable_ *x)</td></tr>
-<tr class="separator:ade41beaa0df73b0ffd9dffc4a5cf5e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd8112d8539bfaee9fe03646cbeaf465" id="r_abd8112d8539bfaee9fe03646cbeaf465"><td class="memTemplParams" colspan="2">template&lt;typename Sortable_ &gt; </td></tr>
+<tr class="memitem:abd8112d8539bfaee9fe03646cbeaf465"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#abd8112d8539bfaee9fe03646cbeaf465">set</a> (const std::size_t num_points, const Sortable_ *x)</td></tr>
+<tr class="separator:abd8112d8539bfaee9fe03646cbeaf465"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3af7bb0c3a06421b855a59c7213ff48" id="r_ac3af7bb0c3a06421b855a59c7213ff48"><td class="memTemplParams" colspan="2">template&lt;typename Data_ , typename Used_ &gt; </td></tr>
 <tr class="memitem:ac3af7bb0c3a06421b855a59c7213ff48"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ac3af7bb0c3a06421b855a59c7213ff48">permute</a> (Data_ *data, Used_ *work) const</td></tr>
 <tr class="separator:ac3af7bb0c3a06421b855a59c7213ff48"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,10 +151,10 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utility class for sorting on a covariate. </p>
-<p>This is typically used to ensure that x-values are sorted prior to calling <code><a class="el" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">compute()</a></code>. The idea is to create a permutation vector from the x-values to sort them in ascending order; use <code><a class="el" href="#ac3af7bb0c3a06421b855a59c7213ff48">permute()</a></code> to apply that permutation to the various arrays of x-values, y-values and weights (if applicable); calculate the fitted values from the permuted arrays with <code><a class="el" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">compute()</a></code>, now that the x-values are sorted; and then use <code><a class="el" href="#a0e21a76c6f8a1a6f43129efd3a4fcc1d">unpermute()</a></code> on the results of the fit, to obtain fitted values for the points in their original (pre-sort) order. </p>
+<p>This is typically used to ensure that x-values are sorted prior to calling <code><a class="el" href="namespaceWeightedLowess.html#ad11983a78a81e353c458a203d4f581c9">compute()</a></code>. The idea is to create a permutation vector from the x-values to sort them in ascending order; use <code><a class="el" href="#ac3af7bb0c3a06421b855a59c7213ff48">permute()</a></code> to apply that permutation to the various arrays of x-values, y-values and weights (if applicable); calculate the fitted values from the permuted arrays with <code><a class="el" href="namespaceWeightedLowess.html#ad11983a78a81e353c458a203d4f581c9">compute()</a></code>, now that the x-values are sorted; and then use <code><a class="el" href="#a0e21a76c6f8a1a6f43129efd3a4fcc1d">unpermute()</a></code> on the results of the fit, to obtain fitted values for the points in their original (pre-sort) order. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aba746dc49e02889ac37cc5e64d452877" name="aba746dc49e02889ac37cc5e64d452877"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba746dc49e02889ac37cc5e64d452877">&#9670;&#160;</a></span>SortBy() <span class="overload">[1/2]</span></h2>
+<a id="aea5069601b1463a43524e0035255349f" name="aea5069601b1463a43524e0035255349f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea5069601b1463a43524e0035255349f">&#9670;&#160;</a></span>SortBy() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -167,7 +167,7 @@ template&lt;typename Sortable_ &gt; </div>
         <tr>
           <td class="memname">WeightedLowess::SortBy::SortBy </td>
           <td>(</td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>num_points</em></span>, </td>
+          <td class="paramtype">const std::size_t</td>          <td class="paramname"><span class="paramname"><em>num_points</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -219,7 +219,7 @@ template&lt;typename Sortable_ &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Default constructor. The object should not be used until <code><a class="el" href="#ade41beaa0df73b0ffd9dffc4a5cf5e9b">set()</a></code> is called. </p>
+<p>Default constructor. The object should not be used until <code><a class="el" href="#abd8112d8539bfaee9fe03646cbeaf465">set()</a></code> is called. </p>
 
 </div>
 </div>
@@ -494,8 +494,8 @@ template&lt;typename Data_ , typename Used_ &gt; </div>
 
 </div>
 </div>
-<a id="ade41beaa0df73b0ffd9dffc4a5cf5e9b" name="ade41beaa0df73b0ffd9dffc4a5cf5e9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade41beaa0df73b0ffd9dffc4a5cf5e9b">&#9670;&#160;</a></span>set()</h2>
+<a id="abd8112d8539bfaee9fe03646cbeaf465" name="abd8112d8539bfaee9fe03646cbeaf465"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd8112d8539bfaee9fe03646cbeaf465">&#9670;&#160;</a></span>set()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -508,7 +508,7 @@ template&lt;typename Sortable_ &gt; </div>
         <tr>
           <td class="memname">void WeightedLowess::SortBy::set </td>
           <td>(</td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>num_points</em></span>, </td>
+          <td class="paramtype">const std::size_t</td>          <td class="paramname"><span class="paramname"><em>num_points</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

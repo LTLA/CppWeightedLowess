@@ -104,28 +104,34 @@ $(function(){ initResizable(false); });
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;numeric&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
+<code>#include &quot;sanisizer/sanisizer.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="Options_8hpp_source.html">Options.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="parallelize_8hpp_source.html">parallelize.hpp</a>&quot;</code><br />
+<code>#include &quot;utils.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for window.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="window_8hpp__incl.png" border="0" usemap="#aWeightedLowess_2window_8hpp" alt=""/></div>
 <map name="aWeightedLowess_2window_8hpp" id="aWeightedLowess_2window_8hpp">
-<area shape="rect" title="Compute the smoothing window for each point." alt="" coords="169,5,363,31"/>
+<area shape="rect" title="Compute the smoothing window for each point." alt="" coords="287,5,480,31"/>
 <area shape="rect" title=" " alt="" coords="5,79,63,105"/>
-<area shape="poly" title=" " alt="" coords="227,34,78,80,77,75,226,29"/>
+<area shape="poly" title=" " alt="" coords="311,34,205,54,78,81,77,76,204,49,310,29"/>
 <area shape="rect" title=" " alt="" coords="86,79,160,105"/>
-<area shape="poly" title=" " alt="" coords="243,34,163,74,160,69,241,29"/>
+<area shape="poly" title=" " alt="" coords="340,34,176,79,175,74,339,29"/>
 <area shape="rect" title=" " alt="" coords="184,79,252,105"/>
-<area shape="poly" title=" " alt="" coords="260,33,237,67,232,64,256,30"/>
+<area shape="poly" title=" " alt="" coords="356,34,261,75,259,70,354,29"/>
 <area shape="rect" title=" " alt="" coords="275,79,353,105"/>
-<area shape="poly" title=" " alt="" coords="276,30,300,64,295,67,272,33"/>
-<area shape="rect" href="Options_8hpp.html" title="Options for compute()." alt="" coords="377,79,467,105"/>
-<area shape="poly" title=" " alt="" coords="294,29,383,70,381,75,291,34"/>
-<area shape="rect" href="parallelize_8hpp.html" title="Definitions for parallelization." alt="" coords="491,79,593,105"/>
-<area shape="poly" title=" " alt="" coords="313,29,481,72,480,77,312,34"/>
-<area shape="rect" target="_parent" href="https://ltla.github.io/subpar/subpar_8hpp.html" title=" " alt="" coords="478,153,606,178"/>
-<area shape="poly" title=" " alt="" coords="545,105,545,137,539,137,539,105"/>
+<area shape="poly" title=" " alt="" coords="374,33,338,70,334,66,370,29"/>
+<area shape="rect" title=" " alt="" coords="377,79,528,105"/>
+<area shape="poly" title=" " alt="" coords="397,29,432,66,429,70,393,33"/>
+<area shape="rect" href="Options_8hpp.html" title="Options for compute()." alt="" coords="553,79,643,105"/>
+<area shape="poly" title=" " alt="" coords="421,29,548,71,546,76,419,34"/>
+<area shape="rect" href="parallelize_8hpp.html" title="Definitions for parallelization." alt="" coords="667,79,769,105"/>
+<area shape="poly" title=" " alt="" coords="441,29,652,74,651,79,440,34"/>
+<area shape="rect" title=" " alt="" coords="793,79,862,105"/>
+<area shape="poly" title=" " alt="" coords="481,29,618,48,778,76,777,81,617,54,480,34"/>
+<area shape="rect" target="_parent" href="https://ltla.github.io/subpar/subpar_8hpp.html" title=" " alt="" coords="654,153,782,178"/>
+<area shape="poly" title=" " alt="" coords="721,105,721,137,715,137,715,105"/>
 </map>
 </div>
 </div>
@@ -145,9 +151,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4dd0465feea6da633892bf916ecd933f" id="r_a4dd0465feea6da633892bf916ecd933f"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
-<tr class="memitem:a4dd0465feea6da633892bf916ecd933f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeightedLowess.html#a4dd0465feea6da633892bf916ecd933f">WeightedLowess::define_windows</a> (size_t num_points, const Data_ *x, const <a class="el" href="structWeightedLowess_1_1Options.html">Options</a>&lt; Data_ &gt; &amp;opt)</td></tr>
-<tr class="separator:a4dd0465feea6da633892bf916ecd933f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30dc5c465fd1c49a9b8a0d8e1a51e1ee" id="r_a30dc5c465fd1c49a9b8a0d8e1a51e1ee"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
+<tr class="memitem:a30dc5c465fd1c49a9b8a0d8e1a51e1ee"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeightedLowess.html#a30dc5c465fd1c49a9b8a0d8e1a51e1ee">WeightedLowess::define_windows</a> (const std::size_t num_points, const Data_ *x, const <a class="el" href="structWeightedLowess_1_1Options.html">Options</a>&lt; Data_ &gt; &amp;opt)</td></tr>
+<tr class="separator:a30dc5c465fd1c49a9b8a0d8e1a51e1ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Compute the smoothing window for each point. </p>

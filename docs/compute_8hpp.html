@@ -101,20 +101,29 @@ $(function(){ initResizable(false); });
 <p>Compute the LOWESS trend fit.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;cstddef&gt;</code><br />
+<code>#include &quot;sanisizer/sanisizer.hpp&quot;</code><br />
 <code>#include &quot;fit.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="Options_8hpp_source.html">Options.hpp</a>&quot;</code><br />
+<code>#include &quot;utils.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for compute.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="compute_8hpp__incl.png" border="0" usemap="#aWeightedLowess_2compute_8hpp" alt=""/></div>
 <map name="aWeightedLowess_2compute_8hpp" id="aWeightedLowess_2compute_8hpp">
-<area shape="rect" title="Compute the LOWESS trend fit." alt="" coords="14,5,214,31"/>
+<area shape="rect" title="Compute the LOWESS trend fit." alt="" coords="216,5,415,31"/>
 <area shape="rect" title=" " alt="" coords="5,79,63,105"/>
-<area shape="poly" title=" " alt="" coords="102,34,60,71,57,67,99,30"/>
-<area shape="rect" title=" " alt="" coords="86,79,142,105"/>
-<area shape="poly" title=" " alt="" coords="117,31,117,63,111,63,111,31"/>
-<area shape="rect" href="Options_8hpp.html" title="Options for compute()." alt="" coords="166,79,256,105"/>
-<area shape="poly" title=" " alt="" coords="132,29,185,68,181,72,129,34"/>
+<area shape="poly" title=" " alt="" coords="265,34,78,81,77,76,264,29"/>
+<area shape="rect" title=" " alt="" coords="87,79,152,105"/>
+<area shape="poly" title=" " alt="" coords="283,34,167,76,165,71,281,29"/>
+<area shape="rect" title=" " alt="" coords="176,79,327,105"/>
+<area shape="poly" title=" " alt="" coords="307,33,274,69,270,66,303,29"/>
+<area shape="rect" title=" " alt="" coords="352,79,407,105"/>
+<area shape="poly" title=" " alt="" coords="328,29,361,66,357,69,324,33"/>
+<area shape="rect" href="Options_8hpp.html" title="Options for compute()." alt="" coords="432,79,522,105"/>
+<area shape="poly" title=" " alt="" coords="344,29,436,70,434,75,342,34"/>
+<area shape="rect" title=" " alt="" coords="546,79,615,105"/>
+<area shape="poly" title=" " alt="" coords="361,29,532,75,531,80,360,34"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -144,15 +153,15 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2729a4bbbea5cdd5599086df491f9426" id="r_a2729a4bbbea5cdd5599086df491f9426"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
-<tr class="memitem:a2729a4bbbea5cdd5599086df491f9426"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeightedLowess.html#a2729a4bbbea5cdd5599086df491f9426">WeightedLowess::compute</a> (size_t num_points, const Data_ *x, const <a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt; &amp;windows, const Data_ *y, Data_ *fitted, Data_ *robust_weights, const <a class="el" href="structWeightedLowess_1_1Options.html">Options</a>&lt; Data_ &gt; &amp;opt)</td></tr>
-<tr class="separator:a2729a4bbbea5cdd5599086df491f9426"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba6c593f671626b4ed0787264868ee36" id="r_aba6c593f671626b4ed0787264868ee36"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
-<tr class="memitem:aba6c593f671626b4ed0787264868ee36"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeightedLowess.html#aba6c593f671626b4ed0787264868ee36">WeightedLowess::compute</a> (size_t num_points, const Data_ *x, const Data_ *y, Data_ *fitted, Data_ *robust_weights, const <a class="el" href="structWeightedLowess_1_1Options.html">Options</a>&lt; Data_ &gt; &amp;opt)</td></tr>
-<tr class="separator:aba6c593f671626b4ed0787264868ee36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a884a25e63dce496fa9e40af652021e31" id="r_a884a25e63dce496fa9e40af652021e31"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
-<tr class="memitem:a884a25e63dce496fa9e40af652021e31"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structWeightedLowess_1_1Results.html">Results</a>&lt; Data_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeightedLowess.html#a884a25e63dce496fa9e40af652021e31">WeightedLowess::compute</a> (size_t num_points, const Data_ *x, const Data_ *y, const <a class="el" href="structWeightedLowess_1_1Options.html">Options</a>&lt; Data_ &gt; &amp;opt)</td></tr>
-<tr class="separator:a884a25e63dce496fa9e40af652021e31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad11983a78a81e353c458a203d4f581c9" id="r_ad11983a78a81e353c458a203d4f581c9"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
+<tr class="memitem:ad11983a78a81e353c458a203d4f581c9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeightedLowess.html#ad11983a78a81e353c458a203d4f581c9">WeightedLowess::compute</a> (const std::size_t num_points, const Data_ *x, const <a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt; &amp;windows, const Data_ *y, Data_ *fitted, Data_ *robust_weights, const <a class="el" href="structWeightedLowess_1_1Options.html">Options</a>&lt; Data_ &gt; &amp;opt)</td></tr>
+<tr class="separator:ad11983a78a81e353c458a203d4f581c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4aaf79d3cc00d2e77b6c3ac887c98a22" id="r_a4aaf79d3cc00d2e77b6c3ac887c98a22"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
+<tr class="memitem:a4aaf79d3cc00d2e77b6c3ac887c98a22"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeightedLowess.html#a4aaf79d3cc00d2e77b6c3ac887c98a22">WeightedLowess::compute</a> (const std::size_t num_points, const Data_ *x, const Data_ *y, Data_ *fitted, Data_ *robust_weights, const <a class="el" href="structWeightedLowess_1_1Options.html">Options</a>&lt; Data_ &gt; &amp;opt)</td></tr>
+<tr class="separator:a4aaf79d3cc00d2e77b6c3ac887c98a22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae05ea1089c2a797e1c5cf2e7115c928d" id="r_ae05ea1089c2a797e1c5cf2e7115c928d"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
+<tr class="memitem:ae05ea1089c2a797e1c5cf2e7115c928d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structWeightedLowess_1_1Results.html">Results</a>&lt; Data_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeightedLowess.html#ae05ea1089c2a797e1c5cf2e7115c928d">WeightedLowess::compute</a> (const std::size_t num_points, const Data_ *x, const Data_ *y, const <a class="el" href="structWeightedLowess_1_1Options.html">Options</a>&lt; Data_ &gt; &amp;opt)</td></tr>
+<tr class="separator:ae05ea1089c2a797e1c5cf2e7115c928d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Compute the LOWESS trend fit. </p>

@@ -1,9 +1,15 @@
 <map id="WeightedLowess/compute.hpp" name="WeightedLowess/compute.hpp">
-<area shape="rect" id="Node000001" title="Compute the LOWESS trend fit." alt="" coords="14,5,214,31"/>
+<area shape="rect" id="Node000001" title="Compute the LOWESS trend fit." alt="" coords="216,5,415,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,63,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,34,60,71,57,67,99,30"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="86,79,142,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="117,31,117,63,111,63,111,31"/>
-<area shape="rect" id="Node000004" href="$Options_8hpp.html" title="Options for compute()." alt="" coords="166,79,256,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="132,29,185,68,181,72,129,34"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="265,34,78,81,77,76,264,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="87,79,152,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="283,34,167,76,165,71,281,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="176,79,327,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="307,33,274,69,270,66,303,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="352,79,407,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="328,29,361,66,357,69,324,33"/>
+<area shape="rect" id="Node000006" href="$Options_8hpp.html" title="Options for compute()." alt="" coords="432,79,522,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="344,29,436,70,434,75,342,34"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="546,79,615,105"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="361,29,532,75,531,80,360,34"/>
 </map>
