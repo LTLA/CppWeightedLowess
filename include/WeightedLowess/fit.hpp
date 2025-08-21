@@ -4,8 +4,10 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 
 #include "subpar/subpar.hpp"
+#include "sanisizer/sanisizer.hpp"
 
 #include "window.hpp"
 #include "Options.hpp"
@@ -27,7 +29,7 @@ Data_ cube(Data_ x) {
  */
 template<typename Data_>
 Data_ fit_point (
-    const size_t curpt,
+    const std::size_t curpt,
     const Window<Data_>& limits, 
     const Data_* x,
     const Data_* y,
@@ -35,20 +37,20 @@ Data_ fit_point (
     const Data_* robust_weights, 
     std::vector<Data_>& work)
 {
-    size_t left = limits.left, right = limits.right;
+    auto left = limits.left, right = limits.right;
     Data_ dist = limits.distance;
 
     if (dist <= 0) {
         Data_ ymean = 0, allweight = 0;
-        for (size_t pt = left; pt <= right; ++pt) {
+        for (auto pt = left; pt <= right; ++pt) {
             Data_ curweight = (weights != NULL ? robust_weights[pt] * weights[pt] : robust_weights[pt]);
             ymean += y[pt] * curweight;
             allweight += curweight;
         }
 
         if (allweight == 0) { // ignore the robustness weights.
-            for (size_t pt = left; pt <= right; ++pt) {
-                Data_ curweight = (weights != NULL ? weights[pt] : 1);
+            for (auto pt = left; pt <= right; ++pt) {
+                Data_ curweight = (weights != NULL ? weights[pt] : static_cast<Data_>(1));
                 ymean += y[pt] * curweight;
                 allweight += curweight;
             }
@@ -59,8 +61,8 @@ Data_ fit_point (
     }
 
     Data_ xmean = 0, ymean = 0, allweight = 0;
-    for (size_t pt = left; pt <= right; ++pt) {
-        Data_ curw = cube(1 - cube(std::abs(x[curpt] - x[pt])/dist)) * robust_weights[pt];
+    for (auto pt = left; pt <= right; ++pt) {
+        Data_ curw = cube(static_cast<Data_>(1) - cube(std::abs(x[curpt] - x[pt])/dist)) * robust_weights[pt];
         Data_ current = (weights != NULL ? curw * weights[pt] : curw);
         xmean += current * x[pt];
         ymean += current * y[pt];
@@ -69,8 +71,8 @@ Data_ fit_point (
     }
 
     if (allweight == 0) { // ignore the robustness weights.
-        for (size_t pt = left; pt <= right; ++pt) {
-            Data_ curw = cube(1 - cube(std::abs(x[curpt] - x[pt])/dist));
+        for (auto pt = left; pt <= right; ++pt) {
+            Data_ curw = cube(static_cast<Data_>(1) - cube(std::abs(x[curpt] - x[pt])/dist));
             Data_ current = (weights != NULL ? curw * weights[pt] : curw);
             xmean += current * x[pt];
             ymean += current * y[pt];
@@ -83,7 +85,7 @@ Data_ fit_point (
     ymean /= allweight;
 
     Data_ var=0, covar=0;
-    for (size_t pt = left; pt <= right; ++pt) {
+    for (auto pt = left; pt <= right; ++pt) {
         Data_ temp = x[pt] - xmean;
         var += temp * temp * work[pt];
         covar += temp * (y[pt] - ymean) * work[pt];
@@ -99,14 +101,14 @@ Data_ fit_point (
     }
 }
 
-/* This is a C version of the local weighted regression (lowess) trend fitting algorithm,
+/* This is a C++ version of the local weighted regression (lowess) trend fitting algorithm,
  * based on the Fortran code in lowess.f from http://www.netlib.org/go written by Cleveland.
  * Consideration of non-equal prior weights is added to the span calculations and linear
  * regression. These weights are intended to have the equivalent effect of frequency weights
  * (at least, in the integer case; extended by analogy to all non-negative values).
  */
 template<typename Data_>
-void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_>& windows, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
+void fit_trend(std::size_t num_points, const Data_* x, const PrecomputedWindows<Data_>& windows, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
     if (num_points == 0) {
         return;
     }
@@ -119,12 +121,10 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
     // Setting up the robustness weights, if robustification is requested.
     std::fill_n(robust_weights, num_points, 1);
     Data_ min_threshold = 0; 
-    std::vector<size_t> residual_permutation;
+    std::vector<std::size_t> residual_permutation;
     constexpr Data_ threshold_multiplier = 1e-8;
 
     if (opt.iterations) {
-        residual_permutation.resize(num_points);
-
         /* If the range of 'y' is zero, we just quit early. Otherwise, we use
          * the range to set a lower bound on the robustness threshold to avoid
          * problems with divide-by-zero. We don't use the MAD of 'y' as it
@@ -139,15 +139,14 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
         min_threshold = range * threshold_multiplier;
     }
 
-    size_t num_anchors = anchors.size();
-    const int nthreads = opt.num_threads;
-    std::vector<std::vector<Data_> > workspaces(nthreads);
+    auto num_anchors = anchors.size();
+    auto workspaces = sanisizer::create<std::vector<std::vector<Data_> > >(opt.num_threads);
 
-    for (int it = 0; it <= opt.iterations; ++it) { // Robustness iterations.
-        parallelize(nthreads, num_anchors, [&](int t, size_t start, size_t length) {
+    for (decltype(I(opt.iterations)) it = 0; it <= opt.iterations; ++it) { // Robustness iterations.
+        parallelize(opt.num_threads, num_anchors, [&](int t, decltype(I(num_anchors)) start, decltype(I(num_anchors)) length) {
             auto& workspace = workspaces[t];
-            workspace.resize(num_points); // resizing inside the thread to encourage allocations to a thread-specific heap to avoid false sharing.
-            for (size_t s = start, end = start + length; s < end; ++s) {
+            sanisizer::resize(workspace, num_points); // resizing inside the thread to encourage allocations to a thread-specific heap to avoid false sharing.
+            for (decltype(I(start)) s = start, end = start + length; s < end; ++s) {
                 auto curpt = anchors[s];
                 fitted[curpt] = fit_point(curpt, limits[s], x, y, opt.weights, robust_weights, workspace);
             }
@@ -159,9 +158,10 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
          * session from the anchor fitting ensure that all 'fitted' values are
          * available for all anchors across all threads.
          */
-        parallelize(nthreads, num_anchors - 1, [&](int, size_t start, size_t length) {
+        auto nanchors_m1 = num_anchors - 1;
+        parallelize(opt.num_threads, nanchors_m1, [&](int, decltype(I(nanchors_m1)) start, decltype(I(nanchors_m1)) length) {
             auto start_p1 = start + 1;
-            for (size_t s = start_p1, end = start_p1 + length; s < end; ++s) {
+            for (decltype(I(start_p1)) s = start_p1, end = start_p1 + length; s < end; ++s) {
                 auto curpt = anchors[s];
                 auto last_anchor = anchors[s - 1];
 
@@ -170,7 +170,7 @@ void fit_trend(size_t num_points, const Data_* x, const PrecomputedWindows<Data_
                     if (current > 0) {
                         const Data_ slope = (fitted[curpt] - fitted[last_anchor])/current;
                         const Data_ intercept = fitted[curpt] - slope * x[curpt];
-                        for (size_t subpt = last_anchor + 1; subpt < curpt; ++subpt) { 
+                        for (decltype(I(curpt)) subpt = last_anchor + 1; subpt < curpt; ++subpt) { 
                             fitted[subpt] = slope * x[subpt] + intercept; 
                         }
                     } else {

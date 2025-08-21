@@ -52,7 +52,7 @@ struct Options {
      *
      * This setting is ignored if `Options::delta` is non-negative.
      */
-    size_t anchors = 200;
+    std::size_t anchors = 200;
 
     /**
      * The number of robustness iterations.

@@ -2,9 +2,13 @@
 #define WEIGHTEDLOWESS_COMPUTE_HPP
 
 #include <vector>
+#include <cstddef>
+
+#include "sanisizer/sanisizer.hpp"
 
 #include "fit.hpp"
 #include "Options.hpp"
+#include "utils.hpp"
 
 /**
  * @file compute.hpp
@@ -33,10 +37,10 @@ namespace WeightedLowess {
  * Note that only a subset of options are actually used in this overload, namely `Options::weights` and `Options::iterations`.
  */
 template<typename Data_>
-void compute(size_t num_points, const Data_* x, const PrecomputedWindows<Data_>& windows, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
+void compute(std::size_t num_points, const Data_* x, const PrecomputedWindows<Data_>& windows, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
     std::vector<Data_> rbuffer;
     if (robust_weights == NULL) {
-        rbuffer.resize(num_points);
+        sanisizer::resize(rbuffer, num_points);
         robust_weights = rbuffer.data();
     }
     internal::fit_trend(num_points, x, windows, y, fitted, robust_weights, opt);
@@ -59,7 +63,7 @@ void compute(size_t num_points, const Data_* x, const PrecomputedWindows<Data_>&
  * @param opt Further options.
  */
 template<typename Data_>
-void compute(size_t num_points, const Data_* x, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
+void compute(std::size_t num_points, const Data_* x, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
     auto win = define_windows(num_points, x, opt);
     compute(num_points, x, win, y, fitted, robust_weights, opt);
 }
@@ -73,7 +77,10 @@ struct Results {
     /**
      * @param n Number of points.
      */
-    Results(size_t n) : fitted(n), robust_weights(n) {}
+    Results(std::size_t n) :
+        fitted(sanisizer::cast<decltype(internal::I(fitted.size()))>(n)),
+        robust_weights(sanisizer::cast<decltype(internal::I(robust_weights.size()))>(n))
+    {}
 
     /**
      * Fitted values from the LOWESS smoother. 
@@ -102,7 +109,7 @@ struct Results {
  * @return A `Results` object containing the fitted values and robustness weights.
  */
 template<typename Data_>
-Results<Data_> compute(size_t num_points, const Data_* x, const Data_* y, const Options<Data_>& opt) {
+Results<Data_> compute(std::size_t num_points, const Data_* x, const Data_* y, const Options<Data_>& opt) {
     Results<Data_> output(num_points);
     compute(num_points, x, y, output.fitted.data(), output.robust_weights.data(), opt);
     return output;

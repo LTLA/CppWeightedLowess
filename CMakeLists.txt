@@ -21,9 +21,10 @@ if(WEIGHTEDLOWESS_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
     find_package(ltla_subpar 0.3.1 CONFIG REQUIRED)
+    find_package(ltla_sanisizer 0.1.2 CONFIG REQUIRED)
 endif()
 
-target_link_libraries(WeightedLowess INTERFACE ltla::subpar)
+target_link_libraries(WeightedLowess INTERFACE ltla::subpar ltla::sanisizer)
 
 # Testing.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)

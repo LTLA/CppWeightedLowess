@@ -5,6 +5,11 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
+#include <cstddef>
+
+#include "sanisizer/sanisizer.hpp"
+
+#include "utils.hpp"
 
 namespace WeightedLowess {
 
@@ -12,32 +17,32 @@ namespace internal {
 
 template<typename Data_>
 Data_ compute_mad(
-    size_t num_points, 
+    std::size_t num_points, 
     const Data_* y, 
     const Data_* fitted, 
     const Data_* freq_weights, 
     Data_ total_weight, 
-    std::vector<Data_>& abs_dev, 
-    std::vector<size_t>& permutation)
+    std::vector<Data_>& abs_dev,
+    std::vector<std::size_t>& permutation)
 {
-    abs_dev.resize(num_points);
-    for (size_t i = 0; i < num_points; ++i) {
+    sanisizer::resize(abs_dev, num_points); // resizing here for safety, even though it would be more performant to resize once outside the robustness loop in fit().
+    for (decltype(I(num_points)) i = 0; i < num_points; ++i) {
         abs_dev[i] = std::abs(y[i] - fitted[i]);
     }
 
-    permutation.resize(num_points);
-    std::iota(permutation.begin(), permutation.end(), static_cast<size_t>(0));
-    std::sort(permutation.begin(), permutation.end(), [&](size_t left, size_t right) -> bool { return abs_dev[left] < abs_dev[right]; });
+    sanisizer::resize(permutation, num_points);
+    std::iota(permutation.begin(), permutation.end(), static_cast<std::size_t>(0));
+    std::sort(permutation.begin(), permutation.end(), [&](std::size_t left, std::size_t right) -> bool { return abs_dev[left] < abs_dev[right]; });
 
     Data_ curweight = 0;
     const Data_ halfweight = total_weight/2;
-    for (size_t i = 0; i < num_points; ++i) {
+    for (decltype(I(num_points)) i = 0; i < num_points; ++i) {
         auto pt = permutation[i];
         curweight += (freq_weights != NULL ? freq_weights[pt] : 1);
 
         if (curweight == halfweight) { 
-            auto next_pt = permutation[i + 1];
-            return (abs_dev[pt] + abs_dev[next_pt]) / 2.0;
+            auto next_pt = permutation[i + 1]; // increment is safe as 'i + 1 <= num_points'.
+            return abs_dev[pt] + (abs_dev[next_pt] - abs_dev[pt]) / 2.0; // reduce risk of overflow.
         } else if (curweight > halfweight) {
             return abs_dev[pt];
         }
@@ -47,9 +52,9 @@ Data_ compute_mad(
 }
 
 template<typename Data_>
-Data_ compute_robust_range(size_t num_points, const Data_* y, const Data_* robust_weights) {
+Data_ compute_robust_range(std::size_t num_points, const Data_* y, const Data_* robust_weights) {
     Data_ first = 0;
-    size_t i = 0;
+    decltype(I(num_points)) i = 0;
     for (; i < num_points; ++i) {
         if (robust_weights[i]) {
             first = y[i];
@@ -77,13 +82,12 @@ Data_ square (Data_ x) {
 
 template<typename Data_>
 void populate_robust_weights(const std::vector<Data_>& abs_dev, Data_ threshold, Data_* robust_weights) {
-    size_t num_points = abs_dev.size();
-
-    for (size_t i = 0; i < num_points; ++i) {
+    auto num_points = abs_dev.size();
+    for (decltype(I(num_points)) i = 0; i < num_points; ++i) {
         auto ad = abs_dev[i];
         // Effectively a branchless if/else, which should help auto-vectorization.
         // This assumes that threshold > 0, which should be true from fit_trend().
-        robust_weights[i] = (ad < threshold) * square(1 - square(ad/threshold));
+        robust_weights[i] = (ad < threshold) * square(static_cast<Data_>(1) - square(ad/threshold));
     }
 }
 
