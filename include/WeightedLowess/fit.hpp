@@ -38,7 +38,7 @@ Data_ fit_point (
     std::vector<Data_>& work)
 {
     auto left = limits.left, right = limits.right;
-    Data_ dist = limits.distance;
+    const Data_ dist = limits.distance;
 
     if (dist <= 0) {
         Data_ ymean = 0, allweight = 0;
@@ -62,8 +62,8 @@ Data_ fit_point (
 
     Data_ xmean = 0, ymean = 0, allweight = 0;
     for (auto pt = left; pt <= right; ++pt) {
-        Data_ curw = cube(static_cast<Data_>(1) - cube(std::abs(x[curpt] - x[pt])/dist)) * robust_weights[pt];
-        Data_ current = (weights != NULL ? curw * weights[pt] : curw);
+        const Data_ curw = cube(static_cast<Data_>(1) - cube(std::abs(x[curpt] - x[pt])/dist)) * robust_weights[pt];
+        const Data_ current = (weights != NULL ? curw * weights[pt] : curw);
         xmean += current * x[pt];
         ymean += current * y[pt];
         allweight += current;
@@ -72,8 +72,8 @@ Data_ fit_point (
 
     if (allweight == 0) { // ignore the robustness weights.
         for (auto pt = left; pt <= right; ++pt) {
-            Data_ curw = cube(static_cast<Data_>(1) - cube(std::abs(x[curpt] - x[pt])/dist));
-            Data_ current = (weights != NULL ? curw * weights[pt] : curw);
+            const Data_ curw = cube(static_cast<Data_>(1) - cube(std::abs(x[curpt] - x[pt])/dist));
+            const Data_ current = (weights != NULL ? curw * weights[pt] : curw);
             xmean += current * x[pt];
             ymean += current * y[pt];
             allweight += current;
@@ -84,9 +84,9 @@ Data_ fit_point (
     xmean /= allweight;
     ymean /= allweight;
 
-    Data_ var=0, covar=0;
+    Data_ var = 0, covar = 0;
     for (auto pt = left; pt <= right; ++pt) {
-        Data_ temp = x[pt] - xmean;
+        const Data_ temp = x[pt] - xmean;
         var += temp * temp * work[pt];
         covar += temp * (y[pt] - ymean) * work[pt];
     }
@@ -108,7 +108,7 @@ Data_ fit_point (
  * (at least, in the integer case; extended by analogy to all non-negative values).
  */
 template<typename Data_>
-void fit_trend(std::size_t num_points, const Data_* x, const PrecomputedWindows<Data_>& windows, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
+void fit_trend(const std::size_t num_points, const Data_* x, const PrecomputedWindows<Data_>& windows, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
     if (num_points == 0) {
         return;
     }
@@ -131,7 +131,7 @@ void fit_trend(std::size_t num_points, const Data_* x, const PrecomputedWindows<
          * could be conceivable that we would end up with a threshold of zero
          * again, e.g., if the majority of points have the same value.
          */
-        Data_ range = (*std::max_element(y, y + num_points) - *std::min_element(y, y + num_points));
+        const Data_ range = (*std::max_element(y, y + num_points) - *std::min_element(y, y + num_points));
         if (range == 0) {
             std::copy_n(y, num_points, fitted);
             return;
@@ -139,7 +139,7 @@ void fit_trend(std::size_t num_points, const Data_* x, const PrecomputedWindows<
         min_threshold = range * threshold_multiplier;
     }
 
-    auto num_anchors = anchors.size();
+    const auto num_anchors = anchors.size();
     auto workspaces = sanisizer::create<std::vector<std::vector<Data_> > >(opt.num_threads);
 
     for (decltype(I(opt.iterations)) it = 0; it <= opt.iterations; ++it) { // Robustness iterations.
@@ -147,7 +147,7 @@ void fit_trend(std::size_t num_points, const Data_* x, const PrecomputedWindows<
             auto& workspace = workspaces[t];
             sanisizer::resize(workspace, num_points); // resizing inside the thread to encourage allocations to a thread-specific heap to avoid false sharing.
             for (decltype(I(start)) s = start, end = start + length; s < end; ++s) {
-                auto curpt = anchors[s];
+                const auto curpt = anchors[s];
                 fitted[curpt] = fit_point(curpt, limits[s], x, y, opt.weights, robust_weights, workspace);
             }
         });
@@ -158,17 +158,17 @@ void fit_trend(std::size_t num_points, const Data_* x, const PrecomputedWindows<
          * session from the anchor fitting ensure that all 'fitted' values are
          * available for all anchors across all threads.
          */
-        auto nanchors_m1 = num_anchors - 1;
+        const auto nanchors_m1 = num_anchors - 1;
         parallelize(opt.num_threads, nanchors_m1, [&](int, decltype(I(nanchors_m1)) start, decltype(I(nanchors_m1)) length) {
-            auto start_p1 = start + 1;
+            const auto start_p1 = start + 1;
             for (decltype(I(start_p1)) s = start_p1, end = start_p1 + length; s < end; ++s) {
-                auto curpt = anchors[s];
-                auto last_anchor = anchors[s - 1];
+                const auto curpt = anchors[s];
+                const auto last_anchor = anchors[s - 1];
 
                 if (curpt - last_anchor > 1) { // only interpolate if there are points between anchors.
-                    Data_ current = x[curpt] - x[last_anchor];
-                    if (current > 0) {
-                        const Data_ slope = (fitted[curpt] - fitted[last_anchor])/current;
+                    const Data_ current_diff = x[curpt] - x[last_anchor];
+                    if (current_diff > 0) {
+                        const Data_ slope = (fitted[curpt] - fitted[last_anchor]) / current_diff;
                         const Data_ intercept = fitted[curpt] - slope * x[curpt];
                         for (decltype(I(curpt)) subpt = last_anchor + 1; subpt < curpt; ++subpt) { 
                             fitted[subpt] = slope * x[subpt] + intercept; 
@@ -202,7 +202,7 @@ void fit_trend(std::size_t num_points, const Data_* x, const PrecomputedWindows<
                  * is exactly zero, because that implies that we should already
                  * have a perfect fit among all of these points.
                  */
-                auto range = compute_robust_range(num_points, y, robust_weights);
+                const auto range = compute_robust_range(num_points, y, robust_weights);
                 if (range == 0) {
                     break;
                 }

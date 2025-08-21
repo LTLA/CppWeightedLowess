@@ -17,7 +17,7 @@ namespace internal {
 
 template<typename Data_>
 Data_ compute_mad(
-    std::size_t num_points, 
+    const std::size_t num_points, 
     const Data_* y, 
     const Data_* fitted, 
     const Data_* freq_weights, 
@@ -35,13 +35,13 @@ Data_ compute_mad(
     std::sort(permutation.begin(), permutation.end(), [&](std::size_t left, std::size_t right) -> bool { return abs_dev[left] < abs_dev[right]; });
 
     Data_ curweight = 0;
-    const Data_ halfweight = total_weight/2;
+    const Data_ halfweight = total_weight / 2;
     for (decltype(I(num_points)) i = 0; i < num_points; ++i) {
-        auto pt = permutation[i];
+        const auto pt = permutation[i];
         curweight += (freq_weights != NULL ? freq_weights[pt] : 1);
 
         if (curweight == halfweight) { 
-            auto next_pt = permutation[i + 1]; // increment is safe as 'i + 1 <= num_points'.
+            const auto next_pt = permutation[i + 1]; // increment is safe as 'i + 1 <= num_points'.
             return abs_dev[pt] + (abs_dev[next_pt] - abs_dev[pt]) / 2.0; // reduce risk of overflow.
         } else if (curweight > halfweight) {
             return abs_dev[pt];
@@ -52,7 +52,7 @@ Data_ compute_mad(
 }
 
 template<typename Data_>
-Data_ compute_robust_range(std::size_t num_points, const Data_* y, const Data_* robust_weights) {
+Data_ compute_robust_range(const std::size_t num_points, const Data_* y, const Data_* robust_weights) {
     Data_ first = 0;
     decltype(I(num_points)) i = 0;
     for (; i < num_points; ++i) {
@@ -66,7 +66,7 @@ Data_ compute_robust_range(std::size_t num_points, const Data_* y, const Data_* 
     Data_ min = first, max = first;
     for (; i < num_points; ++i) {
         if (robust_weights[i]) {
-            auto val = y[i];
+            const auto val = y[i];
             min = std::min(val, min);
             max = std::max(val, max);
         }
@@ -76,15 +76,15 @@ Data_ compute_robust_range(std::size_t num_points, const Data_* y, const Data_* 
 }
 
 template<typename Data_>
-Data_ square (Data_ x) {
+Data_ square (const Data_ x) {
     return x * x;
 }
 
 template<typename Data_>
-void populate_robust_weights(const std::vector<Data_>& abs_dev, Data_ threshold, Data_* robust_weights) {
-    auto num_points = abs_dev.size();
+void populate_robust_weights(const std::vector<Data_>& abs_dev, const Data_ threshold, Data_* robust_weights) {
+    const auto num_points = abs_dev.size();
     for (decltype(I(num_points)) i = 0; i < num_points; ++i) {
-        auto ad = abs_dev[i];
+        const auto ad = abs_dev[i];
         // Effectively a branchless if/else, which should help auto-vectorization.
         // This assumes that threshold > 0, which should be true from fit_trend().
         robust_weights[i] = (ad < threshold) * square(static_cast<Data_>(1) - square(ad/threshold));

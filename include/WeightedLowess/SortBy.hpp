@@ -41,7 +41,7 @@ public:
      * @param[in] x Pointer to an array of sortable values, typically x-values for the dataset.
      */
     template<typename Sortable_>
-    SortBy(std::size_t num_points, const Sortable_* x) {
+    SortBy(const std::size_t num_points, const Sortable_* x) {
         set(num_points, x);
     }
 
@@ -57,7 +57,7 @@ public:
      * @param[in] x Pointer to an array of sortable values, typically x-values for the dataset.
      */
     template<typename Sortable_>
-    void set(std::size_t num_points, const Sortable_* x) {
+    void set(const std::size_t num_points, const Sortable_* x) {
         if (num_points) {
             my_sorted = std::is_sorted(x, x + num_points);
             if (!my_sorted) {
@@ -75,7 +75,7 @@ private:
             return;
         }
 
-        auto num_points = my_permutation.size();
+        const auto num_points = my_permutation.size();
         std::fill_n(work, num_points, 0);
 
         // Reordering values in place.
@@ -151,7 +151,7 @@ public:
      */
     template<typename Data_, typename Used_>
     void permute(Data_* data, std::vector<Used_>& work) const {
-        auto num_points = my_permutation.size();
+        const auto num_points = my_permutation.size();
         sanisizer::resize(work, num_points);
         permute(data, work.data());
     }
@@ -166,7 +166,7 @@ public:
      */
     template<typename Data_, typename Used_>
     void permute(std::initializer_list<Data_> data, std::vector<Used_>& work) const {
-        auto num_points = my_permutation.size();
+        const auto num_points = my_permutation.size();
         sanisizer::resize(work, num_points);
         permute(data, work.data());
     }
@@ -181,7 +181,7 @@ public:
      */
     template<typename DataPointers_, typename Used_>
     void permute(DataPointers_ data, std::vector<Used_>& work) const {
-        auto num_points = my_permutation.size();
+        const auto num_points = my_permutation.size();
         sanisizer::resize(work, num_points);
         permute(data, work.data());
     }
@@ -193,7 +193,7 @@ private:
             return;
         }
 
-        auto num_points = my_permutation.size();
+        const auto num_points = my_permutation.size();
         std::fill_n(work, num_points, 0);
 
         for (decltype(internal::I(num_points)) i = 0; i < num_points; ++i) {
@@ -263,7 +263,7 @@ public:
      */
     template<typename Data_, typename Used_>
     void unpermute(Data_* data, std::vector<Used_>& work) const {
-        auto num_points = my_permutation.size();
+        const auto num_points = my_permutation.size();
         sanisizer::resize(work, num_points);
         unpermute(data, work.data());
     }
@@ -277,7 +277,7 @@ public:
      */
     template<typename Data_, typename Used_>
     void unpermute(std::initializer_list<Data_*> data, std::vector<Used_>& work) const {
-        auto num_points = my_permutation.size();
+        const auto num_points = my_permutation.size();
         sanisizer::resize(work, num_points);
         unpermute(data, work.data());
     }
@@ -291,7 +291,7 @@ public:
      */
     template<typename DataPointers_, typename Used_>
     void unpermute(DataPointers_ data, std::vector<Used_>& work) const {
-        auto num_points = my_permutation.size();
+        const auto num_points = my_permutation.size();
         sanisizer::resize(work, num_points);
         unpermute(data, work.data());
     }

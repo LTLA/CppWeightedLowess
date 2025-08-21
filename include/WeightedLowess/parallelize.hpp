@@ -25,7 +25,7 @@ namespace WeightedLowess {
  * Any user-defined macro should accept the same arguments as `subpar::parallelize_range()`.
  */
 template<typename Task_, class Run_>
-void parallelize(int num_workers, Task_ num_tasks, Run_ run_task_range) {
+void parallelize(const int num_workers, const Task_ num_tasks, Run_ run_task_range) {
 #ifndef WEIGHTEDLOWESS_CUSTOM_PARALLEL
     // Various methods don't allocate or throw, so nothrow_ = true is fine.
     subpar::parallelize_range<true>(num_workers, num_tasks, std::move(run_task_range));
