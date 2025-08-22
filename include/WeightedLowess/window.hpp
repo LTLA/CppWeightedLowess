@@ -123,7 +123,7 @@ std::vector<Window<Data_> > find_limits(
     const auto half_min_width = min_width / 2;
     const auto points_m1 = num_points - 1;
 
-    parallelize(nthreads, nanchors, [&](int, decltype(I(nanchors)) start, decltype(I(nanchors)) length) {
+    parallelize(nthreads, nanchors, [&](const int, const decltype(I(nanchors)) start, const decltype(I(nanchors)) length) {
         for (decltype(I(start)) s = start, end = start + length; s < end; ++s) {
             const auto curpt = anchors[s];
             const auto curx = x[curpt];

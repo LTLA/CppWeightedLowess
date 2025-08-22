@@ -77,7 +77,7 @@ struct Results {
     /**
      * @param n Number of points.
      */
-    Results(std::size_t n) :
+    Results(const std::size_t n) :
         fitted(sanisizer::cast<decltype(internal::I(fitted.size()))>(n)),
         robust_weights(sanisizer::cast<decltype(internal::I(robust_weights.size()))>(n))
     {}

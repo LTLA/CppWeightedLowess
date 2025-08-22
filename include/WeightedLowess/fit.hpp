@@ -143,7 +143,7 @@ void fit_trend(const std::size_t num_points, const Data_* x, const PrecomputedWi
     auto workspaces = sanisizer::create<std::vector<std::vector<Data_> > >(opt.num_threads);
 
     for (decltype(I(opt.iterations)) it = 0; it <= opt.iterations; ++it) { // Robustness iterations.
-        parallelize(opt.num_threads, num_anchors, [&](int t, decltype(I(num_anchors)) start, decltype(I(num_anchors)) length) {
+        parallelize(opt.num_threads, num_anchors, [&](const int t, const decltype(I(num_anchors)) start, const decltype(I(num_anchors)) length) {
             auto& workspace = workspaces[t];
             sanisizer::resize(workspace, num_points); // resizing inside the thread to encourage allocations to a thread-specific heap to avoid false sharing.
             for (decltype(I(start)) s = start, end = start + length; s < end; ++s) {
@@ -159,9 +159,9 @@ void fit_trend(const std::size_t num_points, const Data_* x, const PrecomputedWi
          * available for all anchors across all threads.
          */
         const auto nanchors_m1 = num_anchors - 1;
-        parallelize(opt.num_threads, nanchors_m1, [&](int, decltype(I(nanchors_m1)) start, decltype(I(nanchors_m1)) length) {
+        parallelize(opt.num_threads, nanchors_m1, [&](const int, const decltype(I(nanchors_m1)) start, const decltype(I(nanchors_m1)) length) {
             const auto start_p1 = start + 1;
-            for (decltype(I(start_p1)) s = start_p1, end = start_p1 + length; s < end; ++s) {
+            for (decltype(I(start)) s = start_p1, end = start_p1 + length; s < end; ++s) {
                 const auto curpt = anchors[s];
                 const auto last_anchor = anchors[s - 1];
 
