@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['results_0',['Results',['../structWeightedLowess_1_1Results.html#a0a21c73e34d0500837fcbda534407fb9',1,'WeightedLowess::Results']]]
+  ['results_0',['Results',['../structWeightedLowess_1_1Results.html#afb46837329d3b550dc40114bb283c508',1,'WeightedLowess::Results']]]
 ];

@@ -127,8 +127,8 @@
       <type></type>
       <name>Results</name>
       <anchorfile>structWeightedLowess_1_1Results.html</anchorfile>
-      <anchor>a0a21c73e34d0500837fcbda534407fb9</anchor>
-      <arglist>(std::size_t n)</arglist>
+      <anchor>afb46837329d3b550dc40114bb283c508</anchor>
+      <arglist>(const std::size_t n)</arglist>
     </member>
     <member kind="variable">
       <type>std::vector&lt; Data_ &gt;</type>
