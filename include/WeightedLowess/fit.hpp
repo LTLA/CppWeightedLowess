@@ -31,13 +31,13 @@ template<typename Data_>
 Data_ fit_point (
     const std::size_t curpt,
     const Window<Data_>& limits, 
-    const Data_* x,
-    const Data_* y,
-    const Data_* weights, 
-    const Data_* robust_weights, 
+    const Data_* const x,
+    const Data_* const y,
+    const Data_* const weights, 
+    const Data_* const robust_weights, 
     std::vector<Data_>& work)
 {
-    auto left = limits.left, right = limits.right;
+    const auto left = limits.left, right = limits.right;
     const Data_ dist = limits.distance;
 
     if (dist <= 0) {
@@ -108,13 +108,21 @@ Data_ fit_point (
  * (at least, in the integer case; extended by analogy to all non-negative values).
  */
 template<typename Data_>
-void fit_trend(const std::size_t num_points, const Data_* x, const PrecomputedWindows<Data_>& windows, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
+void fit_trend(
+    const std::size_t num_points,
+    const Data_* const x,
+    const PrecomputedWindows<Data_>& windows,
+    const Data_* const y,
+    Data_* const fitted,
+    Data_* const robust_weights,
+    const Options<Data_>& opt
+) {
     if (num_points == 0) {
         return;
     }
 
     const auto& anchors = windows.anchors;
-    const Data_* freq_weights = windows.freq_weights;
+    const auto freq_weights = windows.freq_weights;
     const Data_ totalweight = windows.total_weight;
     const auto& limits = windows.limits;
 
@@ -142,7 +150,8 @@ void fit_trend(const std::size_t num_points, const Data_* x, const PrecomputedWi
     const auto num_anchors = anchors.size();
     auto workspaces = sanisizer::create<std::vector<std::vector<Data_> > >(opt.num_threads);
 
-    for (decltype(I(opt.iterations)) it = 0; it <= opt.iterations; ++it) { // Robustness iterations.
+    decltype(I(opt.iterations)) it = 0;
+    while (1) { // Robustness iterations.
         parallelize(opt.num_threads, num_anchors, [&](const int t, const decltype(I(num_anchors)) start, const decltype(I(num_anchors)) length) {
             auto& workspace = workspaces[t];
             sanisizer::resize(workspace, num_points); // resizing inside the thread to encourage allocations to a thread-specific heap to avoid false sharing.
@@ -157,34 +166,47 @@ void fit_trend(const std::size_t num_points, const Data_* x, const PrecomputedWi
          * find_anchors() for an example). Note that we do this in a separate parallel
          * session from the anchor fitting ensure that all 'fitted' values are
          * available for all anchors across all threads.
+         *
+         * One would think that we should parallelize across x instead of the anchors,
+         * as this has better worksharing when x is not evenly distributed across anchor segments.
+         * However, if we did so, we'd have to store the slope and intercept for the anchor segments first,
+         * then look up the slope and intercept for each element of x.
+         * This involves an extra memory access and is not SIMD-able.
          */
-        const auto nanchors_m1 = num_anchors - 1;
-        parallelize(opt.num_threads, nanchors_m1, [&](const int, const decltype(I(nanchors_m1)) start, const decltype(I(nanchors_m1)) length) {
-            const auto start_p1 = start + 1;
-            for (decltype(I(start)) s = start_p1, end = start_p1 + length; s < end; ++s) {
-                const auto curpt = anchors[s];
-                const auto last_anchor = anchors[s - 1];
+        const auto num_anchors_m1 = num_anchors - 1;
+        parallelize(opt.num_threads, num_anchors_m1, [&](const int, const decltype(I(num_anchors_m1)) start, const decltype(I(num_anchors_m1)) length) {
+            for (decltype(I(start)) s = start, end = start + length; s < end; ++s) {
+                const auto left_anchor = anchors[s];
+                const auto right_anchor = anchors[s + 1];
+                if (right_anchor - left_anchor <= 1) { // only interpolate if there are points between anchors.
+                    continue;
+                }
 
-                if (curpt - last_anchor > 1) { // only interpolate if there are points between anchors.
-                    const Data_ current_diff = x[curpt] - x[last_anchor];
-                    if (current_diff > 0) {
-                        const Data_ slope = (fitted[curpt] - fitted[last_anchor]) / current_diff;
-                        const Data_ intercept = fitted[curpt] - slope * x[curpt];
-                        for (decltype(I(curpt)) subpt = last_anchor + 1; subpt < curpt; ++subpt) { 
-                            fitted[subpt] = slope * x[subpt] + intercept; 
-                        }
-                    } else {
-                        /* Some protection is provided against infinite slopes.
-                         * This shouldn't be a problem for non-zero delta; the only
-                         * concern is at the final point where the covariate
-                         * distance may be zero.
-                         */
-                        const Data_ ave = (fitted[curpt] + fitted[last_anchor]) / 2;
-                        std::fill(fitted + last_anchor + 1, fitted + curpt, ave);
+                const Data_ xdiff = x[right_anchor] - x[left_anchor];
+                const Data_ ydiff = fitted[right_anchor] - fitted[left_anchor];
+                if (xdiff > 0) {
+                    const Data_ slope = ydiff / xdiff;
+                    const Data_ intercept = fitted[right_anchor] - slope * x[right_anchor];
+                    for (decltype(I(right_anchor)) subpt = left_anchor + 1; subpt < right_anchor; ++subpt) { 
+                        fitted[subpt] = slope * x[subpt] + intercept; 
                     }
+                } else {
+                    /* Some protection is provided against infinite slopes.
+                     * This shouldn't be a problem for non-zero delta; the only
+                     * concern is at the final point where the covariate
+                     * distance may be zero.
+                     */
+                    const Data_ ave = fitted[left_anchor] + ydiff / 2;
+                    std::fill(fitted + left_anchor + 1, fitted + right_anchor, ave);
                 }
             }
         });
+
+        // Using a manual break to avoid overflow of 'it' in a for loop that requires
+        // one last iteration at 'it == opt.iterations'.
+        if (it == opt.iterations) {
+            break;
+        }
 
         /* Both limma::weightedLowess and the original Fortran code have an
          * early termination condition that stops the robustness iterations
@@ -196,31 +218,30 @@ void fit_trend(const std::size_t num_points, const Data_* x, const PrecomputedWi
          * as most residuals are fine, and we would terminate early and fail to
          * robustify against the few outliers.
          */
-        if (it < opt.iterations) {
-            if (it > 0) {
-                /* That said, we do quit if the range of the non-outlier points
-                 * is exactly zero, because that implies that we should already
-                 * have a perfect fit among all of these points.
-                 */
-                const auto range = compute_robust_range(num_points, y, robust_weights);
-                if (range == 0) {
-                    break;
-                }
-
-                /* We redefine the minimum threshold from the non-outlier
-                 * points. This ensures that a massive outlier at the start
-                 * does not continue to inflate the 'min_threshold', even after
-                 * it has been rendered irrelevant by the robustness weighting.
-                 */
-                min_threshold = range * threshold_multiplier;
+        if (it > 0) {
+            /* That said, we do quit if the range of the non-outlier points
+             * is exactly zero, because that implies that we should already
+             * have a perfect fit among all of these points.
+             */
+            const auto range = compute_robust_range(num_points, y, robust_weights);
+            if (range == 0) {
+                break;
             }
 
-            auto& abs_dev = workspaces.front(); // just using the first workspace as a spare buffer, not using any values therein.
-            auto cmad = compute_mad(num_points, y, fitted, freq_weights, totalweight, abs_dev, residual_permutation);
-            cmad *= 6;
-            cmad = std::max(cmad, min_threshold); // avoid difficulties from numerical precision when all residuals are theoretically zero.
-            populate_robust_weights(abs_dev, cmad, robust_weights);
+            /* We redefine the minimum threshold from the non-outlier
+             * points. This ensures that a massive outlier at the start
+             * does not continue to inflate the 'min_threshold', even after
+             * it has been rendered irrelevant by the robustness weighting.
+             */
+            min_threshold = range * threshold_multiplier;
         }
+
+        auto& abs_dev = workspaces.front(); // just using the first workspace as a spare buffer, not using any values therein.
+        auto cmad = compute_mad(num_points, y, fitted, freq_weights, totalweight, abs_dev, residual_permutation);
+        cmad *= 6;
+        cmad = std::max(cmad, min_threshold); // avoid difficulties from numerical precision when all residuals are theoretically zero.
+        populate_robust_weights(abs_dev, cmad, robust_weights);
+        ++it;
     }
 
     return;

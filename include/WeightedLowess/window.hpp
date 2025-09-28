@@ -41,7 +41,7 @@ namespace internal {
  * degree of approximation in the final lowess calculation).
  */
 template<typename Data_>
-Data_ derive_delta(const std::size_t num_anchors, const std::size_t num_points, const Data_* x) {
+Data_ derive_delta(const std::size_t num_anchors, const std::size_t num_points, const Data_* const x) {
     const auto points_m1 = num_points - 1;
     auto diffs = sanisizer::create<std::vector<Data_> >(points_m1);
     for (decltype(I(points_m1)) i = 0; i < points_m1; ++i) {
@@ -113,8 +113,8 @@ std::vector<Window<Data_> > find_limits(
     const std::vector<std::size_t>& anchors, 
     const Data_ span_weight,
     const std::size_t num_points,
-    const Data_* x, 
-    const Data_* weights,
+    const Data_* const x, 
+    const Data_* const weights,
     const Data_ min_width,
     int nthreads = 1)
 {
@@ -264,7 +264,7 @@ struct PrecomputedWindows {
  * and `Options::minimum_width`.
  */
 template<typename Data_>
-PrecomputedWindows<Data_> define_windows(const std::size_t num_points, const Data_* x, const Options<Data_>& opt) {
+PrecomputedWindows<Data_> define_windows(const std::size_t num_points, const Data_* const x, const Options<Data_>& opt) {
     PrecomputedWindows<Data_> output;
 
     if (num_points) {

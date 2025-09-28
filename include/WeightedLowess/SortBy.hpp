@@ -41,7 +41,7 @@ public:
      * @param[in] x Pointer to an array of sortable values, typically x-values for the dataset.
      */
     template<typename Sortable_>
-    SortBy(const std::size_t num_points, const Sortable_* x) {
+    SortBy(const std::size_t num_points, const Sortable_* const x) {
         set(num_points, x);
     }
 
@@ -57,7 +57,7 @@ public:
      * @param[in] x Pointer to an array of sortable values, typically x-values for the dataset.
      */
     template<typename Sortable_>
-    void set(const std::size_t num_points, const Sortable_* x) {
+    void set(const std::size_t num_points, const Sortable_* const x) {
         if (num_points) {
             my_sorted = std::is_sorted(x, x + num_points);
             if (!my_sorted) {
@@ -70,7 +70,7 @@ public:
 
 private:
     template<typename AllData_, typename Used_>
-    void permute_raw(AllData_& data, Used_* work) const {
+    void permute_raw(AllData_& data, Used_* const work) const {
         if (my_sorted) {
             return;
         }
@@ -111,7 +111,7 @@ public:
      * This can recycled across `permute()` and `unpermute()` calls.
      */
     template<typename Data_, typename Used_>
-    void permute(Data_* data, Used_* work) const {
+    void permute(Data_* const data, Used_* const work) const {
         permute_raw(data, work);
     }
 
@@ -124,7 +124,7 @@ public:
      * This can recycled across `permute()` and `unpermute()` calls.
      */
     template<typename Data_, typename Used_>
-    void permute(std::initializer_list<Data_> data, Used_* work) const {
+    void permute(std::initializer_list<Data_* const> data, Used_* const work) const {
         permute_raw(data, work);
     }
 
@@ -137,7 +137,7 @@ public:
      * This can recycled across `permute()` and `unpermute()` calls.
      */
     template<typename DataPointers_, typename Used_>
-    void permute(DataPointers_ data, Used_* work) const {
+    void permute(DataPointers_ data, Used_* const work) const {
         permute_raw(data, work);
     }
 
@@ -150,7 +150,7 @@ public:
      * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
      */
     template<typename Data_, typename Used_>
-    void permute(Data_* data, std::vector<Used_>& work) const {
+    void permute(Data_* const data, std::vector<Used_>& work) const {
         const auto num_points = my_permutation.size();
         sanisizer::resize(work, num_points);
         permute(data, work.data());
@@ -165,7 +165,7 @@ public:
      * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
      */
     template<typename Data_, typename Used_>
-    void permute(std::initializer_list<Data_> data, std::vector<Used_>& work) const {
+    void permute(std::initializer_list<Data_* const> data, std::vector<Used_>& work) const {
         const auto num_points = my_permutation.size();
         sanisizer::resize(work, num_points);
         permute(data, work.data());
@@ -188,7 +188,7 @@ public:
 
 private:
     template<typename AllData_, typename Used_>
-    void unpermute_raw(AllData_& data, Used_* work) const {
+    void unpermute_raw(AllData_& data, Used_* const work) const {
         if (my_sorted) {
             return;
         }
@@ -207,7 +207,7 @@ private:
                 if constexpr(std::is_pointer<AllData_>::value) {
                     std::swap(data[i], data[replacement]);
                 } else {
-                    for (auto d : data) {
+                    for (const auto d : data) {
                         std::swap(d[i], d[replacement]);
                     }
                 }
@@ -226,7 +226,7 @@ public:
      * This can be recycled across `permute()` and `unpermute()` calls.
      */
     template<typename Data_, typename Used_>
-    void unpermute(Data_* data, Used_* work) const {
+    void unpermute(Data_* const data, Used_* const work) const {
         unpermute_raw(data, work);
     }
 
@@ -238,7 +238,7 @@ public:
      * This can be recycled across `permute()` and `unpermute()` calls.
      */
     template<typename Data_, typename Used_>
-    void unpermute(std::initializer_list<Data_*> data, Used_* work) const {
+    void unpermute(std::initializer_list<Data_* const> data, Used_* const work) const {
         unpermute_raw(data, work);
     }
 
@@ -250,7 +250,7 @@ public:
      * This can be recycled across `permute()` and `unpermute()` calls.
      */
     template<typename DataPointers_, typename Used_>
-    void unpermute(DataPointers_ data, Used_* work) const {
+    void unpermute(DataPointers_ data, Used_* const work) const {
         unpermute_raw(data, work);
     }
 
@@ -262,7 +262,7 @@ public:
      * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
      */
     template<typename Data_, typename Used_>
-    void unpermute(Data_* data, std::vector<Used_>& work) const {
+    void unpermute(Data_* const data, std::vector<Used_>& work) const {
         const auto num_points = my_permutation.size();
         sanisizer::resize(work, num_points);
         unpermute(data, work.data());
@@ -276,7 +276,7 @@ public:
      * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
      */
     template<typename Data_, typename Used_>
-    void unpermute(std::initializer_list<Data_*> data, std::vector<Used_>& work) const {
+    void unpermute(std::initializer_list<Data_* const> data, std::vector<Used_>& work) const {
         const auto num_points = my_permutation.size();
         sanisizer::resize(work, num_points);
         unpermute(data, work.data());

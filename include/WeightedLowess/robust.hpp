@@ -18,13 +18,13 @@ namespace internal {
 template<typename Data_>
 Data_ compute_mad(
     const std::size_t num_points, 
-    const Data_* y, 
-    const Data_* fitted, 
-    const Data_* freq_weights, 
+    const Data_* const y, 
+    const Data_* const fitted, 
+    const Data_* const freq_weights, 
     Data_ total_weight, 
     std::vector<Data_>& abs_dev,
-    std::vector<std::size_t>& permutation)
-{
+    std::vector<std::size_t>& permutation
+) {
     sanisizer::resize(abs_dev, num_points); // resizing here for safety, even though it would be more performant to resize once outside the robustness loop in fit().
     for (decltype(I(num_points)) i = 0; i < num_points; ++i) {
         abs_dev[i] = std::abs(y[i] - fitted[i]);
@@ -52,7 +52,7 @@ Data_ compute_mad(
 }
 
 template<typename Data_>
-Data_ compute_robust_range(const std::size_t num_points, const Data_* y, const Data_* robust_weights) {
+Data_ compute_robust_range(const std::size_t num_points, const Data_* const y, const Data_* const robust_weights) {
     Data_ first = 0;
     decltype(I(num_points)) i = 0;
     for (; i < num_points; ++i) {
@@ -81,7 +81,7 @@ Data_ square (const Data_ x) {
 }
 
 template<typename Data_>
-void populate_robust_weights(const std::vector<Data_>& abs_dev, const Data_ threshold, Data_* robust_weights) {
+void populate_robust_weights(const std::vector<Data_>& abs_dev, const Data_ threshold, Data_* const robust_weights) {
     const auto num_points = abs_dev.size();
     for (decltype(I(num_points)) i = 0; i < num_points; ++i) {
         const auto ad = abs_dev[i];

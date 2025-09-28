@@ -37,7 +37,15 @@ namespace WeightedLowess {
  * Note that only a subset of options are actually used in this overload, namely `Options::weights` and `Options::iterations`.
  */
 template<typename Data_>
-void compute(const std::size_t num_points, const Data_* x, const PrecomputedWindows<Data_>& windows, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
+void compute(
+    const std::size_t num_points,
+    const Data_* const x,
+    const PrecomputedWindows<Data_>& windows,
+    const Data_* const y,
+    Data_* const fitted,
+    Data_* robust_weights,
+    const Options<Data_>& opt
+) {
     std::vector<Data_> rbuffer;
     if (robust_weights == NULL) {
         sanisizer::resize(rbuffer, num_points);
@@ -63,8 +71,15 @@ void compute(const std::size_t num_points, const Data_* x, const PrecomputedWind
  * @param opt Further options.
  */
 template<typename Data_>
-void compute(const std::size_t num_points, const Data_* x, const Data_* y, Data_* fitted, Data_* robust_weights, const Options<Data_>& opt) {
-    auto win = define_windows(num_points, x, opt);
+void compute(
+    const std::size_t num_points,
+    const Data_* const x,
+    const Data_* const y,
+    Data_* const fitted,
+    Data_* const robust_weights,
+    const Options<Data_>& opt
+) {
+    const auto win = define_windows(num_points, x, opt);
     compute(num_points, x, win, y, fitted, robust_weights, opt);
 }
 
@@ -109,7 +124,12 @@ struct Results {
  * @return A `Results` object containing the fitted values and robustness weights.
  */
 template<typename Data_>
-Results<Data_> compute(const std::size_t num_points, const Data_* x, const Data_* y, const Options<Data_>& opt) {
+Results<Data_> compute(
+    const std::size_t num_points,
+    const Data_* const x,
+    const Data_* const y,
+    const Options<Data_>& opt
+) {
     Results<Data_> output(num_points);
     compute(num_points, x, y, output.fitted.data(), output.robust_weights.data(), opt);
     return output;

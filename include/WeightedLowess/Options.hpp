@@ -75,7 +75,7 @@ struct Options {
      * Each element should be a positive weight for the corresponding point in `x` and `y`.
      * Alternatively, this may be `NULL` in which case all points are equally weighted.
      */
-    Data_* weights = NULL;
+    const Data_* weights = NULL;
 
     /** 
      * Whether the weights (if provided in `Options::weights`) should be interpreted as frequency weights.
