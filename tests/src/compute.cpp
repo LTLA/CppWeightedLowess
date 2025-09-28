@@ -2,10 +2,13 @@
 #include "WeightedLowess/compute.hpp"
 #include "utils.h"
 
-TEST(BasicTests, Exact) {
+class ComputeTest : public ::testing::TestWithParam<int> {};
+
+TEST_P(ComputeTest, Exact) {
     auto simulated = simulate(1000);
     const auto& x = simulated.first;
     WeightedLowess::Options opt;
+    opt.anchors = GetParam(); // should work under all numbers of anchors, as it's a straight line.
 
     // y = x
     auto res = WeightedLowess::compute(x.size(), x.data(), x.data(), opt);
@@ -28,7 +31,103 @@ TEST(BasicTests, Exact) {
     compare_almost_equal(res.fitted, alt);
 }
 
-TEST(BasicTests, Unsorted) {
+TEST_P(ComputeTest, Weights) {
+    auto simulated = simulate(888);
+    const auto& x = simulated.first;
+    const auto& y = simulated.second;
+
+    WeightedLowess::Options opt;
+    opt.anchors = GetParam();
+
+    // No effect when dealing with a straight line.
+    {
+        auto res = WeightedLowess::compute(x.size(), x.data(), x.data(), opt);
+
+        std::vector<double> mock_weights(x.size());
+        std::iota(mock_weights.begin(), mock_weights.end(), 0.1);
+
+        auto wopt = opt;
+        wopt.weights = mock_weights.data();
+        auto wres = WeightedLowess::compute(x.size(), x.data(), x.data(), wopt); 
+        compare_almost_equal(res.fitted, wres.fitted);
+    }
+
+    // No effect when weights are all equal.
+    {
+        auto res = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
+
+        std::vector<double> mock_weights(x.size(), 1);
+        auto wopt = opt;
+        wopt.weights = mock_weights.data(); 
+        auto wres = WeightedLowess::compute(x.size(), x.data(), y.data(), wopt); 
+        compare_almost_equal(res.fitted, wres.fitted);
+    }
+
+    // Weighting has a frequency interpretation.
+    {
+        std::vector<double> fweights(x.size());
+        std::vector<double> expanded_x, expanded_y;
+        for (size_t i = 0; i < x.size(); ++i) {
+            fweights[i] = std::max(1.0, std::round(x[i] * 5));
+            expanded_x.insert(expanded_x.end(), fweights[i], x[i]);
+            expanded_y.insert(expanded_y.end(), fweights[i], y[i]);
+        }
+
+        auto eres = WeightedLowess::compute(expanded_x.size(), expanded_x.data(), expanded_y.data(), opt);
+
+        auto wopt = opt;
+        wopt.weights = fweights.data();
+        auto wres = WeightedLowess::compute(x.size(), x.data(), y.data(), wopt); 
+
+        std::vector<double> ref;
+        for (size_t i =0; i < x.size(); ++i) { 
+            ref.insert(ref.end(), fweights[i], wres.fitted[i]);
+        }
+        compare_almost_equal(ref, eres.fitted);
+    }
+}
+
+TEST_P(ComputeTest, Robustness) {
+    auto simulated = simulate(500);
+    const auto& x = simulated.first;
+    const auto& y = simulated.second;
+
+    WeightedLowess::Options opt;
+    opt.anchors = GetParam();
+
+    // Spiking in a crazy thing.
+    {
+        std::vector<double> x1 = x, y1 = y;
+        x1.insert(x1.begin() + 25, x[25]); // injecting a value to remain sorted.
+        y1.insert(y1.begin() + 25, 100);
+
+        auto wres = WeightedLowess::compute(x1.size(), x1.data(), y1.data(), opt);
+        EXPECT_EQ(wres.robust_weights[25], 0);
+    }
+
+    // Same results for a straight line.
+    {
+        std::vector<double> x1 = x;
+        x1.insert(x1.begin() + 10, (x[9] + x[10]) / 2); // injecting a value to remain sorted.
+        auto x2 = x1;
+        x2[10] = 100;
+
+        auto ref = WeightedLowess::compute(x.size(), x.data(), x.data(), opt);
+        auto res = WeightedLowess::compute(x1.size(), x1.data(), x2.data(), opt);
+
+        std::vector<double> obsfitted = res.fitted;
+        obsfitted.erase(obsfitted.begin() + 10);
+        compare_almost_equal(ref.fitted, obsfitted);
+    }
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    Compute,
+    ComputeTest,
+    ::testing::Values(10, 50, 200, 1000)
+);
+
+TEST(Compute, Unsorted) {
     std::vector<double> unsorted(10);
     unsorted[0] = 1;
     WeightedLowess::Options opt;
@@ -43,122 +142,40 @@ TEST(BasicTests, Unsorted) {
     EXPECT_TRUE(msg.find("sorted") != std::string::npos);
 }
 
-TEST(BasicTests, Interpolation) {
-    auto simulated = simulate(1001);
-    const auto& x = simulated.first;
+TEST(Compute, TiedInterpolation) {
+    // Basically getting some coverage of the interpolation when the anchors
+    // have tied coordinates. This requires manual specification of the anchors
+    // as define_anchors() would never give us tied anchors.
+    std::vector<double> x { 0., 0., 0., 0., 0., 0. };
+    std::vector<double> y { 1., 2., 3., 4., 5., 6. };
 
-    // y = 2x + 1
-    std::vector<double> alt(x);
-    for (auto& i : alt) {
-        i = 2*i + 1;
-    }
+    WeightedLowess::PrecomputedWindows<double> win;
+    win.anchors.push_back(0);
+    win.anchors.push_back(x.size() - 1);
+    win.freq_weights = NULL;
+    win.total_weight = x.size();
+
+    win.limits.resize(2);
+    win.limits.front().left = 0;
+    win.limits.front().right = 2;
+    win.limits.front().distance = 0;
+    win.limits.back().left = 3;
+    win.limits.back().right = 5;
+    win.limits.back().distance = 0;
 
     WeightedLowess::Options opt;
-    auto res = WeightedLowess::compute(x.size(), x.data(), alt.data(), opt);
+    opt.iterations = 0;
+    std::vector<double> fitted(x.size());
+    WeightedLowess::compute(x.size(), x.data(), win, y.data(), fitted.data(), static_cast<double*>(NULL), opt);
 
-    opt.anchors = 10;
-    auto res2 = WeightedLowess::compute(x.size(), x.data(), alt.data(), opt);
-    compare_almost_equal(res.fitted, res2.fitted);
-
-    // Only two points; start and end.
-    opt.anchors = 2;
-    res2 = WeightedLowess::compute(x.size(), x.data(), alt.data(), opt);
-    compare_almost_equal(res.fitted, res2.fitted);
-
-    // Hell, trying only one point; the start!
-    opt.anchors = 1;
-    res2 = WeightedLowess::compute(x.size(), x.data(), alt.data(), opt);
-    compare_almost_equal(res.fitted, res2.fitted);
+    EXPECT_FLOAT_EQ(fitted[0], 2.0);
+    for (int i = 1; i < 4; ++i) {
+        EXPECT_FLOAT_EQ(fitted[i], 3.5);
+    }
+    EXPECT_FLOAT_EQ(fitted[5], 5.0);
 }
 
-TEST(BasicTests, Weights) {
-    auto simulated = simulate(1002);
-    const auto& x = simulated.first;
-    const auto& y = simulated.second;
-
-    // No effect when dealing with a straight line.
-    {
-        WeightedLowess::Options opt;
-        auto res = WeightedLowess::compute(x.size(), x.data(), x.data(), opt);
-
-        std::vector<double> mock_weights(x.size());
-        std::iota(mock_weights.begin(), mock_weights.end(), 0.1);
-        opt.weights = mock_weights.data();
-
-        auto wres = WeightedLowess::compute(x.size(), x.data(), x.data(), opt); 
-        compare_almost_equal(res.fitted, wres.fitted);
-    }
-
-    // No effect when weights are all equal.
-    {
-        WeightedLowess::Options opt;
-        auto res = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
-
-        std::vector<double> mock_weights(x.size(), 1);
-        opt.weights = mock_weights.data(); 
-
-        auto wres = WeightedLowess::compute(x.size(), x.data(), y.data(), opt); 
-        compare_almost_equal(res.fitted, wres.fitted);
-    }
-
-    // Weighting has a frequency interpretation.
-    {
-        std::vector<double> fweights(x.size());
-        std::vector<double> expanded_x, expanded_y;
-        for (size_t i = 0; i < x.size(); ++i) {
-            fweights[i] = std::max(1.0, std::round(x[i] * 5));
-            expanded_x.insert(expanded_x.end(), fweights[i], x[i]);
-            expanded_y.insert(expanded_y.end(), fweights[i], y[i]);
-        }
-
-        WeightedLowess::Options opt;
-        auto eres = WeightedLowess::compute(expanded_x.size(), expanded_x.data(), expanded_y.data(), opt);
-
-        opt.weights = fweights.data();
-        auto wres = WeightedLowess::compute(x.size(), x.data(), y.data(), opt); 
-
-        std::vector<double> ref;
-        for (size_t i =0; i < x.size(); ++i) { 
-            ref.insert(ref.end(), fweights[i], wres.fitted[i]);
-        }
-        compare_almost_equal(ref, eres.fitted);
-    }
-}
-
-TEST(BasicTests, Robustness) {
-    auto simulated = simulate(1003);
-    const auto& x = simulated.first;
-    const auto& y = simulated.second;
-
-    // Spiking in a crazy thing.
-    {
-        std::vector<double> x1 = x, y1 = y;
-        x1.insert(x1.begin() + 25, x[25]); // injecting a value to remain sorted.
-        y1.insert(y1.begin() + 25, 100);
-
-        WeightedLowess::Options opt;
-        auto wres = WeightedLowess::compute(x1.size(), x1.data(), y1.data(), opt);
-        EXPECT_EQ(wres.robust_weights[25], 0);
-    }
-
-    // Same results for a straight line.
-    {
-        std::vector<double> x1 = x;
-        x1.insert(x1.begin() + 10, (x[9] + x[10]) / 2); // injecting a value to remain sorted.
-        auto x2 = x1;
-        x2[10] = 100;
-
-        WeightedLowess::Options opt;
-        auto ref = WeightedLowess::compute(x.size(), x.data(), x.data(), opt);
-        auto wres = WeightedLowess::compute(x1.size(), x1.data(), x2.data(), opt);
-
-        std::vector<double> obsfitted = wres.fitted;
-        obsfitted.erase(obsfitted.begin() + 10);
-        compare_almost_equal(ref.fitted, obsfitted);
-    }
-}
-
-TEST(BasicTests, QuitEarly) {
+TEST(ComputeTests, QuitEarly) {
     auto simulated = simulate(1004);
     const auto& x = simulated.first;
     std::vector<double> y(x.size(), 101);
@@ -193,7 +210,7 @@ TEST(BasicTests, QuitEarly) {
     }
 }
 
-TEST(BasicTests, Empty) {
+TEST(ComputeTests, Empty) {
     WeightedLowess::Options opt;
     std::vector<double> x, y;
     auto res = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);

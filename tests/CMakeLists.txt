@@ -41,7 +41,7 @@ endmacro()
 
 add_executable(
     libtest
-    src/basic.cpp
+    src/compute.cpp
     src/ties.cpp
     src/options.cpp
     src/SortBy.cpp

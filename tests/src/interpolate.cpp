@@ -105,27 +105,38 @@ TEST(Interpolate, OutOfBounds) {
 }
 
 TEST(Interpolate, Ties) {
-    constexpr int N = 100;
-    auto simulated = simulate(N);
+    // Basically getting some coverage of the interpolation when the anchors
+    // have tied coordinates. This requires manual specification of the anchors
+    // as define_anchors() would never give us tied anchors.
+    std::vector<double> x { 0., 0., 0., 0., 0., 0. };
+    std::vector<double> y { 1., 2., 3., 4., 5., 6. };
 
-    // Duplicating each element to get some coverage on the averaging.
-    // Duplicates are shifted up and down to introduce some differences.
-    std::vector<double> x2, y2;
-    for (int i = 0; i < N; ++i) {
-        x2.insert(x2.end(), 2, simulated.first[i]);
-        y2.push_back(simulated.second[i] - 0.01);
-        y2.push_back(simulated.second[i] + 0.01);
-    }
+    WeightedLowess::PrecomputedWindows<double> win;
+    win.anchors.push_back(0);
+    win.anchors.push_back(x.size() - 1);
+    win.freq_weights = NULL;
+    win.total_weight = x.size();
+
+    win.limits.resize(2);
+    win.limits.front().left = 0;
+    win.limits.front().right = 2;
+    win.limits.front().distance = 0;
+    win.limits.back().left = 3;
+    win.limits.back().right = 5;
+    win.limits.back().distance = 0;
 
     WeightedLowess::Options opt;
-    opt.anchors = x2.size();
-    auto res = WeightedLowess::compute(x2.size(), x2.data(), y2.data(), opt);
+    opt.iterations = 0;
+    std::vector<double> fitted(x.size());
+    WeightedLowess::compute(x.size(), x.data(), win, y.data(), fitted.data(), static_cast<double*>(NULL), opt);
 
-    const auto win = WeightedLowess::define_windows(x2.size(), x2.data(), opt);
-    std::vector<double> fitted(x2.size());
-    WeightedLowess::compute(x2.size(), x2.data(), win, y2.data(), fitted.data(), static_cast<double*>(NULL), opt);
+    std::vector<double> interpolated(x.size());
+    WeightedLowess::interpolate(x.data(), win, fitted.data(), x.size(), x.data(), interpolated.data(), 1);
 
-    std::vector<double> interpolated(x2.size());
-    WeightedLowess::interpolate(x2.data(), win, fitted.data(), x2.size(), x2.data(), interpolated.data(), 1);
-    compare_almost_equal(interpolated, fitted);
+    // Slightly different from compute()'s output as we don't know which points
+    // are the anchors and we don't treat the points differently if they have
+    // the same x-coordinates as the anchors.
+    for (auto ix : interpolated) {
+        EXPECT_FLOAT_EQ(ix, 3.5);
+    }
 }

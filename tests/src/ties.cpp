@@ -10,17 +10,17 @@ TEST(TiesTest, DuplicatedTies) {
     WeightedLowess::Options opt;
     auto res = WeightedLowess::compute(x.size(), x.data(), y.data(), opt);
 
-    // Every element is duplicated evenly, so the fit should be the same.
+    // Every element is duplicated exactly, so the fit should be the same.
     std::vector<double> x2, y2;
-    for (size_t i = 0; i < x.size(); ++i) {
+    for (std::size_t i = 0, end = x.size(); i < end; ++i) {
         x2.insert(x2.end(), 2, x[i]);
         y2.insert(y2.end(), 2, y[i]);
     }
     auto res2 = WeightedLowess::compute(x2.size(), x2.data(), y2.data(), opt);
 
     std::vector<double> obsfit;
-    for (size_t i = 0; i < res.fitted.size(); ++i) {
-        obsfit.insert(obsfit.end(), 2, res.fitted[i]);
+    for (auto r : res.fitted) {
+        obsfit.insert(obsfit.end(), 2, r);
     }
     compare_almost_equal(obsfit, res2.fitted);
 }
