@@ -226,7 +226,7 @@ std::vector<Window<Data_> > find_limits(
 /**
  * @brief Precomputed windows for LOWESS smoothing.
  *
- * @tparam Data_ Floating-point type for the data.
+ * @tparam Data_ Floating-point type of the data.
  *
  * Instances of this class are typically created by `define_windows()` prior to `compute()`.
  */
@@ -245,13 +245,13 @@ struct PrecomputedWindows {
 };
 
 /**
- * Precompute the window locations prior to fitting of different `y` via the corresponding `compute()` overload.
- * This avoids wasting time in unnecessarily recomputing the same windows for each `compute()` call.
+ * Identify anchor points and precompute the associated windows prior to LOWESS smoothing via `compute()`. 
+ * This avoids wasting time in unnecessarily recomputing the same windows for the same `x` but different `y` in multiple `compute()` calls.
  *
- * @tparam Data_ Floating-point type for the data.
+ * @tparam Data_ Floating-point type of the data.
  * 
  * @param num_points Number of points.
- * @param[in] x Pointer to an array of `num_points` x-values, sorted in increasing order.
+ * @param[in] x Pointer to an array of `num_points` x-coordinates, sorted in increasing order.
  * (Consider using `SortBy` to permute the array in-place before calling this function.)
  * @param opt Further options.
  * Only a subset of options are actually used here, namely

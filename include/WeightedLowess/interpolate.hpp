@@ -34,12 +34,13 @@ struct AssignedSegments {
 
 /**
  * Assign points-to-be-interpolated to their corresponding segments between anchors, for use in `interpolate()`.
+ * Segments are defined as the line between two adjacent anchors, to be used for linear interpolation of any intervening points.
  *
  * @tparam Data_ Floating-point type of the data.
  *
  * @param[in] x_fit Pointer to an array of x-coordinates for the fitted trend from `compute()`.
  * This should be sorted in increasing order.
- * @param windows_fit Precomputed windows for anchor pointers, created by calling `define_windows()` on `x_fit`.
+ * @param windows_fit Precomputed windows for anchor points, created by calling `define_windows()` on `x_fit`.
  * @param num_points_out Number of points to be interpolated.
  * @param[in] x_out Pointer to an array of x-coordinates of the points to be interpolated.
  * This should be sorted in increasing order and have length equal to `num_points_out`.
@@ -103,7 +104,7 @@ inline std::pair<std::size_t, std::size_t> get_interpolation_boundaries(const As
 /**
  * Interpolate the fitted values for a set of points, based on a pre-existing trend fitted by `compute()`.
  *
- * In `compute()`, we calculate fitted values exactly for anchor points and then interpolate the fitted values for all intervening points.
+ * In `compute()`, the LOWESS algorithm calculates fitted values exactly for anchor points and then interpolates the fitted values for all intervening points.
  * This function applies the same interpolation to a separate set of points based only on their x-coordinates.
  *
  * @tparam Data_ Floating-point type of the data.

@@ -47,7 +47,7 @@ struct Options {
      * A higher number of anchor points improves accuracy at the cost of computational work.
      *
      * Note that this number is only used as a guideline by our LOWESS implementation.
-     * The actual number of selected anchors depends on the distribution of x-values; in addition, the first and last points are always used as the anchors,.
+     * The actual number of selected anchors depends on the distribution of x-coordinates; in addition, the first and last points are always used as the anchors,.
      * If the specified number of anchors is greater than the number of points, LOWESS smoothing is performed directly for each point.
      *
      * This setting is ignored if `Options::delta` is non-negative.
@@ -66,7 +66,7 @@ struct Options {
      * Seeds are identified greedily, by walking through the ordered x-coordinate values and marking a point `y` as a anchor if there are no anchors in `[y - delta, y]`.
      * If set to zero, all unique points are used as anchors.
      * If set to a negative value, an appropriate delta is determined from the number of points specified in `set_points()`.
-     * Otherwise, the chosen `delta` should have similar magnitude to the range of the x-values.
+     * Otherwise, the chosen `delta` should have similar magnitude to the range of the x-coordinates.
      */
     Data_ delta = -1;
 

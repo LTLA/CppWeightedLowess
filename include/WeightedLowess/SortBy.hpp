@@ -23,10 +23,10 @@ namespace WeightedLowess {
 /**
  * @brief Utility class for sorting on a covariate.
  *
- * This is typically used to ensure that x-values are sorted prior to calling `compute()`.
- * The idea is to create a permutation vector from the x-values to sort them in ascending order;
- * use `permute()` to apply that permutation to the various arrays of x-values, y-values and weights (if applicable);
- * calculate the fitted values from the permuted arrays with `compute()`, now that the x-values are sorted;
+ * This is typically used to ensure that x-coordinates are sorted prior to calling `compute()`.
+ * The idea is to create a permutation vector from the x-coordinates to sort them in ascending order;
+ * use `permute()` to apply that permutation to the various arrays of x-coordinates, y-coordinates and weights (if applicable);
+ * calculate the fitted values from the permuted arrays with `compute()`, now that the x-coordinates are sorted;
  * and then use `unpermute()` on the results of the fit, to obtain fitted values for the points in their original (pre-sort) order.
  */
 class SortBy {
@@ -38,7 +38,7 @@ public:
     /**
      * @tparam Sortable_ Sortable type.
      * @param num_points Number of points.
-     * @param[in] x Pointer to an array of sortable values, typically x-values for the dataset.
+     * @param[in] x Pointer to an array of sortable values, typically x-coordinates for the dataset.
      */
     template<typename Sortable_>
     SortBy(const std::size_t num_points, const Sortable_* const x) {
@@ -54,7 +54,7 @@ public:
     /**
      * @tparam Sortable_ Sortable type.
      * @param num_points Number of points.
-     * @param[in] x Pointer to an array of sortable values, typically x-values for the dataset.
+     * @param[in] x Pointer to an array of sortable values, typically x-coordinates for the dataset.
      */
     template<typename Sortable_>
     void set(const std::size_t num_points, const Sortable_* const x) {
@@ -104,7 +104,7 @@ private:
 public:
     /**
      * @tparam Data_ Any data type.
-     * @tparam Used_ Boolean value for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data Pointer to an array of length `num_points` to be permuted in-place,
      * in the same manner that `x` (from the constructor) would be permuted for sorting.
      * @param[in] work Pointer to an array of length `num_points`, to use as the workspace.
@@ -117,7 +117,7 @@ public:
 
     /**
      * @tparam Data_ Any data type.
-     * @tparam Used_ Boolean value for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place,
      * in the same manner that `x` (from the constructor) would be permuted for sorting.
      * @param[in] work Pointer to an array of length `num_points`, to use as the workspace.
@@ -130,7 +130,7 @@ public:
 
     /**
      * @tparam DataPointers_ Iterable container of pointers.
-     * @tparam Used_ Boolean value for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place,
      * in the same manner that `x` (from the constructor) would be permuted for sorting.
      * @param[in] work Pointer to an array of length `num_points`, to use as the workspace.
@@ -143,7 +143,7 @@ public:
 
     /**
      * @tparam Data_ Any data type.
-     * @tparam Used_ Boolean value for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data Pointer to an array of length `num_points` to be permuted in-place,
      * in the same manner that `x` (from the constructor) would be permuted for sorting.
      * @param work Workspace.
@@ -158,7 +158,7 @@ public:
 
     /**
      * @tparam Data_ Any data type.
-     * @tparam Used_ Boolean value for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place,
      * in the same manner that `x` (from the constructor) would be permuted for sorting.
      * @param work Workspace.
@@ -173,7 +173,7 @@ public:
 
     /**
      * @tparam DataPointers_ Iterable container of pointers.
-     * @tparam Used_ Boolean value for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place,
      * in the same manner that `x` (from the constructor) would be permuted for sorting.
      * @param work Workspace.
@@ -220,7 +220,7 @@ private:
 public:
     /**
      * @tparam Data_ Any data type.
-     * @tparam Used_ Boolean type for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data Pointer to an array of length `num_points` to be permuted in-place to reverse the effect of `permute()`.
      * @param[in] work Pointer to an array of length `num_points`.
      * This can be recycled across `permute()` and `unpermute()` calls.
@@ -232,7 +232,7 @@ public:
 
     /**
      * @tparam Data_ Any data type.
-     * @tparam Used_ Boolean type for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place to reverse the effect of `permute()`.
      * @param[in] work Pointer to an array of length `num_points`.
      * This can be recycled across `permute()` and `unpermute()` calls.
@@ -244,7 +244,7 @@ public:
 
     /**
      * @tparam DataPointers_ Iterable container of pointers.
-     * @tparam Used_ Boolean type for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place to reverse the effect of `permute()`.
      * @param[in] work Pointer to an array of length `num_points`.
      * This can be recycled across `permute()` and `unpermute()` calls.
@@ -256,7 +256,7 @@ public:
 
     /**
      * @tparam Data_ Any data type.
-     * @tparam Used_ Boolean type for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data Pointer to an array of length `num_points` to be permuted in-place to reverse the effect of `permute()`.
      * @param work Workspace.
      * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
@@ -270,7 +270,7 @@ public:
 
     /**
      * @tparam Data_ Any data type.
-     * @tparam Used_ Boolean type for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place to reverse the effect of `permute()`.
      * @param work Workspace.
      * This can be empty and will be recycled across `permute()` and `unpermute()` calls.
@@ -284,7 +284,7 @@ public:
 
     /**
      * @tparam DataPointers_ Iterable container of pointers.
-     * @tparam Used_ Boolean type for the workspace.
+     * @tparam Used_ Boolean type of the workspace.
      * @param[in,out] data One or more pointers to arrays of length `num_points` to be permuted in-place to reverse the effect of `permute()`.
      * @param work Workspace.
      * This can be empty and will be recycled across `permute()` and `unpermute()` calls.

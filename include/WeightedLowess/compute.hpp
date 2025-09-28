@@ -18,17 +18,24 @@
 namespace WeightedLowess {
 
 /**
- * Run the LOWESS smoother with precomputed windows. 
- * This avoids redundant window calculations when re-using the same x-coordinates across multiple y-coordinate vectors.
+ * Run the LOWESS algorithm for non-parametric smoothing. 
  *
- * @tparam Data_ Floating-point type for the data.
+ * First, we identify anchor points that have (roughly) evenly-spaced x-coordinates.
+ * For each anchor point, we identify a window of neighboring points and compute a weight for each neighbor based on its distance to the anchor.
+ * We perform a weighted linear regression to obtain a fitted value for the anchor.
+ * For all non-anchor points, we compute a fitted value via linear interpolation of the surrounding anchor points.
+ * We then compute robustness weights for each point based on their deviation from the fitted value;
+ * the regressions are then repeated with robustness weights for the specified number of iterations.
+ *
+ * @tparam Data_ Floating-point type of the data.
  *
  * @param num_points Number of points.
- * @param[in] x Pointer to an array of `num_points` x-values, sorted in increasing order.
+ * @param[in] x Pointer to an array of `num_points` x-coordinates, sorted in increasing order.
  * (Consider using `SortBy` to permute `x` in-place.
- * Note that the same permutation should be applied to `y`, if present, and weights in `Options::weights`.)
- * @param windows Precomputed windows, created by calling `define_windows()` with `num_points`, `x` and `opt`.
- * @param[in] y Pointer to an array of `num_points` y-values. 
+ * Note that the same permutation should be applied to `y` and, if present, weights in `Options::weights`.)
+ * @param windows Precomputed windows around the anchor points, created by calling `define_windows()` with `num_points`, `x` and `opt`.
+ * This can be re-used across multiple calls to `compute()` with different `y`.
+ * @param[in] y Pointer to an array of `num_points` y-coordinates. 
  * @param[out] fitted Pointer to an output array of length `num_points`, in which the fitted values of the smoother can be stored.
  * @param[out] robust_weights Pointer to an output array of length `num_points`, in which the robustness weights can be stored.
  * This may be `NULL` if the robustness weights are not needed.
@@ -55,16 +62,15 @@ void compute(
 }
 
 /**
- * LOWESS is a simple, efficient, general-purpose non-parametric smoothing algorithm. 
- * It perform weighted linear regressions on subsets of neighboring points, yielding a smooth curve fit to the data.
+ * Overload of `compute()` that computes the windows around each anchor point.
  *
- * @tparam Data_ Floating-point type for the data.
+ * @tparam Data_ Floating-point type of the data.
  *
  * @param num_points Number of points.
- * @param[in] x Pointer to an array of `num_points` x-values, sorted in increasing order.
+ * @param[in] x Pointer to an array of `num_points` x-coordinates, sorted in increasing order.
  * (Consider using `SortBy` to permute `x` in-place.
  * Note that the same permutation should be applied to `y` and, if present, weights in `Options::weights`.)
- * @param[in] y Pointer to an array of `num_points` y-values.
+ * @param[in] y Pointer to an array of `num_points` y-coordinates.
  * @param[out] fitted Pointer to an output array of length `num_points`, in which the fitted values of the smoother can be stored.
  * @param[out] robust_weights Pointer to an output array of length `num_points`, in which the robustness weights can be stored.
  * This may be `NULL` if the robustness weights are not needed.
@@ -84,8 +90,10 @@ void compute(
 }
 
 /** 
- * @brief Store the smoothing results.
- * @tparam Data_ Floating-point type for the data.
+ * @brief Results of the LOWESS smoother.
+ * @tparam Data_ Floating-point type of the data.
+ *
+ * Instances of this class are usually created by `compute()`.
  */
 template<typename Data_>
 struct Results {
@@ -109,16 +117,15 @@ struct Results {
 };
 
 /**
- * Run the LOWESS smoother and return a `Results` object.
- * This avoids the need to instantiate the various output arrays manually. 
+ * Overload of `compute()` that allocates storage for the results of the smoothing.
  * 
- * @tparam Data_ Floating-point type for the data.
+ * @tparam Data_ Floating-point type of the data.
  *
  * @param num_points Number of points.
- * @param[in] x Pointer to an array of `num_points` x-values, sorted in increasing order.
+ * @param[in] x Pointer to an array of `num_points` x-coordinates, sorted in increasing order.
  * (Consider using `SortBy` to permute `x` in-place.
  * Note that the same permutation should be applied to `y` and, if present, weights in `Options::weights`.)
- * @param[in] y Pointer to an array of `num_points` y-values.
+ * @param[in] y Pointer to an array of `num_points` y-coordinates.
  * @param opt Further options.
  *
  * @return A `Results` object containing the fitted values and robustness weights.
