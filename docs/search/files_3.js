@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['range_2ehpp_0',['range.hpp',['https://ltla.github.io/subpar/range_8hpp.html',1,'']]]
+  ['parallelize_2ehpp_0',['parallelize.hpp',['../parallelize_8hpp.html',1,'']]]
 ];

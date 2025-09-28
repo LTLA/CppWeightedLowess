@@ -98,6 +98,9 @@ $(function(){ initResizable(false); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeightedLowess_1_1AssignedSegments.html">AssignedSegments</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigned segments.  <a href="structWeightedLowess_1_1AssignedSegments.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeightedLowess_1_1Options.html">Options</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structWeightedLowess_1_1Options.html" title="Options for compute().">Options</a> for <code><a class="el" href="#ad11983a78a81e353c458a203d4f581c9">compute()</a></code>.  <a href="structWeightedLowess_1_1Options.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,6 +125,17 @@ Functions</h2></td></tr>
 <tr class="memitem:ae05ea1089c2a797e1c5cf2e7115c928d" id="r_ae05ea1089c2a797e1c5cf2e7115c928d"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
 <tr class="memitem:ae05ea1089c2a797e1c5cf2e7115c928d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structWeightedLowess_1_1Results.html">Results</a>&lt; Data_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ae05ea1089c2a797e1c5cf2e7115c928d">compute</a> (const std::size_t num_points, const Data_ *x, const Data_ *y, const <a class="el" href="structWeightedLowess_1_1Options.html">Options</a>&lt; Data_ &gt; &amp;opt)</td></tr>
 <tr class="separator:ae05ea1089c2a797e1c5cf2e7115c928d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63e5d05d4cbdd95dc99bd7a0907947c4" id="r_a63e5d05d4cbdd95dc99bd7a0907947c4"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
+<tr class="memitem:a63e5d05d4cbdd95dc99bd7a0907947c4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structWeightedLowess_1_1AssignedSegments.html">AssignedSegments</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a63e5d05d4cbdd95dc99bd7a0907947c4">assign_to_segments</a> (const Data_ *const x_fit, const <a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt; &amp;windows_fit, const std::size_t num_points_out, const Data_ *const x_out)</td></tr>
+<tr class="separator:a63e5d05d4cbdd95dc99bd7a0907947c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad53f508204319f853c558dd2b157f909" id="r_ad53f508204319f853c558dd2b157f909"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::size_t, std::size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad53f508204319f853c558dd2b157f909">get_interpolation_boundaries</a> (const <a class="el" href="structWeightedLowess_1_1AssignedSegments.html">AssignedSegments</a> &amp;assigned_out)</td></tr>
+<tr class="separator:ad53f508204319f853c558dd2b157f909"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eaa8c82fa05a7f3ea5b50fb43af185a" id="r_a6eaa8c82fa05a7f3ea5b50fb43af185a"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
+<tr class="memitem:a6eaa8c82fa05a7f3ea5b50fb43af185a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a6eaa8c82fa05a7f3ea5b50fb43af185a">interpolate</a> (const Data_ *const x_fit, const <a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt; &amp;windows_fit, const Data_ *const fitted_fit, const Data_ *const x_out, const <a class="el" href="structWeightedLowess_1_1AssignedSegments.html">AssignedSegments</a> &amp;assigned_out, Data_ *const fitted_out, int num_threads)</td></tr>
+<tr class="separator:a6eaa8c82fa05a7f3ea5b50fb43af185a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42db34b74c2f149026e1d7aea443e056" id="r_a42db34b74c2f149026e1d7aea443e056"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
+<tr class="memitem:a42db34b74c2f149026e1d7aea443e056"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::size_t, std::size_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a42db34b74c2f149026e1d7aea443e056">interpolate</a> (const Data_ *const x_fit, const <a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt; &amp;windows_fit, const Data_ *const fitted_fit, const std::size_t num_points_out, const Data_ *const x_out, Data_ *const fitted_out, int num_threads)</td></tr>
+<tr class="separator:a42db34b74c2f149026e1d7aea443e056"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfb0d596184fac8c548a45cb6fb8fbb1" id="r_adfb0d596184fac8c548a45cb6fb8fbb1"><td class="memTemplParams" colspan="2">template&lt;typename Task_ , class Run_ &gt; </td></tr>
 <tr class="memitem:adfb0d596184fac8c548a45cb6fb8fbb1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#adfb0d596184fac8c548a45cb6fb8fbb1">parallelize</a> (const int num_workers, const Task_ num_tasks, Run_ run_task_range)</td></tr>
 <tr class="separator:adfb0d596184fac8c548a45cb6fb8fbb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,6 +146,56 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Namespace for LOWESS functions. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a63e5d05d4cbdd95dc99bd7a0907947c4" name="a63e5d05d4cbdd95dc99bd7a0907947c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63e5d05d4cbdd95dc99bd7a0907947c4">&#9670;&#160;</a></span>assign_to_segments()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_ &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structWeightedLowess_1_1AssignedSegments.html">AssignedSegments</a> WeightedLowess::assign_to_segments </td>
+          <td>(</td>
+          <td class="paramtype">const Data_ *const</td>          <td class="paramname"><span class="paramname"><em>x_fit</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>windows_fit</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::size_t</td>          <td class="paramname"><span class="paramname"><em>num_points_out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Data_ *const</td>          <td class="paramname"><span class="paramname"><em>x_out</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Assign points-to-be-interpolated to their corresponding segments between anchors, for use in <code><a class="el" href="#a6eaa8c82fa05a7f3ea5b50fb43af185a">interpolate()</a></code>.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Data_</td><td>Floating-point type of the data.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">x_fit</td><td>Pointer to an array of x-coordinates for the fitted trend from <code><a class="el" href="#ad11983a78a81e353c458a203d4f581c9">compute()</a></code>. This should be sorted in increasing order. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">windows_fit</td><td>Precomputed windows for anchor pointers, created by calling <code><a class="el" href="#a30dc5c465fd1c49a9b8a0d8e1a51e1ee">define_windows()</a></code> on <code>x_fit</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_points_out</td><td>Number of points to be interpolated. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x_out</td><td>Pointer to an array of x-coordinates of the points to be interpolated. This should be sorted in increasing order and have length equal to <code>num_points_out</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Assignment of each point in <code>x_out</code> to its corresponding segment, where possible. This can be re-used for multiple <code><a class="el" href="#a6eaa8c82fa05a7f3ea5b50fb43af185a">interpolate()</a></code> calls with different <code>fitted</code> values. </dd></dl>
+
+</div>
+</div>
 <a id="ae05ea1089c2a797e1c5cf2e7115c928d" name="ae05ea1089c2a797e1c5cf2e7115c928d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae05ea1089c2a797e1c5cf2e7115c928d">&#9670;&#160;</a></span>compute() <span class="overload">[1/3]</span></h2>
 
@@ -350,6 +414,174 @@ template&lt;typename Data_ &gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ad53f508204319f853c558dd2b157f909" name="ad53f508204319f853c558dd2b157f909"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad53f508204319f853c558dd2b157f909">&#9670;&#160;</a></span>get_interpolation_boundaries()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt; std::size_t, std::size_t &gt; WeightedLowess::get_interpolation_boundaries </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structWeightedLowess_1_1AssignedSegments.html">AssignedSegments</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>assigned_out</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">assigned_out</td><td>Assignment of each point-to-be-interpolated to a inter-anchor segment, produced by <code><a class="el" href="#a63e5d05d4cbdd95dc99bd7a0907947c4">assign_to_segments()</a></code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pair containing (i) the index of the first point that lies within a segment and (ii) the index of the first point that lies beyond the final segment. This defines the subinterval of points in <code>x_out</code> that can be safely interpolated, i.e., do not lie beyond <code>x_fit</code>. </dd></dl>
+
+</div>
+</div>
+<a id="a6eaa8c82fa05a7f3ea5b50fb43af185a" name="a6eaa8c82fa05a7f3ea5b50fb43af185a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6eaa8c82fa05a7f3ea5b50fb43af185a">&#9670;&#160;</a></span>interpolate() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_ &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void WeightedLowess::interpolate </td>
+          <td>(</td>
+          <td class="paramtype">const Data_ *const</td>          <td class="paramname"><span class="paramname"><em>x_fit</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>windows_fit</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Data_ *const</td>          <td class="paramname"><span class="paramname"><em>fitted_fit</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Data_ *const</td>          <td class="paramname"><span class="paramname"><em>x_out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structWeightedLowess_1_1AssignedSegments.html">AssignedSegments</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>assigned_out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Data_ *const</td>          <td class="paramname"><span class="paramname"><em>fitted_out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>num_threads</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Interpolate the fitted values for a set of points, based on a pre-existing trend fitted by <code><a class="el" href="#ad11983a78a81e353c458a203d4f581c9">compute()</a></code>.</p>
+<p>In <code><a class="el" href="#ad11983a78a81e353c458a203d4f581c9">compute()</a></code>, we calculate fitted values exactly for anchor points and then interpolate the fitted values for all intervening points. This function applies the same interpolation to a separate set of points based only on their x-coordinates.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Data_</td><td>Floating-point type of the data.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">x_fit</td><td>Pointer to an array of x-coordinates for the fitted trend from <code><a class="el" href="#ad11983a78a81e353c458a203d4f581c9">compute()</a></code>. This should be sorted in increasing order. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">windows_fit</td><td>Precomputed windows for anchor points, created by calling <code><a class="el" href="#a30dc5c465fd1c49a9b8a0d8e1a51e1ee">define_windows()</a></code> on <code>x_fit</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">fitted_fit</td><td>Pointer to an array of fitted values from calling <code><a class="el" href="#ad11983a78a81e353c458a203d4f581c9">compute()</a></code> with <code>x_fit</code> and <code>windows_fit</code>. This should have the same length as <code>x_fit</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x_out</td><td>Pointer to an array of x-coordinates of the points to be interpolated. This should be sorted in increasing order. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">assigned_out</td><td>Assignment of points-to-be-interpolated to each inter-anchor segment. This should be created by calling <code>assign_to_segment()</code> on <code>x_fit</code>, <code>windows_fit</code> and <code>x_out</code>. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">fitted_out</td><td>Pointer to an array of same length as <code>x_out</code>. On output, this stores the interpolated fitted value for each entry of <code>x_out</code> that lies within the interpolation boundaries (see <code><a class="el" href="#ad53f508204319f853c558dd2b157f909">get_interpolation_boundaries()</a></code>). No value is stored for points that lie beyond the interpolation boundaries. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_threads</td><td>Number of threads to use. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a42db34b74c2f149026e1d7aea443e056" name="a42db34b74c2f149026e1d7aea443e056"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42db34b74c2f149026e1d7aea443e056">&#9670;&#160;</a></span>interpolate() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Data_ &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt; std::size_t, std::size_t &gt; WeightedLowess::interpolate </td>
+          <td>(</td>
+          <td class="paramtype">const Data_ *const</td>          <td class="paramname"><span class="paramname"><em>x_fit</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>windows_fit</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Data_ *const</td>          <td class="paramname"><span class="paramname"><em>fitted_fit</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::size_t</td>          <td class="paramname"><span class="paramname"><em>num_points_out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Data_ *const</td>          <td class="paramname"><span class="paramname"><em>x_out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Data_ *const</td>          <td class="paramname"><span class="paramname"><em>fitted_out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>num_threads</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Overload of <code><a class="el" href="#a6eaa8c82fa05a7f3ea5b50fb43af185a">interpolate()</a></code> that calls <code><a class="el" href="#a63e5d05d4cbdd95dc99bd7a0907947c4">assign_to_segments()</a></code> automatically.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Data_</td><td>Floating-point type of the data.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">x_fit</td><td>Pointer to an array of x-coordinates for the fitted trend from <code><a class="el" href="#ad11983a78a81e353c458a203d4f581c9">compute()</a></code>. This should be sorted in increasing order. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">windows_fit</td><td>Precomputed windows for anchor points, created by calling <code><a class="el" href="#a30dc5c465fd1c49a9b8a0d8e1a51e1ee">define_windows()</a></code> on <code>x_fit</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">fitted_fit</td><td>Pointer to an array of fitted values from calling <code><a class="el" href="#ad11983a78a81e353c458a203d4f581c9">compute()</a></code> with <code>x_fit</code> and <code>windows_fit</code>. This should have the same length as <code>x_fit</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_points_out</td><td>Number of points to be interpolated. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x_out</td><td>Pointer to an array of x-coordinates of the points to be interpolated. This should be sorted in increasing order. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">fitted_out</td><td>Pointer to an array of same length as <code>x_out</code>. On output, this stores the interpolated fitted value for each entry of <code>x_out</code> that lies within the interpolation boundaries. No value is stored for points that lie beyond the interpolation boundaries. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_threads</td><td>Number of threads to use.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Boundaries of the interpolation, see <code><a class="el" href="#ad53f508204319f853c558dd2b157f909">get_interpolation_boundaries()</a></code> for details. </dd></dl>
 
 </div>
 </div>

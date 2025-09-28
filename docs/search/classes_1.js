@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['precomputedwindows_0',['PrecomputedWindows',['../structWeightedLowess_1_1PrecomputedWindows.html',1,'WeightedLowess']]]
+  ['options_0',['Options',['../structWeightedLowess_1_1Options.html',1,'WeightedLowess']]]
 ];

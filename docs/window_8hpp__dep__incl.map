@@ -1,0 +1,7 @@
+<map id="WeightedLowess/window.hpp" name="WeightedLowess/window.hpp">
+<area shape="rect" id="Node000001" title="Compute the smoothing window for each point." alt="" coords="33,5,227,31"/>
+<area shape="rect" id="Node000002" href="$interpolate_8hpp.html" title="Interpolate from the fitted trend." alt="" coords="25,79,235,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,46,133,79,127,79,127,46"/>
+<area shape="rect" id="Node000003" href="$WeightedLowess_8hpp.html" title="LOWESS implementation with various weighting schemes." alt="" coords="5,153,255,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="133,120,133,152,127,152,127,120"/>
+</map>

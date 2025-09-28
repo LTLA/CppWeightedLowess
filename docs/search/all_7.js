@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['num_5fthreads_0',['num_threads',['../structWeightedLowess_1_1Options.html#afe399f94ea4c77261a2583bfe1aa4c2f',1,'WeightedLowess::Options']]]
+  ['minimum_5fwidth_0',['minimum_width',['../structWeightedLowess_1_1Options.html#a896253316d390568bbadd1ce40fe4ee9',1,'WeightedLowess::Options']]]
 ];

@@ -9,6 +9,14 @@
     <namespace>WeightedLowess</namespace>
   </compound>
   <compound kind="file">
+    <name>interpolate.hpp</name>
+    <path>WeightedLowess/</path>
+    <filename>interpolate_8hpp.html</filename>
+    <includes id="window_8hpp" name="window.hpp" local="yes" import="no" module="no" objc="no">window.hpp</includes>
+    <class kind="struct">WeightedLowess::AssignedSegments</class>
+    <namespace>WeightedLowess</namespace>
+  </compound>
+  <compound kind="file">
     <name>Options.hpp</name>
     <path>WeightedLowess/</path>
     <filename>Options_8hpp.html</filename>
@@ -33,6 +41,7 @@
     <path>WeightedLowess/</path>
     <filename>WeightedLowess_8hpp.html</filename>
     <includes id="compute_8hpp" name="compute.hpp" local="yes" import="no" module="no" objc="no">compute.hpp</includes>
+    <includes id="interpolate_8hpp" name="interpolate.hpp" local="yes" import="no" module="no" objc="no">interpolate.hpp</includes>
     <includes id="SortBy_8hpp" name="SortBy.hpp" local="yes" import="no" module="no" objc="no">SortBy.hpp</includes>
     <includes id="Options_8hpp" name="Options.hpp" local="yes" import="no" module="no" objc="no">Options.hpp</includes>
     <namespace>WeightedLowess</namespace>
@@ -45,6 +54,10 @@
     <includes id="parallelize_8hpp" name="parallelize.hpp" local="yes" import="no" module="no" objc="no">parallelize.hpp</includes>
     <class kind="struct">WeightedLowess::PrecomputedWindows</class>
     <namespace>WeightedLowess</namespace>
+  </compound>
+  <compound kind="struct">
+    <name>WeightedLowess::AssignedSegments</name>
+    <filename>structWeightedLowess_1_1AssignedSegments.html</filename>
   </compound>
   <compound kind="struct">
     <name>WeightedLowess::Options</name>
@@ -257,6 +270,7 @@
   <compound kind="namespace">
     <name>WeightedLowess</name>
     <filename>namespaceWeightedLowess.html</filename>
+    <class kind="struct">WeightedLowess::AssignedSegments</class>
     <class kind="struct">WeightedLowess::Options</class>
     <class kind="struct">WeightedLowess::PrecomputedWindows</class>
     <class kind="struct">WeightedLowess::Results</class>
@@ -281,6 +295,34 @@
       <anchorfile>namespaceWeightedLowess.html</anchorfile>
       <anchor>ae05ea1089c2a797e1c5cf2e7115c928d</anchor>
       <arglist>(const std::size_t num_points, const Data_ *x, const Data_ *y, const Options&lt; Data_ &gt; &amp;opt)</arglist>
+    </member>
+    <member kind="function">
+      <type>AssignedSegments</type>
+      <name>assign_to_segments</name>
+      <anchorfile>namespaceWeightedLowess.html</anchorfile>
+      <anchor>a63e5d05d4cbdd95dc99bd7a0907947c4</anchor>
+      <arglist>(const Data_ *const x_fit, const PrecomputedWindows&lt; Data_ &gt; &amp;windows_fit, const std::size_t num_points_out, const Data_ *const x_out)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::pair&lt; std::size_t, std::size_t &gt;</type>
+      <name>get_interpolation_boundaries</name>
+      <anchorfile>namespaceWeightedLowess.html</anchorfile>
+      <anchor>ad53f508204319f853c558dd2b157f909</anchor>
+      <arglist>(const AssignedSegments &amp;assigned_out)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>interpolate</name>
+      <anchorfile>namespaceWeightedLowess.html</anchorfile>
+      <anchor>a6eaa8c82fa05a7f3ea5b50fb43af185a</anchor>
+      <arglist>(const Data_ *const x_fit, const PrecomputedWindows&lt; Data_ &gt; &amp;windows_fit, const Data_ *const fitted_fit, const Data_ *const x_out, const AssignedSegments &amp;assigned_out, Data_ *const fitted_out, int num_threads)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::pair&lt; std::size_t, std::size_t &gt;</type>
+      <name>interpolate</name>
+      <anchorfile>namespaceWeightedLowess.html</anchorfile>
+      <anchor>a42db34b74c2f149026e1d7aea443e056</anchor>
+      <arglist>(const Data_ *const x_fit, const PrecomputedWindows&lt; Data_ &gt; &amp;windows_fit, const Data_ *const fitted_fit, const std::size_t num_points_out, const Data_ *const x_out, Data_ *const fitted_out, int num_threads)</arglist>
     </member>
     <member kind="function">
       <type>void</type>

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['options_0',['Options',['../structWeightedLowess_1_1Options.html',1,'WeightedLowess']]],
-  ['options_2ehpp_1',['Options.hpp',['../Options_8hpp.html',1,'']]]
+  ['num_5fthreads_0',['num_threads',['../structWeightedLowess_1_1Options.html#afe399f94ea4c77261a2583bfe1aa4c2f',1,'WeightedLowess::Options']]]
 ];

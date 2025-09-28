@@ -1,5 +1,9 @@
 <map id="WeightedLowess/parallelize.hpp" name="WeightedLowess/parallelize.hpp">
-<area shape="rect" id="Node000001" title="Definitions for parallelization." alt="" coords="5,5,212,31"/>
-<area shape="rect" id="Node000002" href="$window_8hpp.html" title="Compute the smoothing window for each point." alt="" coords="12,79,205,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,46,111,79,106,79,106,46"/>
+<area shape="rect" id="Node000001" title="Definitions for parallelization." alt="" coords="27,5,233,31"/>
+<area shape="rect" id="Node000002" href="$window_8hpp.html" title="Compute the smoothing window for each point." alt="" coords="33,79,227,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,46,133,79,127,79,127,46"/>
+<area shape="rect" id="Node000003" href="$interpolate_8hpp.html" title="Interpolate from the fitted trend." alt="" coords="25,153,235,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="133,120,133,152,127,152,127,120"/>
+<area shape="rect" id="Node000004" href="$WeightedLowess_8hpp.html" title="LOWESS implementation with various weighting schemes." alt="" coords="5,226,255,252"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="133,194,133,226,127,226,127,194"/>
 </map>
