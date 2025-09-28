@@ -108,85 +108,85 @@ $(function(){ initResizable(false); });
 <div class="foldopen" id="foldopen00018" data-start="{" data-end="}">
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="namespaceWeightedLowess.html">   18</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceWeightedLowess.html">WeightedLowess</a> {</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_&gt;</div>
-<div class="foldopen" id="foldopen00040" data-start="{" data-end="}">
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">   40</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">compute</a>(</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">const</span> std::size_t num_points,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> x,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows&lt;Data_&gt;</a>&amp; windows,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> y,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    Data_* <span class="keyword">const</span> fitted,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    Data_* robust_weights,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structWeightedLowess_1_1Options.html">Options&lt;Data_&gt;</a>&amp; opt</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>) {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::vector&lt;Data_&gt; rbuffer;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">if</span> (robust_weights == NULL) {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        sanisizer::resize(rbuffer, num_points);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        robust_weights = rbuffer.data();</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    internal::fit_trend(num_points, x, windows, y, fitted, robust_weights, opt);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>}</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_&gt;</div>
+<div class="foldopen" id="foldopen00047" data-start="{" data-end="}">
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">   47</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">compute</a>(</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">const</span> std::size_t num_points,</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> x,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows&lt;Data_&gt;</a>&amp; windows,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> y,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    Data_* <span class="keyword">const</span> fitted,</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    Data_* robust_weights,</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structWeightedLowess_1_1Options.html">Options&lt;Data_&gt;</a>&amp; opt</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>) {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::vector&lt;Data_&gt; rbuffer;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">if</span> (robust_weights == NULL) {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        sanisizer::resize(rbuffer, num_points);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        robust_weights = rbuffer.data();</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    }</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    internal::fit_trend(num_points, x, windows, y, fitted, robust_weights, opt);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
 </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_&gt;</div>
-<div class="foldopen" id="foldopen00074" data-start="{" data-end="}">
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="namespaceWeightedLowess.html#a2e434916498f95c65fe6f175e4d4ec07">   74</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">compute</a>(</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">const</span> std::size_t num_points,</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> x,</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> y,</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    Data_* <span class="keyword">const</span> fitted,</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    Data_* <span class="keyword">const</span> robust_weights,</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structWeightedLowess_1_1Options.html">Options&lt;Data_&gt;</a>&amp; opt</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>) {</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keyword">const</span> <span class="keyword">auto</span> win = <a class="code hl_function" href="namespaceWeightedLowess.html#a42bddecb5f16e2cc5586c8c956aeda38">define_windows</a>(num_points, x, opt);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <a class="code hl_function" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">compute</a>(num_points, x, win, y, fitted, robust_weights, opt);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>}</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_&gt;</div>
+<div class="foldopen" id="foldopen00080" data-start="{" data-end="}">
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="namespaceWeightedLowess.html#a2e434916498f95c65fe6f175e4d4ec07">   80</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">compute</a>(</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keyword">const</span> std::size_t num_points,</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> x,</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> y,</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    Data_* <span class="keyword">const</span> fitted,</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    Data_* <span class="keyword">const</span> robust_weights,</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structWeightedLowess_1_1Options.html">Options&lt;Data_&gt;</a>&amp; opt</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>) {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">const</span> <span class="keyword">auto</span> win = <a class="code hl_function" href="namespaceWeightedLowess.html#a42bddecb5f16e2cc5586c8c956aeda38">define_windows</a>(num_points, x, opt);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <a class="code hl_function" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">compute</a>(num_points, x, win, y, fitted, robust_weights, opt);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}</div>
 </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_&gt;</div>
-<div class="foldopen" id="foldopen00091" data-start="{" data-end="};">
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="structWeightedLowess_1_1Results.html">   91</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structWeightedLowess_1_1Results.html">Results</a> {</div>
-<div class="foldopen" id="foldopen00095" data-start="{" data-end="}">
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="structWeightedLowess_1_1Results.html#afb46837329d3b550dc40114bb283c508">   95</a></span>    <a class="code hl_function" href="structWeightedLowess_1_1Results.html#afb46837329d3b550dc40114bb283c508">Results</a>(<span class="keyword">const</span> std::size_t n) :</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <a class="code hl_variable" href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">fitted</a>(sanisizer::cast&lt;I&lt;decltype(<a class="code hl_variable" href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">fitted</a>.size())&gt; &gt;(n)),</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <a class="code hl_variable" href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">robust_weights</a>(sanisizer::cast&lt;I&lt;decltype(<a class="code hl_variable" href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">robust_weights</a>.size())&gt; &gt;(n))</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    {}</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_&gt;</div>
+<div class="foldopen" id="foldopen00099" data-start="{" data-end="};">
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="structWeightedLowess_1_1Results.html">   99</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structWeightedLowess_1_1Results.html">Results</a> {</div>
+<div class="foldopen" id="foldopen00103" data-start="{" data-end="}">
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="structWeightedLowess_1_1Results.html#afb46837329d3b550dc40114bb283c508">  103</a></span>    <a class="code hl_function" href="structWeightedLowess_1_1Results.html#afb46837329d3b550dc40114bb283c508">Results</a>(<span class="keyword">const</span> std::size_t n) :</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <a class="code hl_variable" href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">fitted</a>(sanisizer::cast&lt;I&lt;decltype(<a class="code hl_variable" href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">fitted</a>.size())&gt; &gt;(n)),</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <a class="code hl_variable" href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">robust_weights</a>(sanisizer::cast&lt;I&lt;decltype(<a class="code hl_variable" href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">robust_weights</a>.size())&gt; &gt;(n))</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    {}</div>
 </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">  103</a></span>    std::vector&lt;Data_&gt; <a class="code hl_variable" href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">fitted</a>;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">  108</a></span>    std::vector&lt;Data_&gt; <a class="code hl_variable" href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">robust_weights</a>;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>};</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">  111</a></span>    std::vector&lt;Data_&gt; <a class="code hl_variable" href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">fitted</a>;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">  116</a></span>    std::vector&lt;Data_&gt; <a class="code hl_variable" href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">robust_weights</a>;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>};</div>
 </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_&gt;</div>
-<div class="foldopen" id="foldopen00127" data-start="{" data-end="}">
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="namespaceWeightedLowess.html#a75f25c7e955ed7731becb59c13c6fa90">  127</a></span><a class="code hl_struct" href="structWeightedLowess_1_1Results.html">Results&lt;Data_&gt;</a> <a class="code hl_function" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">compute</a>(</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keyword">const</span> std::size_t num_points,</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> x,</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> y,</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structWeightedLowess_1_1Options.html">Options&lt;Data_&gt;</a>&amp; opt</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>) {</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <a class="code hl_struct" href="structWeightedLowess_1_1Results.html">Results&lt;Data_&gt;</a> output(num_points);</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <a class="code hl_function" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">compute</a>(num_points, x, y, output.<a class="code hl_variable" href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">fitted</a>.data(), output.<a class="code hl_variable" href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">robust_weights</a>.data(), opt);</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keywordflow">return</span> output;</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>}</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_&gt;</div>
+<div class="foldopen" id="foldopen00134" data-start="{" data-end="}">
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="namespaceWeightedLowess.html#a75f25c7e955ed7731becb59c13c6fa90">  134</a></span><a class="code hl_struct" href="structWeightedLowess_1_1Results.html">Results&lt;Data_&gt;</a> <a class="code hl_function" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">compute</a>(</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keyword">const</span> std::size_t num_points,</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> x,</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    <span class="keyword">const</span> Data_* <span class="keyword">const</span> y,</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structWeightedLowess_1_1Options.html">Options&lt;Data_&gt;</a>&amp; opt</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>) {</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <a class="code hl_struct" href="structWeightedLowess_1_1Results.html">Results&lt;Data_&gt;</a> output(num_points);</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <a class="code hl_function" href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">compute</a>(num_points, x, y, output.<a class="code hl_variable" href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">fitted</a>.data(), output.<a class="code hl_variable" href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">robust_weights</a>.data(), opt);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keywordflow">return</span> output;</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>}</div>
 </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>}</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>}</div>
 </div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aOptions_8hpp_html"><div class="ttname"><a href="Options_8hpp.html">Options.hpp</a></div><div class="ttdoc">Options for compute().</div></div>
 <div class="ttc" id="anamespaceWeightedLowess_html"><div class="ttname"><a href="namespaceWeightedLowess.html">WeightedLowess</a></div><div class="ttdoc">Namespace for LOWESS functions.</div><div class="ttdef"><b>Definition</b> compute.hpp:18</div></div>
 <div class="ttc" id="anamespaceWeightedLowess_html_a42bddecb5f16e2cc5586c8c956aeda38"><div class="ttname"><a href="namespaceWeightedLowess.html#a42bddecb5f16e2cc5586c8c956aeda38">WeightedLowess::define_windows</a></div><div class="ttdeci">PrecomputedWindows&lt; Data_ &gt; define_windows(const std::size_t num_points, const Data_ *const x, const Options&lt; Data_ &gt; &amp;opt)</div><div class="ttdef"><b>Definition</b> window.hpp:267</div></div>
-<div class="ttc" id="anamespaceWeightedLowess_html_a86b5b598907a786c4120963b67058864"><div class="ttname"><a href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">WeightedLowess::compute</a></div><div class="ttdeci">void compute(const std::size_t num_points, const Data_ *const x, const PrecomputedWindows&lt; Data_ &gt; &amp;windows, const Data_ *const y, Data_ *const fitted, Data_ *robust_weights, const Options&lt; Data_ &gt; &amp;opt)</div><div class="ttdef"><b>Definition</b> compute.hpp:40</div></div>
+<div class="ttc" id="anamespaceWeightedLowess_html_a86b5b598907a786c4120963b67058864"><div class="ttname"><a href="namespaceWeightedLowess.html#a86b5b598907a786c4120963b67058864">WeightedLowess::compute</a></div><div class="ttdeci">void compute(const std::size_t num_points, const Data_ *const x, const PrecomputedWindows&lt; Data_ &gt; &amp;windows, const Data_ *const y, Data_ *const fitted, Data_ *robust_weights, const Options&lt; Data_ &gt; &amp;opt)</div><div class="ttdef"><b>Definition</b> compute.hpp:47</div></div>
 <div class="ttc" id="astructWeightedLowess_1_1Options_html"><div class="ttname"><a href="structWeightedLowess_1_1Options.html">WeightedLowess::Options</a></div><div class="ttdoc">Options for compute().</div><div class="ttdef"><b>Definition</b> Options.hpp:17</div></div>
 <div class="ttc" id="astructWeightedLowess_1_1PrecomputedWindows_html"><div class="ttname"><a href="structWeightedLowess_1_1PrecomputedWindows.html">WeightedLowess::PrecomputedWindows</a></div><div class="ttdoc">Precomputed windows for LOWESS smoothing.</div><div class="ttdef"><b>Definition</b> window.hpp:234</div></div>
-<div class="ttc" id="astructWeightedLowess_1_1Results_html"><div class="ttname"><a href="structWeightedLowess_1_1Results.html">WeightedLowess::Results</a></div><div class="ttdoc">Store the smoothing results.</div><div class="ttdef"><b>Definition</b> compute.hpp:91</div></div>
-<div class="ttc" id="astructWeightedLowess_1_1Results_html_a8314067146c939368ae593e09d9dca27"><div class="ttname"><a href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">WeightedLowess::Results::fitted</a></div><div class="ttdeci">std::vector&lt; Data_ &gt; fitted</div><div class="ttdef"><b>Definition</b> compute.hpp:103</div></div>
-<div class="ttc" id="astructWeightedLowess_1_1Results_html_afb46837329d3b550dc40114bb283c508"><div class="ttname"><a href="structWeightedLowess_1_1Results.html#afb46837329d3b550dc40114bb283c508">WeightedLowess::Results::Results</a></div><div class="ttdeci">Results(const std::size_t n)</div><div class="ttdef"><b>Definition</b> compute.hpp:95</div></div>
-<div class="ttc" id="astructWeightedLowess_1_1Results_html_aff5b0f38c864f6e8e7323118e4c19ce9"><div class="ttname"><a href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">WeightedLowess::Results::robust_weights</a></div><div class="ttdeci">std::vector&lt; Data_ &gt; robust_weights</div><div class="ttdef"><b>Definition</b> compute.hpp:108</div></div>
+<div class="ttc" id="astructWeightedLowess_1_1Results_html"><div class="ttname"><a href="structWeightedLowess_1_1Results.html">WeightedLowess::Results</a></div><div class="ttdoc">Results of the LOWESS smoother.</div><div class="ttdef"><b>Definition</b> compute.hpp:99</div></div>
+<div class="ttc" id="astructWeightedLowess_1_1Results_html_a8314067146c939368ae593e09d9dca27"><div class="ttname"><a href="structWeightedLowess_1_1Results.html#a8314067146c939368ae593e09d9dca27">WeightedLowess::Results::fitted</a></div><div class="ttdeci">std::vector&lt; Data_ &gt; fitted</div><div class="ttdef"><b>Definition</b> compute.hpp:111</div></div>
+<div class="ttc" id="astructWeightedLowess_1_1Results_html_afb46837329d3b550dc40114bb283c508"><div class="ttname"><a href="structWeightedLowess_1_1Results.html#afb46837329d3b550dc40114bb283c508">WeightedLowess::Results::Results</a></div><div class="ttdeci">Results(const std::size_t n)</div><div class="ttdef"><b>Definition</b> compute.hpp:103</div></div>
+<div class="ttc" id="astructWeightedLowess_1_1Results_html_aff5b0f38c864f6e8e7323118e4c19ce9"><div class="ttname"><a href="structWeightedLowess_1_1Results.html#aff5b0f38c864f6e8e7323118e4c19ce9">WeightedLowess::Results::robust_weights</a></div><div class="ttdeci">std::vector&lt; Data_ &gt; robust_weights</div><div class="ttdef"><b>Definition</b> compute.hpp:116</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

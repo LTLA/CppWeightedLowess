@@ -147,7 +147,7 @@ template&lt;typename Data_  = double&gt; </div>
       </table>
 </div><div class="memdoc">
 <p>The number of points that can be used as "anchors". LOWESS smoothing is performed exactly for each anchor, while the fitted values for all intervening points are computed by linear interpolation. A higher number of anchor points improves accuracy at the cost of computational work.</p>
-<p>Note that this number is only used as a guideline by our LOWESS implementation. The actual number of selected anchors depends on the distribution of x-values; in addition, the first and last points are always used as the anchors,. If the specified number of anchors is greater than the number of points, LOWESS smoothing is performed directly for each point.</p>
+<p>Note that this number is only used as a guideline by our LOWESS implementation. The actual number of selected anchors depends on the distribution of x-coordinates; in addition, the first and last points are always used as the anchors,. If the specified number of anchors is greater than the number of points, LOWESS smoothing is performed directly for each point.</p>
 <p>This setting is ignored if <code><a class="el" href="#a55bc0add48ea9e083cc527773a182192">Options::delta</a></code> is non-negative. </p>
 
 </div>
@@ -165,7 +165,7 @@ template&lt;typename Data_  = double&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Delta value used to identify anchors. Seeds are identified greedily, by walking through the ordered x-coordinate values and marking a point <code>y</code> as a anchor if there are no anchors in <code>[y - delta, y]</code>. If set to zero, all unique points are used as anchors. If set to a negative value, an appropriate delta is determined from the number of points specified in <code>set_points()</code>. Otherwise, the chosen <code>delta</code> should have similar magnitude to the range of the x-values. </p>
+<p>Delta value used to identify anchors. Seeds are identified greedily, by walking through the ordered x-coordinate values and marking a point <code>y</code> as a anchor if there are no anchors in <code>[y - delta, y]</code>. If set to zero, all unique points are used as anchors. If set to a negative value, an appropriate delta is determined from the number of points specified in <code>set_points()</code>. Otherwise, the chosen <code>delta</code> should have similar magnitude to the range of the x-coordinates. </p>
 
 </div>
 </div>

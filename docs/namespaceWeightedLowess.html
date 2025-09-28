@@ -108,7 +108,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precomputed windows for LOWESS smoothing.  <a href="structWeightedLowess_1_1PrecomputedWindows.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeightedLowess_1_1Results.html">Results</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store the smoothing results.  <a href="structWeightedLowess_1_1Results.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structWeightedLowess_1_1Results.html" title="Results of the LOWESS smoother.">Results</a> of the LOWESS smoother.  <a href="structWeightedLowess_1_1Results.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeightedLowess_1_1SortBy.html">SortBy</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility class for sorting on a covariate.  <a href="classWeightedLowess_1_1SortBy.html#details">More...</a><br /></td></tr>
@@ -176,7 +176,7 @@ template&lt;typename Data_ &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Assign points-to-be-interpolated to their corresponding segments between anchors, for use in <code><a class="el" href="#a6eaa8c82fa05a7f3ea5b50fb43af185a">interpolate()</a></code>.</p>
+<p>Assign points-to-be-interpolated to their corresponding segments between anchors, for use in <code><a class="el" href="#a6eaa8c82fa05a7f3ea5b50fb43af185a">interpolate()</a></code>. Segments are defined as the line between two adjacent anchors, to be used for linear interpolation of any intervening points.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Data_</td><td>Floating-point type of the data.</td></tr>
@@ -186,7 +186,7 @@ template&lt;typename Data_ &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">x_fit</td><td>Pointer to an array of x-coordinates for the fitted trend from <code><a class="el" href="#a86b5b598907a786c4120963b67058864">compute()</a></code>. This should be sorted in increasing order. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">windows_fit</td><td>Precomputed windows for anchor pointers, created by calling <code><a class="el" href="#a42bddecb5f16e2cc5586c8c956aeda38">define_windows()</a></code> on <code>x_fit</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">windows_fit</td><td>Precomputed windows for anchor points, created by calling <code><a class="el" href="#a42bddecb5f16e2cc5586c8c956aeda38">define_windows()</a></code> on <code>x_fit</code>. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">num_points_out</td><td>Number of points to be interpolated. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">x_out</td><td>Pointer to an array of x-coordinates of the points to be interpolated. This should be sorted in increasing order and have length equal to <code>num_points_out</code>.</td></tr>
   </table>
@@ -226,23 +226,23 @@ template&lt;typename Data_ &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Run the LOWESS smoother and return a <code><a class="el" href="structWeightedLowess_1_1Results.html" title="Store the smoothing results.">Results</a></code> object. This avoids the need to instantiate the various output arrays manually.</p>
+<p>Overload of <code><a class="el" href="#a86b5b598907a786c4120963b67058864">compute()</a></code> that allocates storage for the results of the smoothing.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Data_</td><td>Floating-point type for the data.</td></tr>
+    <tr><td class="paramname">Data_</td><td>Floating-point type of the data.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num_points</td><td>Number of points. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values, sorted in increasing order. (Consider using <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> to permute <code>x</code> in-place. Note that the same permutation should be applied to <code>y</code> and, if present, weights in <code><a class="el" href="structWeightedLowess_1_1Options.html#a098463ee6beb3d9207725b0d597c42b2">Options::weights</a></code>.) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>Pointer to an array of <code>num_points</code> y-values. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-coordinates, sorted in increasing order. (Consider using <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> to permute <code>x</code> in-place. Note that the same permutation should be applied to <code>y</code> and, if present, weights in <code><a class="el" href="structWeightedLowess_1_1Options.html#a098463ee6beb3d9207725b0d597c42b2">Options::weights</a></code>.) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>Pointer to an array of <code>num_points</code> y-coordinates. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">opt</td><td>Further options.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A <code><a class="el" href="structWeightedLowess_1_1Results.html" title="Store the smoothing results.">Results</a></code> object containing the fitted values and robustness weights. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code><a class="el" href="structWeightedLowess_1_1Results.html" title="Results of the LOWESS smoother.">Results</a></code> object containing the fitted values and robustness weights. </dd></dl>
 
 </div>
 </div>
@@ -286,18 +286,18 @@ template&lt;typename Data_ &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>LOWESS is a simple, efficient, general-purpose non-parametric smoothing algorithm. It perform weighted linear regressions on subsets of neighboring points, yielding a smooth curve fit to the data.</p>
+<p>Overload of <code><a class="el" href="#a86b5b598907a786c4120963b67058864">compute()</a></code> that computes the windows around each anchor point.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Data_</td><td>Floating-point type for the data.</td></tr>
+    <tr><td class="paramname">Data_</td><td>Floating-point type of the data.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num_points</td><td>Number of points. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values, sorted in increasing order. (Consider using <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> to permute <code>x</code> in-place. Note that the same permutation should be applied to <code>y</code> and, if present, weights in <code><a class="el" href="structWeightedLowess_1_1Options.html#a098463ee6beb3d9207725b0d597c42b2">Options::weights</a></code>.) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>Pointer to an array of <code>num_points</code> y-values. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-coordinates, sorted in increasing order. (Consider using <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> to permute <code>x</code> in-place. Note that the same permutation should be applied to <code>y</code> and, if present, weights in <code><a class="el" href="structWeightedLowess_1_1Options.html#a098463ee6beb3d9207725b0d597c42b2">Options::weights</a></code>.) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>Pointer to an array of <code>num_points</code> y-coordinates. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">fitted</td><td>Pointer to an output array of length <code>num_points</code>, in which the fitted values of the smoother can be stored. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">robust_weights</td><td>Pointer to an output array of length <code>num_points</code>, in which the robustness weights can be stored. This may be <code>NULL</code> if the robustness weights are not needed. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">opt</td><td>Further options. </td></tr>
@@ -352,19 +352,20 @@ template&lt;typename Data_ &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Run the LOWESS smoother with precomputed windows. This avoids redundant window calculations when re-using the same x-coordinates across multiple y-coordinate vectors.</p>
+<p>Run the LOWESS algorithm for non-parametric smoothing.</p>
+<p>First, we identify anchor points that have (roughly) evenly-spaced x-coordinates. For each anchor point, we identify a window of neighboring points and compute a weight for each neighbor based on its distance to the anchor. We perform a weighted linear regression to obtain a fitted value for the anchor. For all non-anchor points, we compute a fitted value via linear interpolation of the surrounding anchor points. We then compute robustness weights for each point based on their deviation from the fitted value; the regressions are then repeated with robustness weights for the specified number of iterations.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Data_</td><td>Floating-point type for the data.</td></tr>
+    <tr><td class="paramname">Data_</td><td>Floating-point type of the data.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num_points</td><td>Number of points. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values, sorted in increasing order. (Consider using <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> to permute <code>x</code> in-place. Note that the same permutation should be applied to <code>y</code>, if present, and weights in <code><a class="el" href="structWeightedLowess_1_1Options.html#a098463ee6beb3d9207725b0d597c42b2">Options::weights</a></code>.) </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">windows</td><td>Precomputed windows, created by calling <code><a class="el" href="#a42bddecb5f16e2cc5586c8c956aeda38">define_windows()</a></code> with <code>num_points</code>, <code>x</code> and <code>opt</code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>Pointer to an array of <code>num_points</code> y-values. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-coordinates, sorted in increasing order. (Consider using <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> to permute <code>x</code> in-place. Note that the same permutation should be applied to <code>y</code> and, if present, weights in <code><a class="el" href="structWeightedLowess_1_1Options.html#a098463ee6beb3d9207725b0d597c42b2">Options::weights</a></code>.) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">windows</td><td>Precomputed windows around the anchor points, created by calling <code><a class="el" href="#a42bddecb5f16e2cc5586c8c956aeda38">define_windows()</a></code> with <code>num_points</code>, <code>x</code> and <code>opt</code>. This can be re-used across multiple calls to <code><a class="el" href="#a86b5b598907a786c4120963b67058864">compute()</a></code> with different <code>y</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>Pointer to an array of <code>num_points</code> y-coordinates. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">fitted</td><td>Pointer to an output array of length <code>num_points</code>, in which the fitted values of the smoother can be stored. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">robust_weights</td><td>Pointer to an output array of length <code>num_points</code>, in which the robustness weights can be stored. This may be <code>NULL</code> if the robustness weights are not needed. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">opt</td><td>Further options. This should be the same object that is used in <code><a class="el" href="#a42bddecb5f16e2cc5586c8c956aeda38">define_windows()</a></code>. Note that only a subset of options are actually used in this overload, namely <code><a class="el" href="structWeightedLowess_1_1Options.html#a098463ee6beb3d9207725b0d597c42b2">Options::weights</a></code> and <code><a class="el" href="structWeightedLowess_1_1Options.html#ae1c47f860a4d16df2a54a6048b49f96b">Options::iterations</a></code>. </td></tr>
@@ -399,17 +400,17 @@ template&lt;typename Data_ &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Precompute the window locations prior to fitting of different <code>y</code> via the corresponding <code><a class="el" href="#a86b5b598907a786c4120963b67058864">compute()</a></code> overload. This avoids wasting time in unnecessarily recomputing the same windows for each <code><a class="el" href="#a86b5b598907a786c4120963b67058864">compute()</a></code> call.</p>
+<p>Identify anchor points and precompute the associated windows prior to LOWESS smoothing via <code><a class="el" href="#a86b5b598907a786c4120963b67058864">compute()</a></code>. This avoids wasting time in unnecessarily recomputing the same windows for the same <code>x</code> but different <code>y</code> in multiple <code><a class="el" href="#a86b5b598907a786c4120963b67058864">compute()</a></code> calls.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Data_</td><td>Floating-point type for the data.</td></tr>
+    <tr><td class="paramname">Data_</td><td>Floating-point type of the data.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num_points</td><td>Number of points. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-values, sorted in increasing order. (Consider using <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> to permute the array in-place before calling this function.) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>Pointer to an array of <code>num_points</code> x-coordinates, sorted in increasing order. (Consider using <code><a class="el" href="classWeightedLowess_1_1SortBy.html" title="Utility class for sorting on a covariate.">SortBy</a></code> to permute the array in-place before calling this function.) </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">opt</td><td>Further options. Only a subset of options are actually used here, namely <code><a class="el" href="structWeightedLowess_1_1Options.html#a55bc0add48ea9e083cc527773a182192">Options::delta</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a5e34709595bc216d41f01fc60ca2b7fb">Options::anchors</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a098463ee6beb3d9207725b0d597c42b2">Options::weights</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a414dbeb65809f19b12ce7877c2c048be">Options::frequency_weights</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#a820614e4b0971b12560f420025876549">Options::span</a></code>, <code><a class="el" href="structWeightedLowess_1_1Options.html#ab6408e30d42c2d6f328b1bc002c8e2d9">Options::span_as_proportion</a></code>, and <code><a class="el" href="structWeightedLowess_1_1Options.html#a896253316d390568bbadd1ce40fe4ee9">Options::minimum_width</a></code>. </td></tr>
   </table>
   </dd>
@@ -495,7 +496,7 @@ template&lt;typename Data_ &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>Interpolate the fitted values for a set of points, based on a pre-existing trend fitted by <code><a class="el" href="#a86b5b598907a786c4120963b67058864">compute()</a></code>.</p>
-<p>In <code><a class="el" href="#a86b5b598907a786c4120963b67058864">compute()</a></code>, we calculate fitted values exactly for anchor points and then interpolate the fitted values for all intervening points. This function applies the same interpolation to a separate set of points based only on their x-coordinates.</p>
+<p>In <code><a class="el" href="#a86b5b598907a786c4120963b67058864">compute()</a></code>, the LOWESS algorithm calculates fitted values exactly for anchor points and then interpolates the fitted values for all intervening points. This function applies the same interpolation to a separate set of points based only on their x-coordinates.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Data_</td><td>Floating-point type of the data.</td></tr>
@@ -612,7 +613,7 @@ template&lt;typename Task_ , class Run_ &gt; </div>
 </div><div class="memdoc">
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Task_</td><td>Integer type for the number of tasks. </td></tr>
+    <tr><td class="paramname">Task_</td><td>Integer type of the number of tasks. </td></tr>
     <tr><td class="paramname">Run_</td><td>Function to execute a range of tasks.</td></tr>
   </table>
   </dd>
