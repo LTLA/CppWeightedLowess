@@ -150,12 +150,12 @@ void fit_trend(
     const auto num_anchors = anchors.size();
     auto workspaces = sanisizer::create<std::vector<std::vector<Data_> > >(opt.num_threads);
 
-    decltype(I(opt.iterations)) it = 0;
+    I<decltype(opt.iterations)> it = 0;
     while (1) { // Robustness iterations.
-        parallelize(opt.num_threads, num_anchors, [&](const int t, const decltype(I(num_anchors)) start, const decltype(I(num_anchors)) length) {
+        parallelize(opt.num_threads, num_anchors, [&](const int t, const I<decltype(num_anchors)> start, const I<decltype(num_anchors)> length) {
             auto& workspace = workspaces[t];
             sanisizer::resize(workspace, num_points); // resizing inside the thread to encourage allocations to a thread-specific heap to avoid false sharing.
-            for (decltype(I(start)) s = start, end = start + length; s < end; ++s) {
+            for (I<decltype(start)> s = start, end = start + length; s < end; ++s) {
                 const auto curpt = anchors[s];
                 fitted[curpt] = fit_point(curpt, limits[s], x, y, opt.weights, robust_weights, workspace);
             }
@@ -174,8 +174,8 @@ void fit_trend(
          * This involves an extra memory access and is not SIMD-able.
          */
         const auto num_anchors_m1 = num_anchors - 1;
-        parallelize(opt.num_threads, num_anchors_m1, [&](const int, const decltype(I(num_anchors_m1)) start, const decltype(I(num_anchors_m1)) length) {
-            for (decltype(I(start)) s = start, end = start + length; s < end; ++s) {
+        parallelize(opt.num_threads, num_anchors_m1, [&](const int, const I<decltype(num_anchors_m1)> start, const I<decltype(num_anchors_m1)> length) {
+            for (I<decltype(start)> s = start, end = start + length; s < end; ++s) {
                 const auto left_anchor = anchors[s];
                 const auto right_anchor = anchors[s + 1];
                 if (right_anchor - left_anchor <= 1) { // only interpolate if there are points between anchors.
@@ -187,7 +187,7 @@ void fit_trend(
                 if (xdiff > 0) {
                     const Data_ slope = ydiff / xdiff;
                     const Data_ intercept = fitted[right_anchor] - slope * x[right_anchor];
-                    for (decltype(I(right_anchor)) subpt = left_anchor + 1; subpt < right_anchor; ++subpt) { 
+                    for (I<decltype(right_anchor)> subpt = left_anchor + 1; subpt < right_anchor; ++subpt) { 
                         fitted[subpt] = slope * x[subpt] + intercept; 
                     }
                 } else {

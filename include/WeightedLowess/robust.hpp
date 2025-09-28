@@ -26,7 +26,7 @@ Data_ compute_mad(
     std::vector<std::size_t>& permutation
 ) {
     sanisizer::resize(abs_dev, num_points); // resizing here for safety, even though it would be more performant to resize once outside the robustness loop in fit().
-    for (decltype(I(num_points)) i = 0; i < num_points; ++i) {
+    for (I<decltype(num_points)> i = 0; i < num_points; ++i) {
         abs_dev[i] = std::abs(y[i] - fitted[i]);
     }
 
@@ -36,7 +36,7 @@ Data_ compute_mad(
 
     Data_ curweight = 0;
     const Data_ halfweight = total_weight / 2;
-    for (decltype(I(num_points)) i = 0; i < num_points; ++i) {
+    for (I<decltype(num_points)> i = 0; i < num_points; ++i) {
         const auto pt = permutation[i];
         curweight += (freq_weights != NULL ? freq_weights[pt] : 1);
 
@@ -54,7 +54,7 @@ Data_ compute_mad(
 template<typename Data_>
 Data_ compute_robust_range(const std::size_t num_points, const Data_* const y, const Data_* const robust_weights) {
     Data_ first = 0;
-    decltype(I(num_points)) i = 0;
+    I<decltype(num_points)> i = 0;
     for (; i < num_points; ++i) {
         if (robust_weights[i]) {
             first = y[i];
@@ -83,7 +83,7 @@ Data_ square (const Data_ x) {
 template<typename Data_>
 void populate_robust_weights(const std::vector<Data_>& abs_dev, const Data_ threshold, Data_* const robust_weights) {
     const auto num_points = abs_dev.size();
-    for (decltype(I(num_points)) i = 0; i < num_points; ++i) {
+    for (I<decltype(num_points)> i = 0; i < num_points; ++i) {
         const auto ad = abs_dev[i];
         // Effectively a branchless if/else, which should help auto-vectorization.
         // This assumes that threshold > 0, which should be true from fit_trend().

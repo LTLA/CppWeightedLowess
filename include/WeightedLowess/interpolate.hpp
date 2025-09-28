@@ -68,7 +68,7 @@ AssignedSegments assign_to_segments(
         }
     }
 
-    for (decltype(internal::I(num_anchors)) i = 1; i < num_anchors; ++i) {
+    for (I<decltype(num_anchors)> i = 1; i < num_anchors; ++i) {
         output.boundaries[i - 1] = counter;
         if (counter == num_points_out) {
             continue;
@@ -141,8 +141,8 @@ void interpolate(
     // However, if we did so, we'd have to store the slope and intercept for the anchor segments first,
     // then look up the slope and intercept for each element of x_out.
     // This involves an extra memory access and is not SIMD-able.
-    parallelize(num_threads, num_anchors_m1, [&](const int, const decltype(internal::I(num_anchors_m1)) start, const decltype(internal::I(num_anchors_m1)) length) {
-        for (decltype(internal::I(start)) s = start, end = start + length; s < end; ++s) {
+    parallelize(num_threads, num_anchors_m1, [&](const int, const I<decltype(num_anchors_m1)> start, const I<decltype(num_anchors_m1)> length) {
+        for (I<decltype(start)> s = start, end = start + length; s < end; ++s) {
             const auto run_start = assigned_out.boundaries[s];
             const auto run_end = assigned_out.boundaries[s + 1];
             if (run_start == run_end) {

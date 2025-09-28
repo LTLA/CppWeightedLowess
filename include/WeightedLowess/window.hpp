@@ -44,19 +44,19 @@ template<typename Data_>
 Data_ derive_delta(const std::size_t num_anchors, const std::size_t num_points, const Data_* const x) {
     const auto points_m1 = num_points - 1;
     auto diffs = sanisizer::create<std::vector<Data_> >(points_m1);
-    for (decltype(I(points_m1)) i = 0; i < points_m1; ++i) {
+    for (I<decltype(points_m1)> i = 0; i < points_m1; ++i) {
         diffs[i] = x[i + 1] - x[i];
     }
 
     std::sort(diffs.begin(), diffs.end());
-    for (decltype(I(points_m1)) i = 1; i < points_m1; ++i) {
+    for (I<decltype(points_m1)> i = 1; i < points_m1; ++i) {
         diffs[i] += diffs[i-1];            
     }
 
     Data_ lowest_delta = diffs.back();
     if (num_anchors > 1) {
         auto max_skips = sanisizer::min(num_anchors - 1, points_m1);
-        for (decltype(I(max_skips)) nskips = 0; nskips < max_skips; ++nskips) {
+        for (I<decltype(max_skips)> nskips = 0; nskips < max_skips; ++nskips) {
             Data_ candidate_delta = diffs[points_m1 - nskips - 1] / (num_anchors - nskips);
             lowest_delta = std::min(candidate_delta, lowest_delta);
         }
@@ -81,7 +81,7 @@ void find_anchors(const std::size_t num_points, const Data_* x, Data_ delta, std
 
     std::size_t last_pt = 0;
     const std::size_t points_m1 = num_points - 1;
-    for (decltype(I(points_m1)) pt = 1; pt < points_m1; ++pt) {
+    for (I<decltype(points_m1)> pt = 1; pt < points_m1; ++pt) {
         if (x[pt] - x[last_pt] > delta) {
             anchors.push_back(pt);
             last_pt = pt;
@@ -123,8 +123,8 @@ std::vector<Window<Data_> > find_limits(
     const auto half_min_width = min_width / 2;
     const auto points_m1 = num_points - 1;
 
-    parallelize(nthreads, nanchors, [&](const int, const decltype(I(nanchors)) start, const decltype(I(nanchors)) length) {
-        for (decltype(I(start)) s = start, end = start + length; s < end; ++s) {
+    parallelize(nthreads, nanchors, [&](const int, const I<decltype(nanchors)> start, const I<decltype(nanchors)> length) {
+        for (I<decltype(start)> s = start, end = start + length; s < end; ++s) {
             const auto curpt = anchors[s];
             const auto curx = x[curpt];
             auto left = curpt, right = curpt;

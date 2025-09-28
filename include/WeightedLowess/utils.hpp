@@ -5,16 +5,10 @@
 
 namespace WeightedLowess {
 
-namespace internal {
-
 // Identity function, for use in safe decltype'ing.
-// Takes advantage of type deduction to strip references and const'ness from Input_.
+// Strip references and const'ness from Input_.
 template<typename Input_>
-std::remove_cv_t<std::remove_reference_t<Input_> > I(const Input_ x) {
-    return x;
-}
-
-}
+using I = typename std::remove_cv<typename std::remove_reference<Input_>::type>::type;
 
 }
 

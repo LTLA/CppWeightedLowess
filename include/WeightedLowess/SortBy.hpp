@@ -79,7 +79,7 @@ private:
         std::fill_n(work, num_points, 0);
 
         // Reordering values in place.
-        for (decltype(internal::I(num_points)) i = 0; i < num_points; ++i) {
+        for (I<decltype(num_points)> i = 0; i < num_points; ++i) {
             if (work[i]) {
                 continue;
             }
@@ -196,7 +196,7 @@ private:
         const auto num_points = my_permutation.size();
         std::fill_n(work, num_points, 0);
 
-        for (decltype(internal::I(num_points)) i = 0; i < num_points; ++i) {
+        for (I<decltype(num_points)> i = 0; i < num_points; ++i) {
             if (work[i]) {
                 continue;
             }
