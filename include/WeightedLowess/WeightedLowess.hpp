@@ -2,6 +2,7 @@
 #define WEIGHTEDLOWESS_WEIGHTEDLOWESS_HPP
 
 #include "compute.hpp"
+#include "interpolate.hpp"
 #include "SortBy.hpp"
 #include "Options.hpp"
 

@@ -48,5 +48,6 @@ add_executable(
     src/divzero.cpp
     src/window.cpp
     src/robust.cpp
+    src/interpolate.cpp
 )
 decorate_test(libtest)
