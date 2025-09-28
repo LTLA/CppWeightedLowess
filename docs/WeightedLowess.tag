@@ -106,10 +106,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>Data_ *</type>
+      <type>const Data_ *</type>
       <name>weights</name>
       <anchorfile>structWeightedLowess_1_1Options.html</anchorfile>
-      <anchor>a3c3cae26a248351a3fd78bbfd8f15b3d</anchor>
+      <anchor>a098463ee6beb3d9207725b0d597c42b2</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -165,8 +165,8 @@
       <type></type>
       <name>SortBy</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>aea5069601b1463a43524e0035255349f</anchor>
-      <arglist>(const std::size_t num_points, const Sortable_ *x)</arglist>
+      <anchor>af2cee7cf6dbdc90b92bd73083f0430e0</anchor>
+      <arglist>(const std::size_t num_points, const Sortable_ *const x)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -179,43 +179,43 @@
       <type>void</type>
       <name>set</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>abd8112d8539bfaee9fe03646cbeaf465</anchor>
-      <arglist>(const std::size_t num_points, const Sortable_ *x)</arglist>
+      <anchor>a01f860cdf7398e507ed571ed2fe360f3</anchor>
+      <arglist>(const std::size_t num_points, const Sortable_ *const x)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>permute</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>ac3af7bb0c3a06421b855a59c7213ff48</anchor>
-      <arglist>(Data_ *data, Used_ *work) const</arglist>
+      <anchor>ab7b17e28ae012052e63814a34a6d84ff</anchor>
+      <arglist>(Data_ *const data, Used_ *const work) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>permute</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>a38b636960bd52fb45be7b476974baeab</anchor>
-      <arglist>(std::initializer_list&lt; Data_ &gt; data, Used_ *work) const</arglist>
+      <anchor>a24a20aef379102e955469a69243cdb72</anchor>
+      <arglist>(std::initializer_list&lt; Data_ *const &gt; data, Used_ *const work) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>permute</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>ac36619bc878340236831305133040486</anchor>
-      <arglist>(DataPointers_ data, Used_ *work) const</arglist>
+      <anchor>a359cefdd526033ede6f559f549b0068c</anchor>
+      <arglist>(DataPointers_ data, Used_ *const work) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>permute</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>a5238cd266b2380334778c2f09beb2d1f</anchor>
-      <arglist>(Data_ *data, std::vector&lt; Used_ &gt; &amp;work) const</arglist>
+      <anchor>a6fb0855317b92409f8e67b732aafb470</anchor>
+      <arglist>(Data_ *const data, std::vector&lt; Used_ &gt; &amp;work) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>permute</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>a19fcf75ba3a6117474439dcbbd2d9b33</anchor>
-      <arglist>(std::initializer_list&lt; Data_ &gt; data, std::vector&lt; Used_ &gt; &amp;work) const</arglist>
+      <anchor>a40b99986dbc31582edff6e23c5673077</anchor>
+      <arglist>(std::initializer_list&lt; Data_ *const &gt; data, std::vector&lt; Used_ &gt; &amp;work) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -228,36 +228,36 @@
       <type>void</type>
       <name>unpermute</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>a0e21a76c6f8a1a6f43129efd3a4fcc1d</anchor>
-      <arglist>(Data_ *data, Used_ *work) const</arglist>
+      <anchor>a3e2956fd6992ff180a084b90cf83d0cd</anchor>
+      <arglist>(Data_ *const data, Used_ *const work) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>unpermute</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>a4d316ac11c79c3a80672067756362384</anchor>
-      <arglist>(std::initializer_list&lt; Data_ * &gt; data, Used_ *work) const</arglist>
+      <anchor>a3d9cc05b52a3fd3fdd2eaf91676f6f39</anchor>
+      <arglist>(std::initializer_list&lt; Data_ *const &gt; data, Used_ *const work) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>unpermute</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>a15a41028fc0a28a7f6c97878b790d6b6</anchor>
-      <arglist>(DataPointers_ data, Used_ *work) const</arglist>
+      <anchor>a4aac2ee6b62693e4882e331de8b68610</anchor>
+      <arglist>(DataPointers_ data, Used_ *const work) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>unpermute</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>a0127fde2589669bff5f2b796c67e61dc</anchor>
-      <arglist>(Data_ *data, std::vector&lt; Used_ &gt; &amp;work) const</arglist>
+      <anchor>af988b9ce8382881f855777204da54e64</anchor>
+      <arglist>(Data_ *const data, std::vector&lt; Used_ &gt; &amp;work) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>unpermute</name>
       <anchorfile>classWeightedLowess_1_1SortBy.html</anchorfile>
-      <anchor>a129e7a5205ba62ffd301499333ea1c6d</anchor>
-      <arglist>(std::initializer_list&lt; Data_ * &gt; data, std::vector&lt; Used_ &gt; &amp;work) const</arglist>
+      <anchor>a83c038bdd56fd5d84eee2a9123835bf8</anchor>
+      <arglist>(std::initializer_list&lt; Data_ *const &gt; data, std::vector&lt; Used_ &gt; &amp;work) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -279,22 +279,22 @@
       <type>void</type>
       <name>compute</name>
       <anchorfile>namespaceWeightedLowess.html</anchorfile>
-      <anchor>ad11983a78a81e353c458a203d4f581c9</anchor>
-      <arglist>(const std::size_t num_points, const Data_ *x, const PrecomputedWindows&lt; Data_ &gt; &amp;windows, const Data_ *y, Data_ *fitted, Data_ *robust_weights, const Options&lt; Data_ &gt; &amp;opt)</arglist>
+      <anchor>a86b5b598907a786c4120963b67058864</anchor>
+      <arglist>(const std::size_t num_points, const Data_ *const x, const PrecomputedWindows&lt; Data_ &gt; &amp;windows, const Data_ *const y, Data_ *const fitted, Data_ *robust_weights, const Options&lt; Data_ &gt; &amp;opt)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>compute</name>
       <anchorfile>namespaceWeightedLowess.html</anchorfile>
-      <anchor>a4aaf79d3cc00d2e77b6c3ac887c98a22</anchor>
-      <arglist>(const std::size_t num_points, const Data_ *x, const Data_ *y, Data_ *fitted, Data_ *robust_weights, const Options&lt; Data_ &gt; &amp;opt)</arglist>
+      <anchor>a2e434916498f95c65fe6f175e4d4ec07</anchor>
+      <arglist>(const std::size_t num_points, const Data_ *const x, const Data_ *const y, Data_ *const fitted, Data_ *const robust_weights, const Options&lt; Data_ &gt; &amp;opt)</arglist>
     </member>
     <member kind="function">
       <type>Results&lt; Data_ &gt;</type>
       <name>compute</name>
       <anchorfile>namespaceWeightedLowess.html</anchorfile>
-      <anchor>ae05ea1089c2a797e1c5cf2e7115c928d</anchor>
-      <arglist>(const std::size_t num_points, const Data_ *x, const Data_ *y, const Options&lt; Data_ &gt; &amp;opt)</arglist>
+      <anchor>a75f25c7e955ed7731becb59c13c6fa90</anchor>
+      <arglist>(const std::size_t num_points, const Data_ *const x, const Data_ *const y, const Options&lt; Data_ &gt; &amp;opt)</arglist>
     </member>
     <member kind="function">
       <type>AssignedSegments</type>
@@ -335,8 +335,8 @@
       <type>PrecomputedWindows&lt; Data_ &gt;</type>
       <name>define_windows</name>
       <anchorfile>namespaceWeightedLowess.html</anchorfile>
-      <anchor>a30dc5c465fd1c49a9b8a0d8e1a51e1ee</anchor>
-      <arglist>(const std::size_t num_points, const Data_ *x, const Options&lt; Data_ &gt; &amp;opt)</arglist>
+      <anchor>a42bddecb5f16e2cc5586c8c956aeda38</anchor>
+      <arglist>(const std::size_t num_points, const Data_ *const x, const Options&lt; Data_ &gt; &amp;opt)</arglist>
     </member>
   </compound>
   <compound kind="page">
