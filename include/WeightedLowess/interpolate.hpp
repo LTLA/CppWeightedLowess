@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstddef>
 #include <utility>
+#include <cassert>
 
 #include "sanisizer/sanisizer.hpp"
 
@@ -135,6 +136,7 @@ void interpolate(
 ) {
     const auto& anchors = windows_fit.anchors;
     const auto num_anchors = anchors.size();
+    assert(num_anchors > 0);
     const auto num_anchors_m1 = num_anchors - 1;
 
     // One would think that we should parallelize across x_out instead of anchors,

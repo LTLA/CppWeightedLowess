@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <cassert>
 
 #include "subpar/subpar.hpp"
 #include "sanisizer/sanisizer.hpp"
@@ -147,11 +148,13 @@ void fit_trend(
         min_threshold = range * threshold_multiplier;
     }
 
-    const auto num_anchors = anchors.size();
     auto workspaces = sanisizer::create<std::vector<std::vector<Data_> > >(opt.num_threads);
 
     I<decltype(opt.iterations)> it = 0;
     while (1) { // Robustness iterations.
+        const auto num_anchors = anchors.size();
+        assert(num_anchors > 0); // this should be true if num_points > 0.
+
         parallelize(opt.num_threads, num_anchors, [&](const int t, const I<decltype(num_anchors)> start, const I<decltype(num_anchors)> length) {
             auto& workspace = workspaces[t];
             sanisizer::resize(workspace, num_points); // resizing here to encourage allocations to a thread-specific heap to avoid false sharing.

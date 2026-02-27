@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <numeric>
 #include <stdexcept>
+#include <cassert>
 
 #include "sanisizer/sanisizer.hpp"
 
@@ -42,6 +43,8 @@ namespace internal {
  */
 template<typename Data_>
 Data_ derive_delta(const std::size_t num_anchors, const std::size_t num_points, const Data_* const x) {
+    assert(num_points > 0);
+
     const auto points_m1 = num_points - 1;
     auto diffs = sanisizer::create<std::vector<Data_> >(points_m1);
     for (I<decltype(points_m1)> i = 0; i < points_m1; ++i) {
@@ -76,6 +79,7 @@ Data_ derive_delta(const std::size_t num_anchors, const std::size_t num_points, 
  */
 template<typename Data_>
 void find_anchors(const std::size_t num_points, const Data_* x, Data_ delta, std::vector<std::size_t>& anchors) {
+    assert(num_points > 0);
     anchors.clear();
     anchors.push_back(0);
 
@@ -121,6 +125,8 @@ std::vector<Window<Data_> > find_limits(
     const auto nanchors = anchors.size();
     auto limits = sanisizer::create<std::vector<Window<Data_> > >(nanchors);
     const auto half_min_width = min_width / 2;
+
+    assert(num_points > 0);
     const auto points_m1 = num_points - 1;
 
     parallelize(nthreads, nanchors, [&](const int, const I<decltype(nanchors)> start, const I<decltype(nanchors)> length) {
