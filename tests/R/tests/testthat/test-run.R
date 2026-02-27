@@ -1,17 +1,5 @@
-# Building the function.
-library(Rcpp)
-if (!file.exists("WeightedLowess")) {
-    file.symlink("../../include/WeightedLowess", "WeightedLowess")
-}
-if (!file.exists("subpar")) {
-    file.symlink("../../build/_deps/subpar-src/include/subpar", "subpar")
-}
-if (!file.exists("sanisizer")) {
-    file.symlink("../../build/_deps/sanisizer-src/include/sanisizer", "sanisizer")
-}
-sourceCpp("test.cpp")
+# library(testthat); library(WeightedLowess.tests); source("test-run.R")
 
-# Running it against the reference.
 set.seed(10)
 x <- sort(runif(100))
 y <- rnorm(100)

@@ -1,7 +1,8 @@
 #include "Rcpp.h"
 #include "WeightedLowess/WeightedLowess.hpp"
 
-// [[Rcpp::export(rng=false)]]
+//' @export
+//[[Rcpp::export(rng=false)]]
 Rcpp::List run_weighted_lowess(Rcpp::NumericVector x, Rcpp::NumericVector y, Rcpp::NumericVector w, double span, int npts, int iterations) {
     WeightedLowess::Options opt;
     opt.span = span;
