@@ -1,6 +1,9 @@
 #ifndef WEIGHTEDLOWESS_OPTIONS_HPP
 #define WEIGHTEDLOWESS_OPTIONS_HPP
 
+#include <optional>
+#include <cstddef>
+
 /**
  * @file Options.hpp
  *
@@ -45,12 +48,14 @@ struct Options {
      * The number of points that can be used as "anchors".
      * LOWESS smoothing is performed exactly for each anchor, while the fitted values for all intervening points are computed by linear interpolation.
      * A higher number of anchor points improves accuracy at the cost of computational work.
+     * Obviously, this should be a positive value.
      *
-     * Note that this number is only used as a guideline by our LOWESS implementation.
-     * The actual number of selected anchors depends on the distribution of x-coordinates; in addition, the first and last points are always used as the anchors,.
-     * If the specified number of anchors is greater than the number of points, LOWESS smoothing is performed directly for each point.
+     * Note that this number is only treated as a hint by our LOWESS implementation.
+     * The actual number of selected anchors may be slightly lower or higher, depending on the distribution of x-coordinates.
+     * In addition, the first and last points are always selected as anchors.
+     * If the specified value is greater than the number of points, LOWESS smoothing is performed directly for each point.
      *
-     * This setting is ignored if `Options::delta` is non-negative.
+     * This setting is ignored if `Options::delta` is set.
      */
     std::size_t anchors = 200;
 
@@ -64,11 +69,11 @@ struct Options {
     /**
      * Delta value used to identify anchors.
      * Seeds are identified greedily, by walking through the ordered x-coordinate values and marking a point `y` as a anchor if there are no anchors in `[y - delta, y]`.
-     * If set to zero, all unique points are used as anchors.
-     * If set to a negative value, an appropriate delta is determined from the number of points specified in `set_points()`.
-     * Otherwise, the chosen `delta` should have similar magnitude to the range of the x-coordinates.
+     * If unset, an appropriate delta is determined from the number of anchor points specified in `Options::anchors`.
+     * If zero, all unique points are used as anchors.
+     * If positive, its magnitude should be similar to the range of the x-coordinates.
      */
-    Data_ delta = -1;
+    std::optional<Data_> delta; 
 
     /**
      * Pointer to an array of length equal to the number of points used in `compute()`.

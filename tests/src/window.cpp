@@ -213,3 +213,59 @@ TEST(WindowTest, Parallelized) {
         EXPECT_EQ(val.distance, pval.distance);
     }
 }
+
+TEST(WindowTest, Overall) {
+    std::vector<double> x{ 0.1, 0.11, 0.17, 0.2, 0.24, 0.3, 0.4, 0.42, 0.44, 0.45, 0.5, 0.9 };
+    std::vector<std::size_t> all_anchors(x.size());
+    std::iota(all_anchors.begin(), all_anchors.end(), 0);
+
+    // No delta, non-trivial anchors.
+    {
+        WeightedLowess::Options<double> opt;
+        opt.anchors = 3;
+        const auto windows = WeightedLowess::define_windows(x.size(), x.data(), opt);
+        EXPECT_LT(windows.anchors.size(), x.size());
+        EXPECT_EQ(windows.limits.size(), windows.anchors.size());
+
+        // testing for back-compatibility.
+        opt.delta = -1;
+        const auto windows2 = WeightedLowess::define_windows(x.size(), x.data(), opt);
+        EXPECT_EQ(windows.anchors, windows2.anchors);
+    }
+
+    // No delta, every point is an anchor.
+    {
+        WeightedLowess::Options<double> opt;
+        opt.anchors = 100;
+        const auto windows = WeightedLowess::define_windows(x.size(), x.data(), opt);
+        EXPECT_EQ(windows.anchors, all_anchors);
+        EXPECT_EQ(windows.limits.size(), windows.anchors.size());
+    }
+
+    // Delta set to zero, every point is an anchor, even if the number of anchors is low.
+    {
+        WeightedLowess::Options<double> opt;
+        opt.delta = 0;
+        opt.anchors = 1;
+        const auto windows = WeightedLowess::define_windows(x.size(), x.data(), opt);
+        EXPECT_EQ(windows.anchors, all_anchors);
+        EXPECT_EQ(windows.limits.size(), windows.anchors.size());
+    }
+
+    // Delta set to a positive value.
+    {
+        WeightedLowess::Options<double> opt;
+        opt.delta = 0.1;
+        const auto windows = WeightedLowess::define_windows(x.size(), x.data(), opt);
+        EXPECT_LT(windows.anchors.size(), x.size());
+        EXPECT_EQ(windows.limits.size(), windows.anchors.size());
+    }
+
+    // Empty. 
+    {
+        WeightedLowess::Options<double> opt;
+        const auto windows = WeightedLowess::define_windows(0, x.data(), opt);
+        EXPECT_TRUE(windows.anchors.empty());
+        EXPECT_TRUE(windows.limits.empty());
+    }
+}
