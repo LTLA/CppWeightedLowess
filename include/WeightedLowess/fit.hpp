@@ -154,7 +154,7 @@ void fit_trend(
     while (1) { // Robustness iterations.
         parallelize(opt.num_threads, num_anchors, [&](const int t, const I<decltype(num_anchors)> start, const I<decltype(num_anchors)> length) {
             auto& workspace = workspaces[t];
-            sanisizer::resize(workspace, num_points); // resizing inside the thread to encourage allocations to a thread-specific heap to avoid false sharing.
+            sanisizer::resize(workspace, num_points); // resizing here to encourage allocations to a thread-specific heap to avoid false sharing.
             for (I<decltype(start)> s = start, end = start + length; s < end; ++s) {
                 const auto curpt = anchors[s];
                 fitted[curpt] = fit_point(curpt, limits[s], x, y, opt.weights, robust_weights, workspace);
@@ -236,7 +236,11 @@ void fit_trend(
             min_threshold = range * threshold_multiplier;
         }
 
-        auto& abs_dev = workspaces.front(); // just using the first workspace as a spare buffer, not using any values therein.
+        // Just using the first workspace as a spare buffer, not using any values therein.
+        // This is GUARANTEED to be properly sized, as num_anchors > 0 when num_points > 0.
+        // Thus parallelize() will always run for t = 0, causing the first workspace to be resized.
+        auto& abs_dev = workspaces.front();
+
         auto cmad = compute_mad(num_points, y, fitted, freq_weights, totalweight, abs_dev, residual_permutation);
         cmad *= 6;
         cmad = std::max(cmad, min_threshold); // avoid difficulties from numerical precision when all residuals are theoretically zero.
