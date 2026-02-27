@@ -90,7 +90,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md__2github_2workspace_2README"></a></p>
-<p><img src="https://github.com/LTLA/CppWeightedLowess/actions/workflows/run-tests.yaml/badge.svg" alt="Unit tests" style="pointer-events: none;" class="inline"/> <img src="https://github.com/LTLA/CppWeightedLowess/actions/workflows/doxygenate.yaml/badge.svg" alt="Documentation" style="pointer-events: none;" class="inline"/> <img src="https://github.com/LTLA/CppWeightedLowess/actions/workflows/compare-limma.yaml/badge.svg" alt="Limma comparison" style="pointer-events: none;" class="inline"/> <a href="https://codecov.io/gh/LTLA/CppWeightedLowess"><img src="https://codecov.io/gh/LTLA/CppWeightedLowess/branch/master/graph/badge.svg?token=GBHWVK9MFY" alt="Codecov" style="pointer-events: none;" class="inline"/></a></p>
+<p><img src="https://github.com/libscran/WeightedLowess/actions/workflows/run-tests.yaml/badge.svg" alt="Unit tests" style="pointer-events: none;" class="inline"/> <img src="https://github.com/libscran/WeightedLowess/actions/workflows/doxygenate.yaml/badge.svg" alt="Documentation" style="pointer-events: none;" class="inline"/> <img src="https://github.com/libscran/WeightedLowess/actions/workflows/compare-limma.yaml/badge.svg" alt="Limma comparison" style="pointer-events: none;" class="inline"/> <a href="https://codecov.io/gh/libscran/WeightedLowess"><img src="https://codecov.io/gh/libscran/WeightedLowess/branch/master/graph/badge.svg?token=GBHWVK9MFY" alt="Codecov" style="pointer-events: none;" class="inline"/></a></p>
 <h1>Overview</h1>
 <p>This C++ library implements the Locally Weighted Scatterplot Smoothing (LOWESS) method described by Cleveland (1979, 1981). LOWESS is a non-parametric smoothing algorithm that is simple and computationally efficient yet can accommodate a wide variety of curves. The libary itself is header-only and thus can be easily used in any C++ project by adding the relevant <code>#include</code> directives. This implementation is derived from the <a href="https://bioconductor.org/packages/limma/"><b>limma</b></a> package and contains some modifications from Cleveland's original code. Of particular interest is the ability to treat the weights as frequencies such that they are involved in the window span calculations for each anchor point - hence the name.</p>
 <h1>Algorithm details</h1>
@@ -154,7 +154,7 @@ $(function(){ initResizable(false); });
 <div class="line">sorter.unpermute(res_unsrt.fitted.data(), workspace);</div>
 <div class="line">sorter.unpermute(res_unsrt.robust_weights.data(), workspace);</div>
 <div class="ttc" id="aclassWeightedLowess_1_1SortBy_html"><div class="ttname"><a href="classWeightedLowess_1_1SortBy.html">WeightedLowess::SortBy</a></div><div class="ttdoc">Utility class for sorting on a covariate.</div><div class="ttdef"><b>Definition</b> SortBy.hpp:32</div></div>
-</div><!-- fragment --><p>See the <a href="https://ltla.github.io/CppWeightedLowess">reference documentation</a> for more details.</p>
+</div><!-- fragment --><p>See the <a href="https://libscran.github.io/WeightedLowess">reference documentation</a> for more details.</p>
 <h1>Building projects</h1>
 <h2>CMake with <code>FetchContent</code></h2>
 <p>If you're already using CMake, you can add something like this to your <code>CMakeLists.txt</code>:</p>
@@ -162,7 +162,7 @@ $(function(){ initResizable(false); });
 <div class="line"> </div>
 <div class="line">FetchContent_Declare(</div>
 <div class="line">  WeightedLowess </div>
-<div class="line">  GIT_REPOSITORY https://github.com/LTLA/CppWeightedLowess</div>
+<div class="line">  GIT_REPOSITORY https://github.com/libscran/WeightedLowess</div>
 <div class="line">  GIT_TAG master # or any version of interest</div>
 <div class="line">)</div>
 <div class="line"> </div>
