@@ -1,9 +1,9 @@
 # Weighted LOWESS for C++
 
-![Unit tests](https://github.com/LTLA/CppWeightedLowess/actions/workflows/run-tests.yaml/badge.svg)
-![Documentation](https://github.com/LTLA/CppWeightedLowess/actions/workflows/doxygenate.yaml/badge.svg)
-![Limma comparison](https://github.com/LTLA/CppWeightedLowess/actions/workflows/compare-limma.yaml/badge.svg)
-[![Codecov](https://codecov.io/gh/LTLA/CppWeightedLowess/branch/master/graph/badge.svg?token=GBHWVK9MFY)](https://codecov.io/gh/LTLA/CppWeightedLowess)
+![Unit tests](https://github.com/libscran/WeightedLowess/actions/workflows/run-tests.yaml/badge.svg)
+![Documentation](https://github.com/libscran/WeightedLowess/actions/workflows/doxygenate.yaml/badge.svg)
+![Limma comparison](https://github.com/libscran/WeightedLowess/actions/workflows/compare-limma.yaml/badge.svg)
+[![Codecov](https://codecov.io/gh/libscran/WeightedLowess/branch/master/graph/badge.svg?token=GBHWVK9MFY)](https://codecov.io/gh/libscran/WeightedLowess)
 
 ## Overview
 
@@ -102,7 +102,7 @@ sorter.unpermute(res_unsrt.fitted.data(), workspace);
 sorter.unpermute(res_unsrt.robust_weights.data(), workspace);
 ```
 
-See the [reference documentation](https://ltla.github.io/CppWeightedLowess) for more details.
+See the [reference documentation](https://libscran.github.io/WeightedLowess) for more details.
 
 ## Building projects
 
@@ -115,7 +115,7 @@ include(FetchContent)
 
 FetchContent_Declare(
   WeightedLowess 
-  GIT_REPOSITORY https://github.com/LTLA/CppWeightedLowess
+  GIT_REPOSITORY https://github.com/libscran/WeightedLowess
   GIT_TAG master # or any version of interest
 )
 
