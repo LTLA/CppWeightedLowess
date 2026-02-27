@@ -325,10 +325,10 @@
       <arglist>(const Data_ *const x_fit, const PrecomputedWindows&lt; Data_ &gt; &amp;windows_fit, const Data_ *const fitted_fit, const std::size_t num_points_out, const Data_ *const x_out, Data_ *const fitted_out, int num_threads)</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
+      <type>int</type>
       <name>parallelize</name>
       <anchorfile>namespaceWeightedLowess.html</anchorfile>
-      <anchor>adfb0d596184fac8c548a45cb6fb8fbb1</anchor>
+      <anchor>abf997aef63f77e296cb7be1931fbe6e1</anchor>
       <arglist>(const int num_workers, const Task_ num_tasks, Run_ run_task_range)</arglist>
     </member>
     <member kind="function">

@@ -136,9 +136,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a42db34b74c2f149026e1d7aea443e056" id="r_a42db34b74c2f149026e1d7aea443e056"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
 <tr class="memitem:a42db34b74c2f149026e1d7aea443e056"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::size_t, std::size_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a42db34b74c2f149026e1d7aea443e056">interpolate</a> (const Data_ *const x_fit, const <a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt; &amp;windows_fit, const Data_ *const fitted_fit, const std::size_t num_points_out, const Data_ *const x_out, Data_ *const fitted_out, int num_threads)</td></tr>
 <tr class="separator:a42db34b74c2f149026e1d7aea443e056"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfb0d596184fac8c548a45cb6fb8fbb1" id="r_adfb0d596184fac8c548a45cb6fb8fbb1"><td class="memTemplParams" colspan="2">template&lt;typename Task_ , class Run_ &gt; </td></tr>
-<tr class="memitem:adfb0d596184fac8c548a45cb6fb8fbb1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#adfb0d596184fac8c548a45cb6fb8fbb1">parallelize</a> (const int num_workers, const Task_ num_tasks, Run_ run_task_range)</td></tr>
-<tr class="separator:adfb0d596184fac8c548a45cb6fb8fbb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf997aef63f77e296cb7be1931fbe6e1" id="r_abf997aef63f77e296cb7be1931fbe6e1"><td class="memTemplParams" colspan="2">template&lt;typename Task_ , class Run_ &gt; </td></tr>
+<tr class="memitem:abf997aef63f77e296cb7be1931fbe6e1"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#abf997aef63f77e296cb7be1931fbe6e1">parallelize</a> (const int num_workers, const Task_ num_tasks, Run_ run_task_range)</td></tr>
+<tr class="separator:abf997aef63f77e296cb7be1931fbe6e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42bddecb5f16e2cc5586c8c956aeda38" id="r_a42bddecb5f16e2cc5586c8c956aeda38"><td class="memTemplParams" colspan="2">template&lt;typename Data_ &gt; </td></tr>
 <tr class="memitem:a42bddecb5f16e2cc5586c8c956aeda38"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structWeightedLowess_1_1PrecomputedWindows.html">PrecomputedWindows</a>&lt; Data_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a42bddecb5f16e2cc5586c8c956aeda38">define_windows</a> (const std::size_t num_points, const Data_ *const x, const <a class="el" href="structWeightedLowess_1_1Options.html">Options</a>&lt; Data_ &gt; &amp;opt)</td></tr>
 <tr class="separator:a42bddecb5f16e2cc5586c8c956aeda38"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -586,8 +586,8 @@ template&lt;typename Data_ &gt; </div>
 
 </div>
 </div>
-<a id="adfb0d596184fac8c548a45cb6fb8fbb1" name="adfb0d596184fac8c548a45cb6fb8fbb1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adfb0d596184fac8c548a45cb6fb8fbb1">&#9670;&#160;</a></span>parallelize()</h2>
+<a id="abf997aef63f77e296cb7be1931fbe6e1" name="abf997aef63f77e296cb7be1931fbe6e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf997aef63f77e296cb7be1931fbe6e1">&#9670;&#160;</a></span>parallelize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -595,7 +595,7 @@ template&lt;typename Data_ &gt; </div>
 template&lt;typename Task_ , class Run_ &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void WeightedLowess::parallelize </td>
+          <td class="memname">int WeightedLowess::parallelize </td>
           <td>(</td>
           <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>num_workers</em></span>, </td>
         </tr>
@@ -620,13 +620,13 @@ template&lt;typename Task_ , class Run_ &gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">num_workers</td><td>Number of workers. </td></tr>
-    <tr><td class="paramname">num_tasks</td><td>Number of tasks. </td></tr>
-    <tr><td class="paramname">run_task_range</td><td>Function to iterate over a range of tasks within a worker.</td></tr>
+    <tr><td class="paramname">num_workers</td><td>Number of workers. This should be positive. </td></tr>
+    <tr><td class="paramname">num_tasks</td><td>Number of tasks. This should be non-negative. </td></tr>
+    <tr><td class="paramname">run_task_range</td><td>Function to iterate over a range of tasks within a worker, see the argument of the same name in <code><a class="elRef" href="https://ltla.github.io/subpar/namespacesubpar.html#aa2ea2594f895ea5837bd3df8ad31af14">subpar::parallelize_range()</a></code>.</td></tr>
   </table>
   </dd>
 </dl>
-<p>By default, this is an alias to <code><a class="elRef" href="https://ltla.github.io/subpar/namespacesubpar.html#a9c64cc17f4f8d1fadbba6d25053a8dbe">subpar::parallelize_range()</a></code>. However, if the <code>WEIGHTEDLOWESS_CUSTOM_PARALLEL</code> function-like macro is defined, it is called instead. Any user-defined macro should accept the same arguments as <code><a class="elRef" href="https://ltla.github.io/subpar/namespacesubpar.html#a9c64cc17f4f8d1fadbba6d25053a8dbe">subpar::parallelize_range()</a></code>. </p>
+<p>By default, this function is an alias to <code><a class="elRef" href="https://ltla.github.io/subpar/namespacesubpar.html#aa2ea2594f895ea5837bd3df8ad31af14">subpar::parallelize_range()</a></code>. Its purpose is to enable <b><a class="el" href="namespaceWeightedLowess.html" title="Namespace for LOWESS functions.">WeightedLowess</a></b>-specific customization to the parallelization scheme without affecting other libraries that use <b>subpar</b>. If the <code>WEIGHTEDLOWESS_CUSTOM_PARALLEL</code> macro is defined, it will be used instead of <code><a class="elRef" href="https://ltla.github.io/subpar/namespacesubpar.html#aa2ea2594f895ea5837bd3df8ad31af14">subpar::parallelize_range()</a></code> whenever <code><a class="el" href="#abf997aef63f77e296cb7be1931fbe6e1">parallelize()</a></code> is called. Any user-defined macro should follow the same requirements as the <code>SUBPAR_CUSTOM_PARALLELIZE_RANGE</code> override for <code><a class="elRef" href="https://ltla.github.io/subpar/namespacesubpar.html#aa2ea2594f895ea5837bd3df8ad31af14">subpar::parallelize_range()</a></code>. </p>
 
 </div>
 </div>

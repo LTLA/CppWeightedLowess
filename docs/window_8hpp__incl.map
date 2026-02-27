@@ -1,21 +1,23 @@
 <map id="WeightedLowess/window.hpp" name="WeightedLowess/window.hpp">
-<area shape="rect" id="Node000001" title="Compute the smoothing window for each point." alt="" coords="287,5,480,31"/>
+<area shape="rect" id="Node000001" title="Compute the smoothing window for each point." alt="" coords="312,5,505,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,63,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="311,34,205,54,78,81,77,76,204,49,310,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="327,34,213,54,78,81,77,76,212,48,326,29"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="86,79,160,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="340,34,176,79,175,74,339,29"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="361,34,176,80,175,75,360,29"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="184,79,252,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="356,34,261,75,259,70,354,29"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="377,34,265,76,264,71,375,29"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="275,79,353,105"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="374,33,338,70,334,66,370,29"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="377,79,528,105"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="397,29,432,66,429,70,393,33"/>
-<area shape="rect" id="Node000007" href="$Options_8hpp.html" title="Options for compute()." alt="" coords="553,79,643,105"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="421,29,548,71,546,76,419,34"/>
-<area shape="rect" id="Node000008" href="$parallelize_8hpp.html" title="Definitions for parallelization." alt="" coords="667,79,769,105"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="441,29,652,74,651,79,440,34"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="793,79,862,105"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="481,29,618,48,778,76,777,81,617,54,480,34"/>
-<area shape="rect" id="Node000009" href="/github/workspace/docs/subpar.tag$subpar_8hpp.html" title=" " alt="" coords="654,153,782,178"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="721,105,721,137,715,137,715,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="394,34,344,72,340,67,391,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="376,79,441,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="411,31,411,63,406,63,406,31"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="465,79,616,105"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="432,29,506,69,504,74,430,34"/>
+<area shape="rect" id="Node000008" href="$Options_8hpp.html" title="Options for compute()." alt="" coords="641,79,731,105"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="456,29,627,73,625,78,455,34"/>
+<area shape="rect" id="Node000009" href="$parallelize_8hpp.html" title="Definitions for parallelization." alt="" coords="755,79,857,105"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="478,29,740,76,739,81,477,34"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="881,79,950,105"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="506,26,670,46,866,76,865,81,670,51,505,31"/>
+<area shape="rect" id="Node000010" href="/github/workspace/docs/subpar.tag$subpar_8hpp.html" title=" " alt="" coords="742,153,870,178"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="809,105,809,137,803,137,803,105"/>
 </map>
