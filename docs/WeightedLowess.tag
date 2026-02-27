@@ -99,10 +99,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>Data_</type>
+      <type>std::optional&lt; Data_ &gt;</type>
       <name>delta</name>
       <anchorfile>structWeightedLowess_1_1Options.html</anchorfile>
-      <anchor>a55bc0add48ea9e083cc527773a182192</anchor>
+      <anchor>ae51e31d3789ce934fe021f6121bf2435</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">

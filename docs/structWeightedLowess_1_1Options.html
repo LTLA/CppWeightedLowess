@@ -114,8 +114,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a5e34709595bc216d41f01fc60ca2b7fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1c47f860a4d16df2a54a6048b49f96b" id="r_ae1c47f860a4d16df2a54a6048b49f96b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1c47f860a4d16df2a54a6048b49f96b">iterations</a> = 3</td></tr>
 <tr class="separator:ae1c47f860a4d16df2a54a6048b49f96b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55bc0add48ea9e083cc527773a182192" id="r_a55bc0add48ea9e083cc527773a182192"><td class="memItemLeft" align="right" valign="top">Data_&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55bc0add48ea9e083cc527773a182192">delta</a> = -1</td></tr>
-<tr class="separator:a55bc0add48ea9e083cc527773a182192"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae51e31d3789ce934fe021f6121bf2435" id="r_ae51e31d3789ce934fe021f6121bf2435"><td class="memItemLeft" align="right" valign="top">std::optional&lt; Data_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae51e31d3789ce934fe021f6121bf2435">delta</a></td></tr>
+<tr class="separator:ae51e31d3789ce934fe021f6121bf2435"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a098463ee6beb3d9207725b0d597c42b2" id="r_a098463ee6beb3d9207725b0d597c42b2"><td class="memItemLeft" align="right" valign="top">const Data_ *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a098463ee6beb3d9207725b0d597c42b2">weights</a> = NULL</td></tr>
 <tr class="separator:a098463ee6beb3d9207725b0d597c42b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a414dbeb65809f19b12ce7877c2c048be" id="r_a414dbeb65809f19b12ce7877c2c048be"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a414dbeb65809f19b12ce7877c2c048be">frequency_weights</a> = true</td></tr>
@@ -146,14 +146,14 @@ template&lt;typename Data_  = double&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The number of points that can be used as "anchors". LOWESS smoothing is performed exactly for each anchor, while the fitted values for all intervening points are computed by linear interpolation. A higher number of anchor points improves accuracy at the cost of computational work.</p>
-<p>Note that this number is only used as a guideline by our LOWESS implementation. The actual number of selected anchors depends on the distribution of x-coordinates; in addition, the first and last points are always used as the anchors,. If the specified number of anchors is greater than the number of points, LOWESS smoothing is performed directly for each point.</p>
-<p>This setting is ignored if <code><a class="el" href="#a55bc0add48ea9e083cc527773a182192">Options::delta</a></code> is non-negative. </p>
+<p>The number of points that can be used as "anchors". LOWESS smoothing is performed exactly for each anchor, while the fitted values for all intervening points are computed by linear interpolation. A higher number of anchor points improves accuracy at the cost of computational work. Obviously, this should be a positive value.</p>
+<p>Note that this number is only treated as a hint by our LOWESS implementation. The actual number of selected anchors may be slightly lower or higher, depending on the distribution of x-coordinates. In addition, the first and last points are always selected as anchors. If the specified value is greater than the number of points, LOWESS smoothing is performed directly for each point.</p>
+<p>This setting is ignored if <code><a class="el" href="#ae51e31d3789ce934fe021f6121bf2435">Options::delta</a></code> is set. </p>
 
 </div>
 </div>
-<a id="a55bc0add48ea9e083cc527773a182192" name="a55bc0add48ea9e083cc527773a182192"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a55bc0add48ea9e083cc527773a182192">&#9670;&#160;</a></span>delta</h2>
+<a id="ae51e31d3789ce934fe021f6121bf2435" name="ae51e31d3789ce934fe021f6121bf2435"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae51e31d3789ce934fe021f6121bf2435">&#9670;&#160;</a></span>delta</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -161,11 +161,11 @@ template&lt;typename Data_  = double&gt; </div>
 template&lt;typename Data_  = double&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Data_ <a class="el" href="structWeightedLowess_1_1Options.html">WeightedLowess::Options</a>&lt; Data_ &gt;::delta = -1</td>
+          <td class="memname">std::optional&lt;Data_&gt; <a class="el" href="structWeightedLowess_1_1Options.html">WeightedLowess::Options</a>&lt; Data_ &gt;::delta</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Delta value used to identify anchors. Seeds are identified greedily, by walking through the ordered x-coordinate values and marking a point <code>y</code> as a anchor if there are no anchors in <code>[y - delta, y]</code>. If set to zero, all unique points are used as anchors. If set to a negative value, an appropriate delta is determined from the number of points specified in <code>set_points()</code>. Otherwise, the chosen <code>delta</code> should have similar magnitude to the range of the x-coordinates. </p>
+<p>Delta value used to identify anchors. Seeds are identified greedily, by walking through the ordered x-coordinate values and marking a point <code>y</code> as a anchor if there are no anchors in <code>[y - delta, y]</code>. If unset, an appropriate delta is determined from the number of anchor points specified in <code><a class="el" href="#a5e34709595bc216d41f01fc60ca2b7fb">Options::anchors</a></code>. If zero, all unique points are used as anchors. If positive, its magnitude should be similar to the range of the x-coordinates. </p>
 
 </div>
 </div>
