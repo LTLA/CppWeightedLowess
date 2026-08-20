@@ -12,19 +12,16 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Add Pretty CSS
-      uses: wei/wget@v1
-      with:
-        args: -O docs/doxygen-awesome.css https://raw.githubusercontent.com/jothepro/doxygen-awesome-css/main/doxygen-awesome.css
+      run: curl -L https://raw.githubusercontent.com/jothepro/doxygen-awesome-css/main/doxygen-awesome.css -o docs/doxygen-awesome.css 
 
     - name: Add subpar tagfile
-      uses: wei/wget@v1
-      with:
-        args: -O docs/subpar.tag https://ltla.github.io/subpar/subpar.tag
+      run: curl -L https://ltla.github.io/subpar/subpar.tag -o docs/subpar.tag 
 
     - name: Doxygen Action
       uses: mattnotmitt/doxygen-action@v1
       with:
         working-directory: docs/
+
     - name: GH Pages Deployment
       uses: JamesIves/github-pages-deploy-action@v4
       with:
