@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(WeightedLowess
-    VERSION 2.1.4
+project(
+    WeightedLowess
+    VERSION 2.1.5
     DESCRIPTION "C++ port of the limma::weightedLowess function"
-    LANGUAGES CXX)
+    LANGUAGES CXX
+)
 
 add_library(WeightedLowess INTERFACE)
 add_library(ltla::WeightedLowess ALIAS WeightedLowess)
